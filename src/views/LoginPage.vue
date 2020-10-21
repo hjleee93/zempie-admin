@@ -12,7 +12,7 @@
                     <q-form @submit="onSubmit" class="q-gutter-md q-pa-md">
                         <q-input outlined v-model="account" label="계정" placeholder="Account" :dense="dense" />
 
-                        <q-input outlined v-model="password" label="비밀번호" placeholder="Password" :dense="dense" />
+                        <q-input outlined v-model="password" label="비밀번호" placeholder="Password" type="password" :dense="dense" />
 
                         <div>
                             <q-btn label="로그인" id="login-btn" type="submit" color="primary" />
@@ -45,7 +45,7 @@ import { Component, Vue } from "vue-property-decorator";
 
 @Component
 export default class extends Vue {
-    // dense
+    dense = null;
     loginDialog = false;
     account = "";
     password = "";
@@ -53,10 +53,16 @@ export default class extends Vue {
     onSubmit(event: PageTransitionEvent) {
         event.preventDefault();
         if(this.account == "admin" && this.password == "password"){
-            // location.href = "/";
+            this.$store.commit("login", {name: ""});
             this.$router.push("/");
         }else{
             this.loginDialog = true;
+        }
+    }
+
+    mounted(){
+        if(this.$store.getters.isLogin){
+            this.$router.push("/");
         }
     }
 }

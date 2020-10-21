@@ -1,14 +1,22 @@
 <template>
-    <router-view></router-view>
+    <MainLayout v-if="this.$route.path != '/login'">
+        <router-view></router-view>
+    </MainLayout>
+    <router-view v-else></router-view>
 </template>
 
 <script lang="ts">
-    import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
+import MainLayout from "./components/MainLayout.vue";
 
-    @Component
-    export default class  extends Vue {
-        
+@Component({
+    components: {
+        MainLayout
     }
+})
+export default class  extends Vue {
+    
+}
 </script>
 
 <style>
