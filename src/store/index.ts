@@ -5,7 +5,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        adminData: null
+        adminData: {name: ""}
     },
     getters: {
         isLogin(state){
@@ -17,7 +17,7 @@ export default new Vuex.Store({
             state.adminData = adminData;
         },
         logout(state){
-            state.adminData = null;
+            // state.adminData = null;
         }
     },
     actions: {},

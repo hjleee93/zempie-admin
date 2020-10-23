@@ -1,18 +1,51 @@
 <template>
     <div>
-        어드민 리스트
+        <CheckTable :rows="rows" rowKey="번호" :columns="columns" link="/community/faq/sub/" @selectEvent="selectItem" >
+            <q-btn class="q-mr-sm" color="primary" label="새 글작성" @click="moveCreatePage" />
+            <q-btn class="q-mr-sm" color="primary" label="편집" />
+            <q-btn class="q-mr-sm" color="primary" label="삭제" />
+        </CheckTable>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import CheckTable from "../../components/CheckTable.vue";
 
 @Component({
-    components: {
-        // MainLayout
-    }
+    components: {CheckTable},
 })
 export default class extends Vue {
-    
+    selectedItem = null;
+    rows = [
+        {
+            "번호" : 1,
+            "카테고리" : "게임 문의",
+            "제목" : "제목",
+            "조회수" : 11,
+        },
+        {
+            "번호" : 2,
+            "카테고리" : "계정",
+            "제목" : "제목",
+            "조회수" : 10,
+        }
+    ]
+
+    columns = [
+        { name: '번호', label:"번호", field: '번호', sortable: true },
+        { name: '카테고리', label: '카테고리', field: '카테고리', sortable: true },
+        { name: '제목', label: '제목', field: '제목', sortable: true },
+        { name: '조회수', label: '조회수', field: '조회수', sortable: true },
+        { name: 'detail', label: "상세 보기"}
+    ];
+
+    moveCreatePage(){
+        this.$router.push(this.$route.path + "/create");
+    }
+
+    selectItem(item: any){
+        this.selectedItem = item;
+    }
 }
 </script>

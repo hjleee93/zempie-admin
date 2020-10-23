@@ -1,6 +1,5 @@
 <template>
     <div>
-        어드민 리스트
     </div>
 </template>
 
