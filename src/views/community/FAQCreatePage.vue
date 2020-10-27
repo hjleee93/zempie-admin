@@ -50,7 +50,7 @@ export default class extends Vue {
     }
     
     submit(){
-        console.log(this.title, this.category, this.content);
+        // console.log(this.title, this.category, this.content);
     }
 }
 </script>

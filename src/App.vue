@@ -1,5 +1,5 @@
 <template>
-    <MainLayout v-if="this.$route.path != '/login'">
+    <MainLayout v-if="this.$route.path != '/login' && this.$route.name != 'notFoundPage'">
         <router-view></router-view>
     </MainLayout>
     <router-view v-else></router-view>
@@ -14,8 +14,9 @@ import MainLayout from "./components/MainLayout.vue";
         MainLayout
     }
 })
-export default class  extends Vue {
-    
+export default class extends Vue {
+    // mounted(){
+    // }
 }
 </script>
 

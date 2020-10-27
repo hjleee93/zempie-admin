@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="row q-mb-md">
+        <!-- <div class="row q-mb-md">
             <div class="col">
                 <line-chart label="접속자 수" :data="accessorData">
                     <q-btn-toggle
@@ -34,7 +34,7 @@
                     />
                 </line-chart>
             </div>
-        </div>
+        </div> -->
     </div>
 </template>
 

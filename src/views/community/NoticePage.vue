@@ -11,26 +11,14 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import CheckTable from "../../components/CheckTable.vue";
+import Api from "../../util/Api";
 
 @Component({
     components: { CheckTable },
 })
 export default class extends Vue {
     selectedItem = null;
-    rows = [
-        {
-            번호: 1,
-            카테고리: "게임 문의",
-            제목: "제목",
-            조회수: 11,
-        },
-        {
-            번호: 2,
-            카테고리: "계정",
-            제목: "제목",
-            조회수: 10,
-        },
-    ];
+    rows = [];
 
     columns = [
         { name: "번호", label: "번호", field: "번호", sortable: true },
@@ -46,6 +34,12 @@ export default class extends Vue {
 
     selectItem(item: any) {
         this.selectedItem = item;
+    }
+
+    async mounted(){
+        if(this.$store.getters.isLogin){
+            // this.rows = await Api.getNoticeList();
+        }
     }
 }
 </script>

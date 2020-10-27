@@ -7,6 +7,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import DetailTable from "../../components/DetailTable.vue";
+import Api from "../../util/Api";
 
 @Component({
     components: {
@@ -14,20 +15,7 @@ import DetailTable from "../../components/DetailTable.vue";
     }
 })
 export default class extends Vue {
-    rows = [
-        {
-            "번호" : "1",
-            "카테고리" : "계정",
-            "제목" : "Example",
-            "조회수" : 123,
-        },
-        {
-            "번호" : "2",
-            "카테고리" : "게임문의",
-            "제목" : "Example",
-            "조회수" : 312,
-        }
-    ]
+    rows = []
 
     columns = [
         { name: '번호', label:"번호", field: '번호', sortable: true, align: 'left' },
@@ -36,5 +24,11 @@ export default class extends Vue {
         { name: '조회수', label: "조회수", field: '조회수', sortable: true, align: 'left' },
         { name: 'detail', label: "상세 보기"}
     ];
+
+    async mounted(){
+        if(this.$store.getters.isLogin){
+            this.rows = await Api.getQuestionList();
+        }
+    }
 }
 </script>

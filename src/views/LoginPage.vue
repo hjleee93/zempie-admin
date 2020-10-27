@@ -50,10 +50,11 @@ export default class extends Vue {
     account = "";
     password = "";
 
-    onSubmit(event: PageTransitionEvent) {
+    async onSubmit(event: PageTransitionEvent) {
         event.preventDefault();
-        if(this.account == "admin" && this.password == "password"){
-            this.$store.commit("login", {name: ""});
+        if(this.account.trim() != "" && this.password.trim() != ""){
+            await this.$store.dispatch("login", {account: this.account, password: this.password});
+
             this.$router.push("/");
         }else{
             this.loginDialog = true;

@@ -143,6 +143,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import LineChart from "../../components/LineChart.vue";
 import DetailTable from "../../components/DetailTable.vue";
+import Api from "../../util/Api";
 
 @Component({
     components: {
@@ -186,5 +187,18 @@ export default class extends Vue {
     ];
 
     link = "";
+
+    userData = {
+
+    }
+
+    async mounted(){
+        if(this.$store.getters.isLogin){
+            const userData = await Api.getUserData(this.index);
+            if(userData.length > 0){
+                this.userData = userData
+            }
+        }
+    }
 }
 </script>

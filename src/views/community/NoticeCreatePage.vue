@@ -30,7 +30,7 @@ export default class extends Vue {
     }
     
     submit(){
-        console.log(this.title, this.content);
+        // console.log(this.title, this.content);
     }
 }
 </script>

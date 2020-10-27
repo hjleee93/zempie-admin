@@ -8,6 +8,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import Table from "../../components/Table.vue";
+import Api from "../../util/Api";
 
 @Component({
     components: {
@@ -25,10 +26,16 @@ export default class extends Vue {
     ];
 
     columns = [
-        { name: '아이디', label:"아이디", field: '아이디', sortable: true, align: 'left'},
+        { name: '아이디', label:"아이디", field: 'admin', sortable: true, align: 'left'},
         { name: '일시', label: '일시', field: '일시', sortable: true, align: 'left' },
         { name: 'IP', label: 'IP', field: 'IP', sortable: true, align: 'left' },
         { name: '변경내역', label: "변경내역", field: '변경내역', sortable: true, align: 'left' },
     ]
+
+    async mounted(){
+        if(this.$store.getters.isLogin){
+            // this.rows = await Api.getLogList();
+        }
+    }
 }
 </script>

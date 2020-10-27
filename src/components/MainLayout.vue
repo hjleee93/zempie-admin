@@ -2,6 +2,8 @@
     <q-layout view="hHh lpR fFf">
         <q-header elevated class="glossy">
             <q-toolbar>
+                <q-btn dense flat round icon="menu" @click="left = !left" />
+
                 <q-toolbar-title>
                     Zempie admin page
                 </q-toolbar-title>
@@ -12,10 +14,10 @@
             </q-toolbar>
         </q-header>
 
-        <q-drawer show-if-above side="left" bordered content-class="bg-grey-2">
+        <q-drawer v-model="left" show-if-above side="left" bordered content-class="bg-grey-2">
             <q-scroll-area class="fit">
                 <q-list>
-                    <template v-for="(categoryItem, index) in categoryList">
+                    <template v-for="(categoryItem, index) in filteredCategoryList">
                         <q-expansion-item :key="index" expand-separator :icon="categoryItem.icon" :label="categoryItem.label" v-if="categoryItem.sub != false">
                             <q-list>
                                 <q-item
@@ -87,6 +89,8 @@ import HelloWorld from "@/components/HelloWorld.vue";
     },
 })
 export default class MainLayout extends Vue {
+    left = false;
+
     logoutDialog = false;
     categoryList = [
         {
@@ -243,6 +247,22 @@ export default class MainLayout extends Vue {
         }
 
         return this.categoryList[0];
+    }
+
+    get filteredCategoryList(){
+        const filterList = [["/", "/user", "/admin"], ["/", "/community", "/judge", "/game"]];
+
+        const filteredList = [];
+        const level = 1;
+
+        for(let i = 0; i < this.categoryList.length; i++){
+            if(filterList[level].includes(this.categoryList[i].path)){
+                filteredList.push(this.categoryList[i]);
+            }
+        }
+
+        // return filteredList;
+        return this.categoryList;
     }
 
     getIsActive(category: any) {
