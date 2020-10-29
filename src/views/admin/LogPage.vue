@@ -16,26 +16,32 @@ import Api from "../../util/Api";
     }
 })
 export default class extends Vue {
-    rows = [
-        {
-            "아이디": "Admin_Master",
-            "일시": "Master",
-            "IP": "정상",
-            "변경내역": "2020.10.23 05:22:14"
-        }
-    ];
-
+    logs: any[] = [];
+    
     columns = [
-        { name: '아이디', label:"아이디", field: 'admin', sortable: true, align: 'left'},
-        { name: '일시', label: '일시', field: '일시', sortable: true, align: 'left' },
-        { name: 'IP', label: 'IP', field: 'IP', sortable: true, align: 'left' },
-        { name: '변경내역', label: "변경내역", field: '변경내역', sortable: true, align: 'left' },
+        { name: '계정', label:"계정", field: 'account', sortable: true, align: 'left'},
+        { name: '이름', label:"이름", field: 'name', sortable: true, align: 'left'},
+        { name: '권한', label: '권한', field: 'level', sortable: true, align: 'left' },
+        { name: '변경내역', label: "변경내역", field: 'path', sortable: true, align: 'left' },
     ]
 
     async mounted(){
         if(this.$store.getters.isLogin){
-            // this.rows = await Api.getLogList();
+            this.logs = await Api.getLogList();
         }
+    }
+
+    get rows(){
+        const result = [];
+        for(let i = 0; i < this.logs.length; i++){
+            result.push({
+                account: this.logs[i].admin.account,
+                name: this.logs[i].admin.name,
+                level: this.logs[i].admin.level,
+                path: this.logs[i].path,
+            });
+        }
+        return result;
     }
 }
 </script>

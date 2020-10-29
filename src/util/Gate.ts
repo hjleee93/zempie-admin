@@ -1,6 +1,5 @@
 import axios from "axios";
 import store from "../store/index";
-// import { refreshToken } from "../service/login";
 
 const instance = axios.create({
     baseURL: "http://192.168.0.10:8299",
@@ -24,8 +23,10 @@ instance.interceptors.response.use(
     async function(error) {
         const errorAPI = error.config;
         if (error.response.data.status === 401) {
-            // await store.dipatch("refreshToken");
-            return await axios(errorAPI);
+            const result = await store.dispatch("refreshToken");
+            if(result){
+                return await axios(errorAPI);
+            }
         }
         return Promise.reject(error);
     }

@@ -17,6 +17,8 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import { Notify } from "quasar";
+import Api from "../../util/Api";
 
 @Component({
     components: {},
@@ -25,15 +27,35 @@ export default class extends Vue {
     title = "";
     content = "";
 
-    cancel(){
+    cancel() {
         this.$router.go(-1);
     }
-    
-    submit(){
-        // console.log(this.title, this.content);
+
+    async submit() {
+        if(this.title.trim() == "" || this.content.trim() == ""){
+            Notify.create({
+                type: "negative",
+                message: "내용을 전부 채워주시기 바랍니다.",
+                position: "top",
+            });
+        }
+        const result = await Api.addNotice(this.title, this.content);
+        if (result) {
+            Notify.create({
+                type: "positive",
+                message: "공지사항이 성공적으로 작성되었습니다.",
+                position: "top",
+            });
+            this.$router.push("/community/notice");
+        } else {
+            Notify.create({
+                type: "negative",
+                message: "공지사항을 작성하는 도중에 문제가 발생하였습니다.",
+                position: "top",
+            });
+        }
     }
 }
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

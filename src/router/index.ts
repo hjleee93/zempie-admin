@@ -21,11 +21,19 @@ import JudgeGameSub from "../views/judge/GameSubPage.vue";
 import JudgeLog from "../views/judge/LogPage.vue";
 import NotFoundPage from "../views/NotFoundPage.vue";
 
-const adminLevel = 3;
+import store from "../store/index";
+import {Notify} from "quasar";
+
 const requireAuth = (levels: number[]) => (to: any, from: any, next: any) => {
-    if (levels.includes(adminLevel)) {
-        return next();
-    }
+    // if (levels.includes(store.state.subLevel)) {
+    //     return next();
+    // }
+
+    Notify.create({
+        type: "negative",
+        message: '해당 페이지를 이용할 권한이 없습니다.',
+        position: "top",
+    })
     next("/");
 };
 
@@ -45,7 +53,6 @@ const routes: Array<RouteConfig> = [
         path: "/",
         name: "DashBoard",
         component: DashBoard,
-        beforeEnter: requireAuth([3]),
     },
 
     {
@@ -53,7 +60,6 @@ const routes: Array<RouteConfig> = [
         path: "/admin/list",
         name: "AdminList",
         component: AdminList,
-        beforeEnter: requireAuth([3]),
     },
     {
         path: "/admin/list/create",

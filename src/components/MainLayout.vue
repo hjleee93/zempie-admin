@@ -10,7 +10,7 @@
 
                 <q-space />
 
-                <q-btn stretch flat @click="openLogoutDialog"> <q-icon name="logout" />Logout </q-btn>
+                <q-btn stretch flat @click="logout">{{$store.state.name}}<q-icon name="logout" />Logout</q-btn>
             </q-toolbar>
         </q-header>
 
@@ -58,29 +58,13 @@
                 <slot></slot>
             </div>
         </q-page-container>
-
-        <q-dialog v-model="logoutDialog" persistent transition-show="scale" transition-hide="scale" style="width: 1000px">
-            <q-card style="width: 400px">
-                <q-card-section>
-                    <div class="text-h6">로그아웃</div>
-                </q-card-section>
-
-                <q-card-section class="q-pt-none">
-                    로그아웃 하시겠습니까?
-                </q-card-section>
-
-                <q-card-actions align="right">
-                    <q-btn flat label="취소" color="primary" v-close-popup />
-                    <q-btn flat label="확인" color="primary" v-close-popup @click="logout" />
-                </q-card-actions>
-            </q-card>
-        </q-dialog>
     </q-layout>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import HelloWorld from "@/components/HelloWorld.vue";
+import { Notify, Dialog } from "quasar";
 
 @Component({
     name: "MainLayout",
@@ -91,7 +75,6 @@ import HelloWorld from "@/components/HelloWorld.vue";
 export default class MainLayout extends Vue {
     left = false;
 
-    logoutDialog = false;
     categoryList = [
         {
             icon: "dashboard",
@@ -108,7 +91,7 @@ export default class MainLayout extends Vue {
                     path: "/list",
                 },
                 {
-                    label: "로그인 로그",
+                    label: "관리자 로그",
                     path: "/log",
                 },
             ],
@@ -273,17 +256,25 @@ export default class MainLayout extends Vue {
         this.$router.go(-1);
     }
 
-    openLogoutDialog() {
-        this.logoutDialog = true;
-    }
-
     logout() {
-        this.$store.commit("logout");
-        this.$router.push("/login");
+        Dialog.create({
+            title: '로그아웃',
+            message: '로그아웃하시겠습니까?',
+            cancel: true,
+            persistent: true,
+        }).onOk(async () => {
+            this.$store.commit("logout");
+            this.$router.push("/login");
+        })
     }
 
-    mounted() {
+    async mounted() {
         if (!this.$store.getters.isLogin) {
+            Notify.create({
+                type: "negative",
+                message: '해당 서비스는 로그인 후 이용하실 수 있습니다.',
+                position: "top",
+            });
             this.$router.push("/login");
         }
     }

@@ -10,9 +10,9 @@
 
                 <q-card-actions vertical>
                     <q-form @submit="onSubmit" class="q-gutter-md q-pa-md">
-                        <q-input outlined v-model="account" label="계정" placeholder="Account" :dense="dense" />
+                        <q-input outlined v-model="account" label="계정" placeholder="Account" />
 
-                        <q-input outlined v-model="password" label="비밀번호" placeholder="Password" type="password" :dense="dense" />
+                        <q-input outlined v-model="password" label="비밀번호" placeholder="Password" type="password" />
 
                         <div>
                             <q-btn label="로그인" id="login-btn" type="submit" color="primary" />
@@ -21,31 +21,15 @@
                 </q-card-actions>
             </q-card>
         </div>
-
-        <q-dialog v-model="loginDialog" persistent transition-show="scale" transition-hide="scale">
-            <q-card>
-                <q-card-section>
-                    <div class="text-h6">로그인 오류</div>
-                </q-card-section>
-
-                <q-card-section class="q-pt-none">
-                    아이디 또는 비밀번호가 일치하지 않습니다. 확인 후 다시 입력해주세요.
-                </q-card-section>
-
-                <q-card-actions align="right">
-                    <q-btn flat label="확인" color="primary" v-close-popup />
-                </q-card-actions>
-            </q-card>
-        </q-dialog>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import { Notify } from "quasar";
 
 @Component
 export default class extends Vue {
-    dense = null;
     loginDialog = false;
     account = "";
     password = "";
@@ -53,11 +37,29 @@ export default class extends Vue {
     async onSubmit(event: PageTransitionEvent) {
         event.preventDefault();
         if(this.account.trim() != "" && this.password.trim() != ""){
-            await this.$store.dispatch("login", {account: this.account, password: this.password});
+            const result = await this.$store.dispatch("login", {account: this.account, password: this.password});
 
-            this.$router.push("/");
+            if(result){
+                Notify.create({
+                    type: "positive",
+                    message: '로그인 성공',
+                    position: "top",
+                });
+                this.$store.dispatch("getAdminData");
+                this.$router.push("/");
+            }else{
+                Notify.create({
+                    type: "negative",
+                    message: '아이디 또는 비민번호가 일치하지 않습니다. 확인 후 다시 입력해 주시기 바랍니다.',
+                    position: "top",
+                });
+            }
         }else{
-            this.loginDialog = true;
+            Notify.create({
+                type: "negative",
+                message: '내용을 전부 채워주시기 바랍니다.',
+                position: "top",
+            });
         }
     }
 

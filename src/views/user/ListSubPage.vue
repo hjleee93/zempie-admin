@@ -16,11 +16,11 @@
                 <q-tab-panel name="data">
                     <div class="row q-mb-md">
                         <div class="col-12 text-weight-bold text-h6">
-                            게임 ID
+                            ID
                         </div>
 
                         <div class="col-12">
-                            example
+                            {{userData.account}}
                         </div>
                     </div>
                     <div class="row q-mb-md">
@@ -74,7 +74,7 @@
                         </div>
 
                         <div class="col-12">
-                            example
+                            {{userData.email}}
                         </div>
                     </div>
                     <div class="row q-mb-md">
@@ -92,7 +92,7 @@
                         </div>
                         
                         <div class="col-12">
-                            example
+                            {{userData.name}}
                         </div>
                     </div>
                     <div class="row q-mb-md">
@@ -196,7 +196,7 @@ export default class extends Vue {
         if(this.$store.getters.isLogin){
             const userData = await Api.getUserData(this.index);
             if(userData.length > 0){
-                this.userData = userData
+                this.userData = userData[0];
             }
         }
     }
