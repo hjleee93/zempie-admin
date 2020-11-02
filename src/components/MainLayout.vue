@@ -63,13 +63,11 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import HelloWorld from "@/components/HelloWorld.vue";
 import { Notify, Dialog } from "quasar";
 
 @Component({
     name: "MainLayout",
     components: {
-        HelloWorld,
     },
 })
 export default class MainLayout extends Vue {

@@ -1,12 +1,10 @@
 <template>
     <div>
-        <CheckTable :rows="rows" rowKey="id" :columns="columns" link="/community/notice/sub/" @selectEvent="selectItem">
+        <SubButtonTable :rows="rows" rowKey="id" :columns="columns" icon="pageview" @subEvent="openPopup">
             <q-btn class="q-mr-sm" color="primary" label="새 글작성" @click="moveCreatePage" />
-            <q-btn class="q-mr-sm" color="primary" label="편집" @click="openModifyNotice" />
-            <q-btn class="q-mr-sm" color="primary" label="삭제" @click="deleteNotice" />
-        </CheckTable>
+        </SubButtonTable>
 
-        <q-dialog v-model="modify" v-if="modifyItem != null">
+        <q-dialog v-model="popup" v-if="selectedItem != null">
             <q-card class="my-card">
                 <q-card-section class="q-pt-none">
                     <div class="row items-center q-ma-md">
@@ -15,7 +13,7 @@
                                 제목
                             </div>
                             <div class="col-9">
-                                <q-input outlined v-model="modifyItem.title" label="title" />
+                                <q-input outlined v-model="selectedItem.title" label="title" />
                             </div>
                         </div>
 
@@ -24,7 +22,7 @@
                                 내용
                             </div>
                             <div class="col-9">
-                                <q-editor v-model="modifyItem.content" min-height="10rem" />
+                                <q-editor v-model="selectedItem.content" min-height="10rem" />
                             </div>
                         </div>
                     </div>
@@ -33,8 +31,9 @@
                 <q-separator />
 
                 <q-card-actions align="right">
-                    <q-btn v-close-popup color="negative" label="닫기" />
-                    <q-btn color="primary" label="저장" @click="modifyNotice" />
+                    <q-btn v-close-popup color="primary" label="닫기" />
+                    <q-btn color="negative" label="삭제" @click="deleteNotice" />
+                    <q-btn color="positive" label="저장" @click="modifyNotice" />
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -43,32 +42,32 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import CheckTable from "../../components/CheckTable.vue";
+import SubButtonTable from "../../components/SubButtonTable.vue";
 import Api from "../../util/Api";
 import { Notify, Dialog } from "quasar";
 
 @Component({
-    components: { CheckTable },
+    components: { SubButtonTable },
 })
 export default class extends Vue {
-    selectedItem: any = null;
     rows = [];
-    modify = false;
-    modifyItem: any = null;
+    popup = false;
+    selectedItem: any = null;
 
     columns = [
-        { name: "번호", label: "번호", field: "id", sortable: true },
-        { name: "카테고리", label: "카테고리", field: "type", sortable: true },
-        { name: "제목", label: "제목", field: "title", sortable: true },
-        { name: "detail", label: "상세 보기" },
+        { name: "번호", label: "번호", field: "id", align: "left"},
+        { name: "카테고리", label: "카테고리", field: "type"},
+        { name: "제목", label: "제목", field: "title"},
+        { name: "sub", label: "상세 보기" },
     ];
 
     moveCreatePage() {
         this.$router.push(this.$route.path + "/create");
     }
 
-    selectItem(item: any) {
-        this.selectedItem = item;
+    openPopup(row: any){
+        this.popup = true;
+        this.selectedItem = JSON.parse(JSON.stringify(row));
     }
 
     async mounted() {
@@ -78,68 +77,48 @@ export default class extends Vue {
     }
 
     deleteNotice() {
-        if (this.selectedItem != null) {
-            Dialog.create({
-                title: '삭제',
-                message: '정말로 삭제하시겠습니까?',
-                cancel: true,
-                persistent: true
-            }).onOk(async () => {
-                const result = await Api.deleteNotice(this.selectedItem.id);
-                if (result) {
-                    Notify.create({
-                        type: "positive",
-                        message: "공지사항이 성공적으로 삭제되었습니다.",
-                        position: "top",
-                    });
-                    this.selectedItem = null;
-                } else {
-                    Notify.create({
-                        type: "negative",
-                        message: "공지사항을 삭제하는 도중에 문제가 발생하였습니다.",
-                        position: "top",
-                    });
-                }
-            })
-        } else {
-            Notify.create({
-                type: "negative",
-                message: "공지사항을 선택해 주시기 바랍니다.",
-                position: "top",
-            });
-        }
+        Dialog.create({
+            title: '삭제',
+            message: '정말로 삭제하시겠습니까?',
+            cancel: true,
+            persistent: true
+        }).onOk(async () => {
+            const result = await Api.deleteNotice(this.selectedItem.id);
+            if (result) {
+                Notify.create({
+                    type: "positive",
+                    message: "공지사항이 성공적으로 삭제되었습니다.",
+                    position: "top",
+                });
+                this.rows = this.rows.filter((item: any) => item.id != this.selectedItem.id);
+                this.selectedItem = null;
+            } else {
+                Notify.create({
+                    type: "negative",
+                    message: "공지사항을 삭제하는 도중에 문제가 발생하였습니다.",
+                    position: "top",
+                });
+            }
+        })
     }
 
-    openModifyNotice(){
-        if(this.selectedItem != null){
-            this.modify = true;
-            this.modifyItem = JSON.parse(JSON.stringify(this.selectedItem));
-        }else{
-            Notify.create({
-                type: "negative",
-                message: "공지사항을 선택해 주시기 바랍니다.",
-                position: "top",
-            });
-        }
-    }
 
     async modifyNotice(){
-        if(this.modifyItem.title.trim() == "" || this.modifyItem.content.trim() == ""){
-            Notify.create({
+        if(this.selectedItem.title.trim() == "" || this.selectedItem.content.trim() == ""){
+            return Notify.create({
                 type: "negative",
                 message: "내용을 전부 채워주시기 바랍니다.",
                 position: "top",
             });
         }
-        const result = await Api.modifyNotice(this.modifyItem.id, this.modifyItem.title, this.modifyItem.content);
+        const result = await Api.modifyNotice(this.selectedItem.id, this.selectedItem.title, this.selectedItem.content);
         if (result) {
             Notify.create({
                 type: "positive",
                 message: "공지사항이 성공적으로 수정되었습니다.",
                 position: "top",
             });
-            this.modify = false;
-            this.modifyItem = null;
+            this.popup = false;
         } else {
             Notify.create({
                 type: "negative",

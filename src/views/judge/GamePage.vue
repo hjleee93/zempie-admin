@@ -34,12 +34,12 @@ export default class extends Vue {
     ]
 
     columns = [
-        { name: '번호', label:"번호", field: '번호', sortable: true, align: 'left' },
-        { name: '아이디', label: '아이디', field: '아이디', sortable: true, align: 'left' },
-        { name: '게임 제목', label: "게임 제목", field: '게임 제목', sortable: true, align: 'left' },
-        { name: '버전', label: "버전", field: '버전', sortable: true, align: 'left' },
-        { name: '상태', label: "상태", field: '상태', sortable: true, align: 'left' },
-        { name: '신청일', label: "신청일", field: '신청일', sortable: true, align: 'left' },
+        { name: '번호', label:"번호", field: '번호', align: 'left' },
+        { name: '아이디', label: '아이디', field: '아이디', align: 'left' },
+        { name: '게임 제목', label: "게임 제목", field: '게임 제목', align: 'left' },
+        { name: '버전', label: "버전", field: '버전', align: 'left' },
+        { name: '상태', label: "상태", field: '상태', align: 'left' },
+        { name: '신청일', label: "신청일", field: '신청일', align: 'left' },
         { name: 'detail', label: "상세 보기"}
     ];
 }

@@ -1,19 +1,26 @@
 import Gate from "../util/Gate";
 
 export default class Api{
+    static getUserData(index: string) {
+        throw new Error('Method not implemented.');
+    }
     static host = "http://192.168.0.10:8299";
 
     /* 관리자 */
-    static async getAdminList(limit = 50, offset = 0){
+    static async getAdminList(limit = 10, offset = 0, sort = "id", dir= "asc"){
         try{
+            if(sort == null){
+                sort = "id";
+            }
+            limit *= 2;
             const result = await Gate({
                 method: "GET",
-                url: `/api/v1/admin/admin/list?limit=${limit}&offset=${offset}`,
+                url: `/api/v1/admin/admin/list?limit=${limit}&offset=${offset}&sort=${sort}&dir=${dir}`,
                 headers: {
                     "Content-Type": "application/json",
                 }
             });
-            return result.data.result.admins;
+            return result.data.result;
         }catch(error){
             return [];
         }
@@ -68,16 +75,20 @@ export default class Api{
         }
     }
 
-    static async getLogList(limit = 50, offset = 0){
+    static async getLogList(limit = 10, offset = 0, sort = "id", dir= "asc"){
         try{
+            if(sort == null){
+                sort = "id";
+            }
+            limit *= 2;
             const result = await Gate({
                 method: "GET",
-                url: `/api/v1/admin/admin/logs?limit=${limit}&offset=${offset}`,
+                url: `/api/v1/admin/admin/logs?limit=${limit}&offset=${offset}&admin_id=1&sort=${sort}&dir=${dir}`,
                 headers: {
                     "Content-Type": "application/json",
                 }
             });
-            return result.data.result.logs;
+            return result.data.result;
         }catch(error){
             return [];
         }
@@ -85,31 +96,35 @@ export default class Api{
     /* 관리자 */
 
     /* 회원관리 */
-    static async getUserList(limit = 50, offset = 0){
+    static async getUserList(limit = 50, offset = 0, sort = "id", dir = "asc"){
         try{
+            if(sort == null || sort == ""){
+                sort = "id";
+            }
+            limit *= 2;
             const result = await Gate({
                 method: "GET",
-                url: `/api/v1/admin/user/list?limit=${limit}&offset=${offset}`,
+                url: `/api/v1/admin/user/list?limit=${limit}&offset=${offset}&sort=${sort}&dir=${dir}`,
                 headers: {
                     "Content-Type": "application/json",
                 }
             });
-            return result.data.result.users;
+            return result.data.result;
         }catch(error){
             return [];
         }
     }
 
-    static async getUserData(id: string){
+    static async getUserQuestion(limit = 50, offset = 0, sort = "id", dir = "asc", id: number){
         try{
             const result = await Gate({
                 method: "GET",
-                url: `/api/v1/admin/user/list?limit=${1}&offset=${id}`,
+                url: `/api/v1/admin/user/questions?limit=${limit}&offset=${offset}&user_id=${id}&no_answer=${0}&sort=${sort}&dir=${dir}`,
                 headers: {
                     "Content-Type": "application/json",
                 }
             });
-            return result.data.result.users;
+            return result.data.result;
         }catch(error){
             return [];
         }
@@ -203,10 +218,10 @@ export default class Api{
             await Gate({
                 method: "POST",
                 url: `/api/v1/admin/support/notice/mod`,
+                params,
                 headers: {
                     'Content-Type': "application/x-www-form-urlencoded"
                 },
-                params
             });
             return true;
         }catch(error){

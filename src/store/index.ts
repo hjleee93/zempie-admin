@@ -7,8 +7,7 @@ import { Notify } from "quasar";
 import router from "../router/index";
 
 Vue.use(Vuex);
-
-const host = "http://192.168.0.10:8299";
+const host = "http://192.168.0.10:8299"
 
 export default new Vuex.Store({
     state: {
@@ -61,18 +60,22 @@ export default new Vuex.Store({
         },
         refreshToken: async (context) => {
             const refreshToken = Cookie.getCookie("refresh_token") || "";
+            if(refreshToken == null || refreshToken == ""){
+                return;
+            }
             const params = new URLSearchParams();
             params.append('token', refreshToken);
             try{
                 const result = await axios({
                     method: "POST",
-                    url: "/api/v1/admin/token",
+                    url: host + "/api/v1/admin/token",
                     params,
                     headers: {
                         'Content-Type': "application/x-www-form-urlencoded"
                     }
                 });
                 context.state.loginToken = result.data.result.access_token;
+                Cookie.setCookie("token", result.data.result.access_token);
                 return true;
             }catch(error){
                 Notify.create({
@@ -101,7 +104,7 @@ export default new Vuex.Store({
                 context.state.level = result.data.result.level;
                 context.state.subLevel = result.data.result.sub_level;
             }catch(error){
-                // console.log(error);
+                // console.log([error]);
             }
         }
     },

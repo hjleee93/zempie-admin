@@ -1,10 +1,10 @@
 <template>
     <div>
-        <ModifyTable :rows="rows" :columns="columns" rowKey="account" @openPopup="openPopup" v-if="$store.state.level >= 3">
+        <SubButtonTable :rows="rows" :columns="columns" rowKey="id" @subEvent="openPopup" v-if="$store.state.level >= 3" icon="create" @movePage="movePage">
             <q-btn color="primary" @click="moveSubPage">관리자 생성</q-btn>
-        </ModifyTable>
+        </SubButtonTable>
 
-        <Table :rows="rows" :columns="columns" rowKey="account" v-else />
+        <Table :rows="rows" :columns="columns" rowKey="id" v-else @movePage="movePage" />
 
         <q-dialog v-model="modify" v-if="selectedRow != null">
             <q-card class="my-card">
@@ -59,8 +59,8 @@
                 <q-separator />
 
                 <q-card-actions align="right">
-                    <q-btn v-close-popup color="negative" label="닫기" />
-                    <q-btn color="primary" label="저장" @click="submit" />
+                    <q-btn v-close-popup color="primary" label="닫기" />
+                    <q-btn color="positive" label="저장" @click="submit" />
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -69,27 +69,27 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import ModifyTable from "../../components/ModifyTable.vue";
+import SubButtonTable from "../../components/SubButtonTable.vue";
 import Table from "../../components/Table.vue";
 import Api from "../../util/Api";
 import { Notify } from "quasar";
 
 @Component({
     components: {
-        ModifyTable,
+        SubButtonTable,
         Table,
     },
 })
 export default class extends Vue {
-    rows = [];
+    rows: any[] = [];
 
     get columns() {
         const columns = [
-            { name: "아이디", label: "아이디", field: "account", sortable: true, align: "left" },
-            { name: "이름", label: "이름", field: "name", sortable: true, align: "left" },
-            { name: "권한", label: "권한", field: "level", sortable: true, align: "left" },
-            { name: "생성일", label: "생성일", field: "created_at", sortable: true, align: "left" },
-            { name: "modify", label: "변경" },
+            { label: "아이디", name: "account", field: "account", align: "left", sortable: true, sort: ()=>false },
+            { label: "이름", name: "name", field: "name", align: "left", sortable: true, sort: ()=>false },
+            { label: "권한", name: "level", field: "level", align: "left", sortable: true, sort: ()=>false },
+            { label: "생성일", name: "created_at", field: "created_at", align: "left", sortable: true, sort: ()=>false },
+            { label: "변경", name: "sub" },
         ];
         if (this.$store.state.level < 3) {
             columns.splice(columns.length - 1, 1);
@@ -121,9 +121,7 @@ export default class extends Vue {
     ];
 
     async mounted() {
-        if (this.$store.getters.isLogin) {
-            this.rows = await Api.getAdminList();
-        }
+        await this.movePage(10, 0, "id", "asc");
     }
 
     moveSubPage() {
@@ -174,6 +172,19 @@ export default class extends Vue {
                 position: "top",
             });
         }
+    }
+
+    async movePage(limit: number, offset: number, sort: string, dir: string) {
+        const result = await Api.getAdminList(limit, offset, sort, dir);
+        const admins = new Array(result.count).fill({id:null});
+        for(let i = 0; i < this.rows.length; i++){
+            admins[i] = this.rows[i];
+        }
+        this.rows = admins;
+        for(let i = 0; i < result.admins.length; i++){
+            this.rows[offset + i] = result.admins[i];
+        }
+        
     }
 }
 </script>

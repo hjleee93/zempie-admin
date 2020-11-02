@@ -1,5 +1,5 @@
 <template>
-    <q-table :data="rows" :filter="filter" :columns="columns" :pagination.sync="pagination" :rows-per-page-options="[5, 10, 15, 20, 30]" row-key="null">
+    <q-table :data="rows" :filter="filter" row-key="null" :columns="columns" :pagination.sync="pagination" :rows-per-page-options="[5, 10, 15, 20, 30]" >
         <template v-slot:top-left>
             <slot></slot>
         </template>
@@ -12,17 +12,11 @@
             </q-input>
         </template>
 
-        <!-- <template v-slot:pagination="scope">
-            <span class="q-mr-md">{{scope.pagination.page}} page of {{scope.pagesNumber}} pages</span>
-
-            <q-btn v-if="scope.pagesNumber > 2" icon="first_page" color="grey-8" round dense flat :disable="scope.isFirstPage" @click="firstPage(scope)" />
-
-            <q-btn icon="chevron_left" color="grey-8" round dense flat :disable="scope.isFirstPage" @click="prevPage(scope)" />
-
-            <q-btn icon="chevron_right" color="grey-8" round dense flat :disable="scope.isLastPage" @click="nextPage(scope)" />
-
-            <q-btn v-if="scope.pagesNumber > 2" icon="last_page" color="grey-8" round dense flat :disable="scope.isLastPage" @click="lastPage(scope)" />
-        </template> -->
+        <template v-slot:body-cell-sub="props">
+            <q-td key="sub" :props="props">
+                <q-btn round color="primary" :icon="icon" @click="subEvent(props.row)" />
+            </q-td>
+        </template>
     </q-table>
 </template>
 
@@ -34,7 +28,6 @@ import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 })
 export default class extends Vue {
     filter = "";
-    page = 1;
 
     pagination = {
         rowsPerPage: 5,
@@ -52,8 +45,15 @@ export default class extends Vue {
     @Prop()
     columns!: any[];
 
+    @Prop()
+    icon!: string;
+
+    subEvent(row: any){
+        this.$emit('subEvent', row);
+    }
+
     @Watch("pagination")
-    paginationChanged(prevP: any, nextP: any){
+    paginationChanged(){
         this.$emit("movePage", this.pagination.rowsPerPage, (this.pagination.page - 1) * this.pagination.rowsPerPage, this.pagination.sortBy || this.rowKey, this.pagination.descending ? "desc":"asc");
     }
 }

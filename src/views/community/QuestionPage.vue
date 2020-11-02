@@ -18,10 +18,10 @@ export default class extends Vue {
     rows = []
 
     columns = [
-        { name: '번호', label:"번호", field: '번호', sortable: true, align: 'left' },
-        { name: '카테고리', label: '카테고리', field: '카테고리', sortable: true, align: 'left' },
-        { name: '제목', label: "제목", field: '제목', sortable: true, align: 'left' },
-        { name: '조회수', label: "조회수", field: '조회수', sortable: true, align: 'left' },
+        { name: '번호', label:"번호", field: '번호', align: 'left' },
+        { name: '카테고리', label: '카테고리', field: '카테고리', align: 'left' },
+        { name: '제목', label: "제목", field: '제목', align: 'left' },
+        { name: '조회수', label: "조회수", field: '조회수', align: 'left' },
         { name: 'detail', label: "상세 보기"}
     ];
 

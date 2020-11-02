@@ -22,10 +22,10 @@ instance.interceptors.response.use(
     },
     async function(error) {
         const errorAPI = error.config;
-        if (error.response.data.status === 401) {
+        if (error.response.data.error == "Unauthorized") {
             const result = await store.dispatch("refreshToken");
             if(result){
-                return await axios(errorAPI);
+                return await instance(errorAPI);
             }
         }
         return Promise.reject(error);
