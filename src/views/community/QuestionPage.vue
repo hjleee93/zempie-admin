@@ -25,7 +25,7 @@ export default class extends Vue {
         { name: 'detail', label: "상세 보기"}
     ];
 
-    async mounted(){
+    async created(){
         if(this.$store.getters.isLogin){
             this.rows = await Api.getQuestionList();
         }

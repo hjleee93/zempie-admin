@@ -1,14 +1,15 @@
 import axios from "axios";
 import store from "../store/index";
+import config from "../util/config";
 
 const instance = axios.create({
-    baseURL: "http://192.168.0.10:8299",
+    baseURL: config.api,
     timeout: 1000,
 });
 
 instance.interceptors.request.use(
     async function(config) {
-        config.headers.Authorization = `Bearer ${store.state.loginToken}`;
+        config.headers.Authorization = `Bearer ${store.state.accessToken}`;
         return config;
     },
     function(error) {

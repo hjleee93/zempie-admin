@@ -1,38 +1,59 @@
-export default class Cookie{
-    static getCookie( name: string ) {
-        const matches = document.cookie.match(new RegExp(
-          "(?:^|; )" + name.replace(/([.$?*|{}()[]\/+^])/g, '\\$1') + "=([^;]*)"
-        ));
-        return matches ? decodeURIComponent(matches[1]) : undefined;
-    }
+type Options = {
+    expires?: Date | number | string;
+    path?: string;
+    domain?: string;
+    secure?: boolean;
+};
 
-    static setCookie(name: string, value: string, options: any = {}) {
+class Cookie {
+    static set(name: string, value: string, options?: Options) {
+        options = options || {};
 
-        options = {
-          path: '/',
-          ...options
-        };
-      
-        if (options.expires instanceof Date) {
-          options.expires = options.expires.toUTCString();
+        let expires = options.expires;
+
+        if (typeof expires == "number" && expires) {
+            const d = new Date();
+            d.setTime(d.getTime() + expires * 1000);
+            expires = options.expires = d;
         }
-      
-        let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
-      
-        for (const optionKey in options) {
-          updatedCookie += "; " + optionKey;
-          const optionValue = options[optionKey];
-          if (optionValue !== true) {
-            updatedCookie += "=" + optionValue;
-          }
+        if (expires && (expires as Date).toUTCString) {
+            options.expires = (expires as Date).toUTCString();
         }
-      
+
+        value = encodeURIComponent(value);
+
+        let updatedCookie = name + "=" + value;
+
+        let propName: keyof Options;
+        for (propName in options) {
+            updatedCookie += "; " + propName;
+            const propValue = options[propName];
+            if (propValue !== true) {
+                updatedCookie += "=" + propValue;
+            }
+        }
+
         document.cookie = updatedCookie;
     }
 
-    static deleteCookie(name: string) {
-        this.setCookie(name, "", {
-          'max-age': -1
-        })
+    static get(name: string): string | null {
+        const matches = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([.$?*|{}()[]\/\+^])/g, "\\$1") + "=([^;]*)"));
+        return matches ? decodeURIComponent(matches[1]) : null;
     }
 }
+
+export function setCookie(name: string, value: string, options?: Options) {
+    Cookie.set(name, value, options);
+}
+
+export function getCookie(name: string) {
+    return Cookie.get(name);
+}
+
+export function deleteCookie(name: string) {
+    setCookie(name, "", {
+        expires: -1,
+    });
+}
+
+export default Cookie;

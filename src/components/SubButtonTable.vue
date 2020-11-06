@@ -4,13 +4,13 @@
             <slot></slot>
         </template>
 
-        <template v-slot:top-right>
+        <!-- <template v-slot:top-right>
             <q-input borderless dense debounce="300" v-model="filter" placeholder="Search">
                 <template v-slot:append>
                     <q-icon name="search" />
                 </template>
             </q-input>
-        </template>
+        </template> -->
 
         <template v-slot:body-cell-sub="props">
             <q-td key="sub" :props="props">
@@ -30,10 +30,10 @@ export default class extends Vue {
     filter = "";
 
     pagination = {
-        rowsPerPage: 5,
+        rowsPerPage: 10,
         sortBy: null,
         descending: false,
-        page: 1
+        page: 1,
     };
 
     @Prop()

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <!-- <div class="row q-mb-md">
+        <div class="row q-mb-md">
             <div class="col-12">
                 <q-option-group
                     v-model="option"
@@ -12,10 +12,9 @@
 
             <div class="col-12 row">
                 <q-select outlined v-model="option2" :options="options2" label="Outlined" style="width: 300px;" class="q-mr-md" />
-                <q-btn color="primary" class="q-mr-sm" label="정지" />
+                <q-btn color="primary" class="q-mr-sm" label="상세 검색" />
             </div>
-        </div> -->
-        
+        </div>
 
         <SubButtonTable icon="pageview" :rows="rows" :columns="columns" @subEvent="openPopup" @movePage="movePage"> </SubButtonTable>
 
@@ -112,6 +111,20 @@ import Api from "../../util/Api";
     components: { SubButtonTable },
 })
 export default class extends Vue {
+    option = 1;
+    options = [
+        {label: "상태", value: 1},
+        {label: "가입/최종방문일", value: 2}
+    ]
+
+    option2 = "상태";
+    options2 = [
+        {label: "상태", value: 1},
+        {label: "가입/최종방문일", value: 2},
+        {label: "상태", value: 1},
+        {label: "가입/최종방문일", value: 2},
+    ]
+
     rows: any[] = [];
 
     columns = [
@@ -142,18 +155,6 @@ export default class extends Vue {
         this.rows = users;
         for (let i = 0; i < result.users.length; i++) {
             this.rows[offset + i] = result.users[i];
-        }
-    }
-
-    async moveSubPage(limit: number, offset: number, sort: string, dir: string) {
-        const result = await Api.getUserQuestion(limit, offset, sort, dir, this.selectedItem.id || 1);
-        const questions = new Array(result.count);
-        for (let i = 0; i < this.subrows.length; i++) {
-            questions[i] = this.subrows[i];
-        }
-        this.subrows = questions;
-        for (let i = 0; i < result.questions.length; i++) {
-            this.subrows[offset + i] = result.questions[i];
         }
     }
 
@@ -189,5 +190,17 @@ export default class extends Vue {
         { label: "등록일", name: "등록일",  field: "등록일", align: "left" },
         { label: "상세보기", name: "sub" },
     ];
+
+    async moveSubPage(limit: number, offset: number, sort: string, dir: string) {
+        const result = await Api.getUserQuestion(limit, offset, sort, dir, this.selectedItem.id || 1);
+        const questions = new Array(result.count);
+        for (let i = 0; i < this.subrows.length; i++) {
+            questions[i] = this.subrows[i];
+        }
+        this.subrows = questions;
+        for (let i = 0; i < result.questions.length; i++) {
+            this.subrows[offset + i] = result.questions[i];
+        }
+    }
 }
 </script>

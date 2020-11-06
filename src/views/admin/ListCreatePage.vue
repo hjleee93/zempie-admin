@@ -75,7 +75,7 @@ export default class extends Vue {
     levelOptions = [
         { label: "Viewer", value: 1 },
         { label: "Editor", value: 3 },
-        { label: "Master", value: 10 },
+        // { label: "Master", value: 10 },
     ];
 
     subLevel = [];
@@ -102,26 +102,25 @@ export default class extends Vue {
 
     async submit() {
         if (this.$store.getters.isLogin) {
-            if (this.account.trim() != "" && this.password.trim() != "" && this.name.trim() != "" && this.level != null) {
-                const result = await Api.addAdmin(this.account, this.password, this.name, this.level, this.level);
-                if (result) {
-                    Notify.create({
-                        type: "positive",
-                        message: `관리자 생성에 성공하였습니다.`,
-                        position: "top",
-                    });
-                    this.$router.push("/admin/list");
-                } else {
-                    Notify.create({
-                        type: "negative",
-                        message: `관리자 생성에 실패하였습니다.`,
-                        position: "top",
-                    });
-                }
-            }else{
-                Notify.create({
+            if (this.account.trim() == "" && this.password.trim() == "" || this.name.trim() == "" || this.level == null) {    
+                return Notify.create({
                     type: "negative",
                     message: `내용을 전부 채워주시기 바랍니다.`,
+                    position: "top",
+                });
+            }
+            const result = await Api.addAdmin(this.account.trim(), this.password.trim(), this.name.trim(), this.level, this.level);
+            if (result) {
+                Notify.create({
+                    type: "positive",
+                    message: `관리자 생성에 성공하였습니다.`,
+                    position: "top",
+                });
+                this.$router.push("/admin/list");
+            } else {
+                Notify.create({
+                    type: "negative",
+                    message: `관리자 생성에 실패하였습니다.`,
                     position: "top",
                 });
             }

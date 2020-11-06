@@ -10,9 +10,53 @@
 
                 <q-space />
 
-                <q-btn stretch flat @click="logout">{{$store.state.name}}<q-icon name="logout" />Logout</q-btn>
+                <q-btn flat @click="openPasswordPopup">
+                    <q-icon name="person" />
+                    {{$store.state.name}}
+
+                    <q-tooltip>
+                        정보 수정
+                    </q-tooltip>
+                </q-btn>
+
+                <q-btn stretch flat @click="logout">
+                    <q-icon name="logout" />Logout
+                </q-btn>
             </q-toolbar>
         </q-header>
+
+        <q-dialog v-model="passwordPopup">
+            <q-card class="my-card" style="width: 600px;">
+                <q-card-section class="q-pt-none q-ma-md">
+                    <div class="row items-center q-mb-md">
+                        <div class="col-12">
+                            이름
+                        </div>
+
+                        <div class="col-12">
+                            <q-input outlined v-model="name" label="name" />
+                        </div>
+                    </div>
+
+                    <div class="row items-center">
+                        <div class="col-12">
+                            변경할 비밀번호
+                        </div>
+
+                        <div class="col-12">
+                            <q-input outlined v-model="password" label="New password" />
+                        </div>
+                    </div>
+                </q-card-section>
+
+                <q-separator />
+
+                <q-card-actions align="right">
+                    <q-btn v-close-popup color="primary" label="닫기" />
+                    <q-btn color="positive" label="변경" @click="changePassword" />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
 
         <q-drawer v-model="left" show-if-above side="left" bordered content-class="bg-grey-2">
             <q-scroll-area class="fit">
@@ -64,6 +108,14 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { Notify, Dialog } from "quasar";
+import Api from '@/util/Api';
+
+interface Category{
+    icon: string;
+    label: string;
+    sub: Category[];
+    path: string;
+}
 
 @Component({
     name: "MainLayout",
@@ -246,7 +298,7 @@ export default class MainLayout extends Vue {
         return this.categoryList;
     }
 
-    getIsActive(category: any) {
+    getIsActive(category: Category) {
         return category == this.activeCategory ? "active" : "";
     }
 
@@ -266,20 +318,75 @@ export default class MainLayout extends Vue {
         })
     }
 
-    async mounted() {
+    async created() {
         if (!this.$store.getters.isLogin) {
-            Notify.create({
-                type: "negative",
-                message: '해당 서비스는 로그인 후 이용하실 수 있습니다.',
-                position: "top",
-            });
+            if(this.$route.path != "/"){
+                Notify.create({
+                    type: "negative",
+                    message: '해당 서비스는 로그인 후 이용하실 수 있습니다.',
+                    position: "top",
+                });
+            }
             this.$router.push("/login");
+        }else{
+            this.$store.dispatch("getAdminData");
         }
     }
 
     movepath(path: string) {
         if (this.$route.path != path) {
             this.$router.push(path);
+        }
+    }
+    
+    
+    
+    
+    
+    passwordPopup = false;
+    name = "";
+    password = "";
+
+    openPasswordPopup() {
+        this.name = this.$store.state.name;
+        this.password = "";
+
+        this.passwordPopup = true;
+    }
+
+    closePasswordPopup() {
+        this.passwordPopup = false;
+    }
+
+    async changePassword() {
+        const id = this.$store.state.id;
+        const name = this.name;
+        const password = this.password;
+
+        if (name.trim() == "" || password.trim() == "") {
+            return Notify.create({
+                type: "negative",
+                message: "내용을 전부 채워주시기 바랍니다.",
+                position: "top",
+            });
+            
+        }
+
+        const result = await Api.setAdmin(id, name.trim(), password.trim());
+        if (result) {
+            Notify.create({
+                type: "positive",
+                message: "변경에 성공하였습니다.",
+                position: "top",
+            });
+            this.$router.go(0);
+            this.passwordPopup = false;
+        } else {
+            Notify.create({
+                type: "negative",
+                message: "변경하는 도중에 문제가 발생하였습니다.",
+                position: "top",
+            });
         }
     }
 }

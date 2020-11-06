@@ -15,9 +15,6 @@ import MainLayout from "./components/MainLayout.vue";
     }
 })
 export default class extends Vue {
-    created(){
-        this.$store.dispatch("getAdminData");
-    }
 }
 </script>
 

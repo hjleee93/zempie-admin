@@ -1,60 +1,37 @@
 <template>
     <div>
-        <SubButtonTable :rows="rows" :columns="columns" rowKey="id" @subEvent="openPopup" v-if="$store.state.level >= 3" icon="create" @movePage="movePage">
+        <SubButtonTable :rows="rows" :columns="columns" rowKey="id" @subEvent="openPopup" v-if="$store.state.level >= 10" icon="create" @movePage="movePage">
             <q-btn color="primary" @click="moveSubPage">관리자 생성</q-btn>
         </SubButtonTable>
 
         <Table :rows="rows" :columns="columns" rowKey="id" v-else @movePage="movePage" />
 
-        <q-dialog v-model="modify" v-if="selectedRow != null">
-            <q-card class="my-card">
+        <q-dialog v-model="levelPopup" v-if="selectedRow != null">
+            <q-card class="my-card" style="width: 600px;">
                 <q-card-section class="q-pt-none">
-                    <div class="row items-center q-ma-md">
-                        <div class="row items-center q-mb-md" style="width: 600px;">
-                            <div class="col-3">
-                                이름
-                            </div>
-                            <div class="col-9">
-                                <q-input outlined v-model="selectedRow.name" label="name" />
-                            </div>
-                        </div>
-
-                        <div class="row items-center q-mb-md" style="width: 600px;">
-                            <div class="col-3">
-                                비밀번호
-                            </div>
-                            <div class="col-9">
-                                <q-input outlined v-model="selectedRow.password" label="password" />
-                            </div>
-                        </div>
-
-                        <div class="row items-center q-mb-md" style="width: 600px;">
-                            <div class="col-3">
+                    <div class="items-center q-ma-md">
+                        <div class="row items-center" v-if="$store.state.level >= 10">
+                            <div class="col-12">
                                 권한
                             </div>
-                            <div class="col-9">
+
+                            <div class="col-12">
                                 <q-option-group v-model="selectedRow.level" :options="levelOptions" color="primary" type="radio" />
                             </div>
                         </div>
 
-                        <div class="row items-center q-mb-md" style="width: 600px;">
-                            <div class="col-3">
+                        <div class="row items-center" v-if="$store.state.level >= 10">
+                            <div class="col-12">
                                 권한 영역
                             </div>
-                            <div class="col-9">
+
+                            <div class="col-12">
                                 <q-option-group v-model="selectedRow.subLevel" :options="subLevelOptions" color="primary" type="checkbox" />
                             </div>
                         </div>
-                        <!-- <div class="row items-center" style="width: 600px;">
-                            <div class="col-3">
-                                activated
-                            </div>
-                            <div class="col-9">
-                                <q-input outlined v-model="selectedRow.name" label="name" />
-                            </div>
-                        </div> -->
                     </div>
                 </q-card-section>
+
 
                 <q-separator />
 
@@ -89,7 +66,7 @@ export default class extends Vue {
             { label: "이름", name: "name", field: "name", align: "left", sortable: true, sort: ()=>false },
             { label: "권한", name: "level", field: "level", align: "left", sortable: true, sort: ()=>false },
             { label: "생성일", name: "created_at", field: "created_at", align: "left", sortable: true, sort: ()=>false },
-            { label: "변경", name: "sub" },
+            { label: "권한 변경", name: "sub" },
         ];
         if (this.$store.state.level < 3) {
             columns.splice(columns.length - 1, 1);
@@ -97,19 +74,16 @@ export default class extends Vue {
         return columns;
     }
 
-    modify = false;
+    levelPopup = false;
     selectedRow = {
-        name: "",
-        password: "",
         level: 1,
         subLevel: [],
-        activated: true,
         id: 1,
     };
     levelOptions = [
         { label: "Viewer", value: 1 },
         { label: "Editor", value: 3 },
-        { label: "Master", value: 10 },
+        // { label: "Master", value: 10 },
     ];
     subLevelOptions = [
         { label: "대쉬 보드", value: 1 },
@@ -119,8 +93,14 @@ export default class extends Vue {
         { label: "심사", value: 5 },
         { label: "게임관리", value: 6 },
     ];
+    lastMove = {
+        limit: 10,
+        offset: 0,
+        sort: "id",
+        dir: "asc",
+    };
 
-    async mounted() {
+    async created() {
         await this.movePage(10, 0, "id", "asc");
     }
 
@@ -130,25 +110,19 @@ export default class extends Vue {
 
     openPopup(row: any) {
         this.selectedRow.id = row.id;
-        this.selectedRow.name = row.name;
-        this.selectedRow.password = "";
         this.selectedRow.level = row.level;
-        this.selectedRow.activated = row.activated;
-        this.modify = true;
+        this.levelPopup = true;
     }
 
     closePopup() {
-        this.modify = false;
+        this.levelPopup = false;
     }
 
     async submit() {
         const id = this.selectedRow.id;
-        const name = this.selectedRow.name;
-        const password = this.selectedRow.password;
         const level = this.$store.state.name == "master" ? this.selectedRow.level : null;
-        const activated = this.$store.state.name == "master" ? this.selectedRow.activated : null;
 
-        if (id == null || name == "" || password == "") {
+        if (id == null || level == null) {
             Notify.create({
                 type: "negative",
                 message: "내용을 전부 채워주시기 바랍니다.",
@@ -157,14 +131,15 @@ export default class extends Vue {
             return;
         }
 
-        const result = await Api.setAdmin(id, name, password, level, activated);
+        const result = await Api.setAdminLevel(id, level, level);
         if (result) {
             Notify.create({
                 type: "positive",
                 message: "변경에 성공했습니다.",
                 position: "top",
             });
-            this.modify = false;
+            this.movePage(this.lastMove.limit, this.lastMove.offset, this.lastMove.sort, this.lastMove.dir);
+            this.levelPopup = false;
         } else {
             Notify.create({
                 type: "negative",
@@ -185,6 +160,10 @@ export default class extends Vue {
             this.rows[offset + i] = result.admins[i];
         }
         
+        this.lastMove.limit = limit;
+        this.lastMove.offset = offset;
+        this.lastMove.sort = sort;
+        this.lastMove.dir = dir;
     }
 }
 </script>

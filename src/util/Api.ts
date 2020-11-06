@@ -1,11 +1,6 @@
 import Gate from "../util/Gate";
 
 export default class Api{
-    static getUserData(index: string) {
-        throw new Error('Method not implemented.');
-    }
-    static host = "http://192.168.0.10:8299";
-
     /* 관리자 */
     static async getAdminList(limit = 10, offset = 0, sort = "id", dir= "asc"){
         try{
@@ -48,17 +43,32 @@ export default class Api{
         }
     }
 
-    static async setAdmin(id: number, name: string, password: string, level: number|null, activated: boolean|null){
+    static async setAdminLevel(id: number, level: number, subLevel: number){
+        const params = new URLSearchParams();
+        params.append('id', id.toString());
+        params.append('level', level.toString());
+        params.append('sub_level', level.toString());
+        
+        try{
+            await Gate({
+                method: "POST",
+                url: `/api/v1/admin/admin/mod`,
+                headers: {
+                    'Content-Type': "application/x-www-form-urlencoded"
+                },
+                params
+            });
+            return true;
+        }catch(error){
+            return false;
+        }
+    }
+
+    static async setAdmin(id: number, name: string, password: string){
         const params = new URLSearchParams();
         params.append('id', id.toString());
         params.append('name', name);
         params.append('password', password);
-        if(level != null){
-            params.append('level', level.toString());
-        }
-        if(activated != null){
-            params.append('activated', activated.toString());
-        }
         
         try{
             await Gate({
@@ -83,7 +93,7 @@ export default class Api{
             limit *= 2;
             const result = await Gate({
                 method: "GET",
-                url: `/api/v1/admin/admin/logs?limit=${limit}&offset=${offset}&admin_id=1&sort=${sort}&dir=${dir}`,
+                url: `/api/v1/admin/admin/logs?limit=${limit}&offset=${offset}&sort=${sort}&dir=${dir}`,
                 headers: {
                     "Content-Type": "application/json",
                 }

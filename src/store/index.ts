@@ -1,38 +1,45 @@
 import Vue from "vue";
-import Vuex from "vuex";
+import Vuex, { StoreOptions } from "vuex";
 import Gate from "../util/Gate";
-import Cookie from "../util/Cookie";
+import { getCookie, setCookie, deleteCookie } from "../util/Cookie";
 import axios from "axios";
 import { Notify } from "quasar";
 import router from "../router/index";
+import config from "../util/config";
 
 Vue.use(Vuex);
-const host = "http://192.168.0.10:8299"
-
-export default new Vuex.Store({
+interface State{
+    accessToken: string|null;
+    name: string|null;
+    level: number|null;
+    subLevel: number|null;
+    id: number|null;
+}
+const store: StoreOptions<State> = {
     state: {
-        loginToken: null,
+        accessToken: null,
         name: null,
         level: null,
-        subLevel: null
+        subLevel: null,
+        id: null
     },
     getters: {
         isLogin(state){
-            if(state.loginToken == null){
-                state.loginToken = Cookie.getCookie("token") as any;
+            if(state.accessToken == null){
+                state.accessToken = getCookie("access_token") as any;
             }
 
-            return state.loginToken != null;
+            return state.accessToken != null;
         }
     },
     mutations: {
         login(state, token) {
-            state.loginToken = token;
+            state.accessToken = token;
         },
         logout(state){
-            Cookie.deleteCookie("token");
-            Cookie.deleteCookie("refresh_token");
-            state.loginToken = null;
+            deleteCookie("access_token");
+            deleteCookie("refresh_token");
+            state.accessToken = null;
         }
     },
     actions: {
@@ -49,8 +56,8 @@ export default new Vuex.Store({
                         'Content-Type': "application/x-www-form-urlencoded"
                     }
                 });
-                Cookie.setCookie("token", result.data.result.access_token);
-                Cookie.setCookie("refresh_token", result.data.result.refresh_token);
+                setCookie("access_token", result.data.result.access_token);
+                setCookie("refresh_token", result.data.result.refresh_token);
                 context.commit("login", result.data.result.access_token);
 
                 return true;
@@ -59,7 +66,7 @@ export default new Vuex.Store({
             }
         },
         refreshToken: async (context) => {
-            const refreshToken = Cookie.getCookie("refresh_token") || "";
+            const refreshToken = getCookie("refresh_token") || "";
             if(refreshToken == null || refreshToken == ""){
                 return;
             }
@@ -68,14 +75,14 @@ export default new Vuex.Store({
             try{
                 const result = await axios({
                     method: "POST",
-                    url: host + "/api/v1/admin/token",
+                    url: config.api + "/api/v1/admin/token",
                     params,
                     headers: {
                         'Content-Type': "application/x-www-form-urlencoded"
                     }
                 });
-                context.state.loginToken = result.data.result.access_token;
-                Cookie.setCookie("token", result.data.result.access_token);
+                context.state.accessToken = result.data.result.access_token;
+                setCookie("access_token", result.data.result.access_token);
                 return true;
             }catch(error){
                 Notify.create({
@@ -103,10 +110,13 @@ export default new Vuex.Store({
                 context.state.name = result.data.result.name;
                 context.state.level = result.data.result.level;
                 context.state.subLevel = result.data.result.sub_level;
+                context.state.id = result.data.data.id;
             }catch(error){
                 // console.log([error]);
             }
         }
     },
     modules: {},
-});
+}
+
+export default new Vuex.Store(store);

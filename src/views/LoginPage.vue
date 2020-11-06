@@ -36,34 +36,34 @@ export default class extends Vue {
 
     async onSubmit(event: PageTransitionEvent) {
         event.preventDefault();
-        if(this.account.trim() != "" && this.password.trim() != ""){
-            const result = await this.$store.dispatch("login", {account: this.account, password: this.password});
-
-            if(result){
-                Notify.create({
-                    type: "positive",
-                    message: '로그인 성공',
-                    position: "top",
-                });
-                this.$store.dispatch("getAdminData");
-                this.$router.push("/");
-            }else{
-                Notify.create({
-                    type: "negative",
-                    message: '아이디 또는 비민번호가 일치하지 않습니다. 확인 후 다시 입력해 주시기 바랍니다.',
-                    position: "top",
-                });
-            }
-        }else{
-            Notify.create({
+        if(this.account.trim() == "" || this.password.trim() == ""){
+            
+            return Notify.create({
                 type: "negative",
                 message: '내용을 전부 채워주시기 바랍니다.',
                 position: "top",
             });
         }
+        const result = await this.$store.dispatch("login", {account: this.account.trim(), password: this.password.trim()});
+
+        if(result){
+            Notify.create({
+                type: "positive",
+                message: '로그인 성공',
+                position: "top",
+            });
+            this.$store.dispatch("getAdminData");
+            this.$router.push("/");
+        }else{
+            Notify.create({
+                type: "negative",
+                message: '아이디 또는 비민번호가 일치하지 않습니다. 확인 후 다시 입력해 주시기 바랍니다.',
+                position: "top",
+            });
+        }
     }
 
-    mounted(){
+    created(){
         if(this.$store.getters.isLogin){
             this.$router.push("/");
         }

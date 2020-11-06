@@ -4,24 +4,12 @@
             <slot></slot>
         </template>
 
-        <template v-slot:top-right>
+        <!-- <template v-slot:top-right>
             <q-input borderless dense debounce="300" v-model="filter" placeholder="Search">
                 <template v-slot:append>
                     <q-icon name="search" />
                 </template>
             </q-input>
-        </template>
-
-        <!-- <template v-slot:pagination="scope">
-            <span class="q-mr-md">{{scope.pagination.page}} page of {{scope.pagesNumber}} pages</span>
-
-            <q-btn v-if="scope.pagesNumber > 2" icon="first_page" color="grey-8" round dense flat :disable="scope.isFirstPage" @click="firstPage(scope)" />
-
-            <q-btn icon="chevron_left" color="grey-8" round dense flat :disable="scope.isFirstPage" @click="prevPage(scope)" />
-
-            <q-btn icon="chevron_right" color="grey-8" round dense flat :disable="scope.isLastPage" @click="nextPage(scope)" />
-
-            <q-btn v-if="scope.pagesNumber > 2" icon="last_page" color="grey-8" round dense flat :disable="scope.isLastPage" @click="lastPage(scope)" />
         </template> -->
     </q-table>
 </template>
@@ -37,7 +25,7 @@ export default class extends Vue {
     page = 1;
 
     pagination = {
-        rowsPerPage: 5,
+        rowsPerPage: 10,
         sortBy: null,
         descending: false,
         page: 1
