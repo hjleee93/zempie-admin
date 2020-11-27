@@ -55,7 +55,7 @@ export default class extends Vue {
     async movePage(limit: number, offset: number, sort: string, dir: string) {
         const result = await Api.getLogList(limit, offset, sort, dir);
         const logs = new Array(result.count);
-        for(let i = 0; i < this.logs.length; i++){
+        for(let i = 0; i < logs.length; i++){
             logs[i] = this.logs[i];
         }
         this.logs = logs;

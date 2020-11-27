@@ -8,9 +8,7 @@
                     Zempie admin page
                 </q-toolbar-title>
 
-                <q-space />
-
-                <q-btn flat @click="openPasswordPopup">
+                <q-btn flat @click="openPasswordPopup" v-if="$q.screen.name != 'xs'">
                     <q-icon name="person" />
                     {{$store.state.name}}
 
@@ -19,7 +17,7 @@
                     </q-tooltip>
                 </q-btn>
 
-                <q-btn stretch flat @click="logout">
+                <q-btn stretch flat @click="logout" v-if="$q.screen.name != 'xs'">
                     <q-icon name="logout" />Logout
                 </q-btn>
             </q-toolbar>
@@ -61,6 +59,21 @@
         <q-drawer v-model="left" show-if-above side="left" bordered content-class="bg-grey-2">
             <q-scroll-area class="fit">
                 <q-list>
+                    <q-btn flat @click="openPasswordPopup" v-if="$q.screen.name == 'xs'" style="width: 50%;">
+                        <q-icon name="person" />
+                        {{$store.state.name}}
+
+                        <q-tooltip>
+                            정보 수정
+                        </q-tooltip>
+                    </q-btn>
+
+                    <q-btn stretch flat @click="logout" v-if="$q.screen.name == 'xs'" style="width: 50%;">
+                        <q-icon name="logout" /> Logout
+                    </q-btn>
+
+                    <q-separator />
+                    
                     <template v-for="(categoryItem, index) in filteredCategoryList">
                         <q-expansion-item :key="index" expand-separator :icon="categoryItem.icon" :label="categoryItem.label" v-if="categoryItem.sub != false">
                             <q-list>
@@ -162,13 +175,13 @@ export default class MainLayout extends Vue {
             icon: "forum",
             label: "커뮤니티",
             sub: [
-                {
-                    label: "FAQ",
-                    path: "/faq",
-                },
+                // {
+                //     label: "FAQ",
+                //     path: "/faq",
+                // },
                 {
                     label: "1 : 1 문의",
-                    path: "/question",
+                    path: "/inquiry",
                 },
                 {
                     label: "공지사항",
@@ -219,7 +232,7 @@ export default class MainLayout extends Vue {
             title: "유저 상세보기",
         },
         {
-            path: "/community/question/sub/",
+            path: "/community/inquiry/sub/",
             title: "1 : 1 문의 상세보기",
         },
         {
@@ -341,8 +354,6 @@ export default class MainLayout extends Vue {
     
     
     
-    
-    
     passwordPopup = false;
     name = "";
     password = "";
@@ -374,19 +385,8 @@ export default class MainLayout extends Vue {
 
         const result = await Api.setAdmin(id, name.trim(), password.trim());
         if (result) {
-            Notify.create({
-                type: "positive",
-                message: "변경에 성공하였습니다.",
-                position: "top",
-            });
             this.$router.go(0);
             this.passwordPopup = false;
-        } else {
-            Notify.create({
-                type: "negative",
-                message: "변경하는 도중에 문제가 발생하였습니다.",
-                position: "top",
-            });
         }
     }
 }

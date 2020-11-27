@@ -1,14 +1,14 @@
 <template>
     <div>
-        <SubButtonTable :rows="rows" rowKey="id" :columns="columns" icon="pageview" @subEvent="openPopup">
-            <q-btn class="q-mr-sm" color="primary" label="새 글작성" @click="moveCreatePage" />
+        <SubButtonTable :rows="rows" rowKey="id" :columns="columns" icon="pageview" @subEvent="openPopup" @movePage="movePage">
+            <q-btn class="q-mr-sm" color="primary" label="새 공지사항 작성" @click="moveCreatePage" />
         </SubButtonTable>
 
         <q-dialog v-model="popup" v-if="selectedItem != null">
-            <q-card class="my-card">
-                <q-card-section class="q-pt-none">
+            <q-card style="wdith: 1200px; max-width: 1200px;">
+                <q-card-section>
                     <div class="row items-center q-ma-md">
-                        <div class="row items-center q-mb-md" style="width: 600px;">
+                        <div class="row items-center q-mb-md" style="width: 100%;">
                             <div class="col-3">
                                 제목
                             </div>
@@ -17,7 +17,16 @@
                             </div>
                         </div>
 
-                        <div class="row items-center q-mb-md" style="width: 600px;">
+                        <div class="row items-center q-mb-md" style="width: 100%;">
+                            <div class="col-3">
+                                카테고리
+                            </div>
+                            <div class="col-9">
+                                <q-select outlined v-model="selectedItem.category" :options="options" />
+                            </div>
+                        </div>
+
+                        <div class="row items-center q-mb-md" style="width: 100%;">
                             <div class="col-3">
                                 내용
                             </div>
@@ -32,7 +41,7 @@
 
                 <q-card-actions align="right">
                     <q-btn v-close-popup color="primary" label="닫기" />
-                    <q-btn color="negative" label="삭제" @click="deleteNotice" />
+                    <q-btn color="red" label="삭제" @click="deleteNotice" />
                     <q-btn color="positive" label="저장" @click="modifyNotice" />
                 </q-card-actions>
             </q-card>
@@ -50,15 +59,16 @@ import { Notify, Dialog } from "quasar";
     components: { SubButtonTable },
 })
 export default class extends Vue {
-    rows = [];
+    rows: any[] = [];
     popup = false;
     selectedItem: any = null;
 
     columns = [
-        { name: "번호", label: "번호", field: "id", align: "left"},
-        { name: "카테고리", label: "카테고리", field: "type"},
-        { name: "제목", label: "제목", field: "title"},
-        { name: "sub", label: "상세 보기" },
+        { label: "번호", name: "id", field: "id", align: "left", sortable: true, sort: () => false},
+        { label: "카테고리", name: "category", field: "category", align: "left", sortable: true, sort: () => false},
+        { label: "제목", name: "title", field: "title", align: "left", sortable: true, sort: () => false},
+        // { label: "조회수", name: "조회수", field: "title"},
+        { label: "상세 보기", name: "sub" },
     ];
 
     moveCreatePage() {
@@ -70,10 +80,8 @@ export default class extends Vue {
         this.selectedItem = JSON.parse(JSON.stringify(row));
     }
 
-    async mounted() {
-        if (this.$store.getters.isLogin) {
-            this.rows = await Api.getNoticeList();
-        }
+    async created() {
+        await this.movePage(10, 0, "id", "asc");
     }
 
     deleteNotice() {
@@ -85,24 +93,15 @@ export default class extends Vue {
         }).onOk(async () => {
             const result = await Api.deleteNotice(this.selectedItem.id);
             if (result) {
-                Notify.create({
-                    type: "positive",
-                    message: "공지사항이 성공적으로 삭제되었습니다.",
-                    position: "top",
-                });
-                this.rows = this.rows.filter((item: any) => item.id != this.selectedItem.id);
                 this.selectedItem = null;
-            } else {
-                Notify.create({
-                    type: "negative",
-                    message: "공지사항을 삭제하는 도중에 문제가 발생하였습니다.",
-                    position: "top",
-                });
+                this.movePage(this.lastMove.limit, this.lastMove.offset, this.lastMove.sort, this.lastMove.dir);
             }
         })
     }
 
-
+    options = [
+        "공지", "점검", "업데이트", "이벤트", "기타"
+    ]
     async modifyNotice(){
         if(this.selectedItem.title.trim() == "" || this.selectedItem.content.trim() == ""){
             return Notify.create({
@@ -111,21 +110,38 @@ export default class extends Vue {
                 position: "top",
             });
         }
-        const result = await Api.modifyNotice(this.selectedItem.id, this.selectedItem.title, this.selectedItem.content);
+        const result = await Api.modifyNotice(this.selectedItem.id, this.selectedItem.title, this.selectedItem.content, this.options.indexOf(this.selectedItem.category));
         if (result) {
-            Notify.create({
-                type: "positive",
-                message: "공지사항이 성공적으로 수정되었습니다.",
-                position: "top",
-            });
             this.popup = false;
-        } else {
-            Notify.create({
-                type: "negative",
-                message: "공지사항을 수정하는 도중에 문제가 발생하였습니다.",
-                position: "top",
-            });
+            this.movePage(this.lastMove.limit, this.lastMove.offset, this.lastMove.sort, this.lastMove.dir);
         }
+    }
+
+
+    lastMove = {
+        limit: 0,
+        offset: 0,
+        sort: "",
+        dir: ""
+    }
+
+    async movePage(limit: number, offset: number, sort: string, dir: string) {
+        const result = await Api.getNoticeList(limit, offset, sort, dir);
+        const notices = new Array(result.count).fill({id:null});
+        for(let i = 0; i < notices.length; i++){
+            notices[i] = this.rows[i];
+        }
+        this.rows = notices;
+            
+        for(let i = 0; i < result.notices.length; i++){
+            this.rows[offset + i] = result.notices[i];
+            this.rows[offset + i].category = this.options[this.rows[offset + i].category];
+        }
+        
+        this.lastMove.limit = limit;
+        this.lastMove.offset = offset;
+        this.lastMove.sort = sort;
+        this.lastMove.dir = dir;
     }
 }
 </script>

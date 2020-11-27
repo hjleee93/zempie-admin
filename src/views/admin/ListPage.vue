@@ -7,7 +7,7 @@
         <Table :rows="rows" :columns="columns" rowKey="id" v-else @movePage="movePage" />
 
         <q-dialog v-model="levelPopup" v-if="selectedRow != null">
-            <q-card class="my-card" style="width: 600px;">
+            <q-card class="my-card" style="width: 600px;" v-if="selectedRow.level < 10">
                 <q-card-section class="q-pt-none">
                     <div class="items-center q-ma-md">
                         <div class="row items-center" v-if="$store.state.level >= 10">
@@ -39,6 +39,10 @@
                     <q-btn v-close-popup color="primary" label="닫기" />
                     <q-btn color="positive" label="저장" @click="submit" />
                 </q-card-actions>
+            </q-card>
+
+            <q-card class="row wrap justify-center items-center" style="width: 600px; height: 100px;" v-else>
+                <div>Master 권한의 계정은 권한을 변경할 수 없습니다.</div>
             </q-card>
         </q-dialog>
     </div>
@@ -73,7 +77,7 @@ export default class extends Vue {
         }
         return columns;
     }
-
+    
     levelPopup = false;
     selectedRow = {
         level: 1,
@@ -120,7 +124,7 @@ export default class extends Vue {
 
     async submit() {
         const id = this.selectedRow.id;
-        const level = this.$store.state.name == "master" ? this.selectedRow.level : null;
+        const level = this.$store.state.level == 10 ? this.selectedRow.level : null;
 
         if (id == null || level == null) {
             Notify.create({
@@ -130,34 +134,23 @@ export default class extends Vue {
             });
             return;
         }
-
-        const result = await Api.setAdminLevel(id, level, level);
+        const result = await Api.setAdminLevel(id, level);
         if (result) {
-            Notify.create({
-                type: "positive",
-                message: "변경에 성공했습니다.",
-                position: "top",
-            });
             this.movePage(this.lastMove.limit, this.lastMove.offset, this.lastMove.sort, this.lastMove.dir);
             this.levelPopup = false;
-        } else {
-            Notify.create({
-                type: "negative",
-                message: "변경하는 도중에 문제가 발생하였습니다.",
-                position: "top",
-            });
         }
     }
 
     async movePage(limit: number, offset: number, sort: string, dir: string) {
         const result = await Api.getAdminList(limit, offset, sort, dir);
         const admins = new Array(result.count).fill({id:null});
-        for(let i = 0; i < this.rows.length; i++){
+        for(let i = 0; i < admins.length; i++){
             admins[i] = this.rows[i];
         }
         this.rows = admins;
         for(let i = 0; i < result.admins.length; i++){
             this.rows[offset + i] = result.admins[i];
+            this.rows[offset + i]["created_at"] = new Date(this.rows[offset + i]['created_at']).toLocaleString();
         }
         
         this.lastMove.limit = limit;

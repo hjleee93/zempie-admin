@@ -132,7 +132,7 @@
                 </q-tab-panel>
 
                 <q-tab-panel name="info">
-                    <DetailTable :rows="rows"  :rowKey="rowKey" :columns="columns" link="/community/question/sub/" />
+                    <DetailTable :rows="rows"  :rowKey="rowKey" :columns="columns" link="/community/inquiry/sub/" />
                 </q-tab-panel>
             </q-tab-panels>
         </q-card>

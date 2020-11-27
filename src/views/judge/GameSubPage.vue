@@ -28,43 +28,32 @@
 
         <div>
             <iframe ref="game" :src="iframeLink" frameborder="0" width="600px" height="800px"></iframe>
-
-            <q-expansion-item v-model="controllerOption" label="컨트롤러 옵션" switch-toggle-side class="q-mb-md">
-                <q-card>
-                    <q-card-section>
-                        <q-btn class="q-mr-md" color="primary" label="시작" @click="startGame" />
-                        <q-btn class="q-mr-md" color="primary" label="재시작" @click="restartGame" />
-                        <q-btn class="q-mr-md" color="primary" label="일시정지" @click="pauseGame" />
-                        <q-btn class="q-mr-md" color="primary" label="일시정지 해제" @click="resumeGame" />
-                        <q-btn class="q-mr-md" color="primary" label="사운드 온" @click="soundOnGame" />
-                        <q-btn class="q-mr-md" color="primary" label="사운드 오프" @click="soundOffGame" />
-                    </q-card-section>
-                </q-card>
-            </q-expansion-item>
         </div>
 
-        <q-expansion-item v-model="judgeOption" label="심사 옵션" switch-toggle-side class="q-mb-md">
+        <div class="q-mt-md q-mb-md">
+            <div class="row justify-start items-center">
+                <div class="col-12 col-md-2 text-weight-bold text-h6">
+                    반려 사유
+                </div>
+
+                <div class="col-12 col-md-10">
+                    <q-input v-model="reason" outlined type="text" />
+                </div>
+            </div>
+        </div>
+
+        <!-- <q-expansion-item v-model="judgeOption" label="심사 옵션" switch-toggle-side class="q-mb-md">
             <q-card>
                 <q-card-section>
                     <div class="row q-mb-md">
                         <q-option-group inline v-model="selectedOption" :options="options" color="primary" type="checkbox" />
                     </div>
-
-                    <div class="row justify-start items-center">
-                        <div class="col-12 col-md-2 text-weight-bold text-h6">
-                            반려 사유
-                        </div>
-
-                        <div class="col-12 col-md-10">
-                            <q-input v-model="reason" outlined type="text" />
-                        </div>
-                    </div>
                 </q-card-section>
             </q-card>
-        </q-expansion-item>
+        </q-expansion-item> -->
 
-        <div class="row justify-between">
-            <q-btn class="q-pl-md q-pr-md" :disable="!isReject" color="primary" label="반려" @click="reject" />
+        <div class="row q-gutter-md">
+            <q-btn class="q-pl-md q-pr-md" :disable="!isReject" color="red" label="반려" @click="reject" />
             <q-btn class="q-pl-md q-pr-md" :disable="isReject" color="primary" label="승인" @click="submit" />
         </div>
     </div>
@@ -72,11 +61,15 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import Api from "../../util/Api";
+import { Notify } from "quasar";
 
 @Component({
     components: {},
 })
 export default class extends Vue {
+    index = 0;
+
     gameWindow: Window|null = null;
     iframeLink = "";
 
@@ -84,7 +77,7 @@ export default class extends Vue {
     titleOption = false;
     description = "게임 설명입니다.";
 
-    imgLink = "https://s3.ap-northeast-2.amazonaws.com/zeminiplay.com/games/imgs/LEGP-r3SX.png";
+    imgLink = "";
 
     controllerOption = false;
     selectedOption = [];
@@ -102,88 +95,39 @@ export default class extends Vue {
         return this.selectedOption.length > 0 || this.reason.length > 0;
     }
 
-    startGame(){
-        // if (this.status == STATUS.READY || this.status == STATUS.END) {
-            // this.status = STATUS.START;
-            // this.score = 0;
-            this.gameWindow && this.gameWindow.postMessage({
-                type: "@gamePlay",
-            },"*");
-        // }
-    }
-
-    restartGame(){
-        // if (this.status == STATUS.END || this.status == STATUS.PAUSE) {
-            // this.status = STATUS.START;
-            // this.score = 0;
-            this.gameWindow && this.gameWindow.postMessage({
-                type: "@gameRetry",
-            },"*");
-        // }
-    }
-
-    pauseGame() {
-        // if (this.status == STATUS.START) {
-            // this.status = STATUS.PAUSE;
-            this.gameWindow && this.gameWindow.postMessage({
-                type: "@gamePause",
-            },"*");
-        // }
-    }
-
-    resumeGame() {
-        // if (this.status == STATUS.PAUSE) {
-            // this.status = STATUS.START;
-            this.gameWindow && this.gameWindow.postMessage({
-                type: "@gameResume",
-            },"*");
-        // }
-    }
-
-    soundOnGame(){
-        this.gameWindow && this.gameWindow.postMessage({
-            type: "@soundOn",
-        },"*");
-    }
-
-    soundOffGame(){
-        this.gameWindow && this.gameWindow.postMessage({
-            type: "@soundOff",
-        },"*");
-    }
-
-    reject(){
-        if(!this.isReject){
-            return;
+    async created(){
+        this.index = parseInt(this.$route.params.index) || 0;
+        const result = await Api.getProjectItem(this.index);
+        if(result === false){
+            Notify.create({
+                type: "negative",
+                message: "존재하지 않는 프로젝트입니다.",
+                position: "top",
+            });
+            this.$router.go(-1);
         }
+        this.iframeLink = process.env.VUE_APP_LAUNCHER_LINK + encodeURIComponent(result.version.url);
+        this.title = result.project.name;
+        this.description = result.project.description;
+        this.imgLink = result.project.picture;
     }
 
-    submit(){
+    async reject(){
         if(this.isReject){
-            return;
+            const result = await Api.JudgeProject("fail", this.index, this.reason);
+            if(result){
+                this.$router.push("/judge/game");
+            }
         }
     }
 
-    created(){
-        this.iframeLink = "http://zeminiplay.com/games/data/papa/index.html";
-    }
-
-    mounted(){
-        window.addEventListener("message", (event) => {
-            switch (event.data.type) {
-                case "@gameReady":
-                    // this.status = STATUS.READY;
-                    this.gameWindow = (this.$refs.game as HTMLIFrameElement).contentWindow;
-                    break;
-                // case "@updateScore":
-                    // this.score = event.data.score;
-                    // break;
-                // case "@gameOver":
-                    // this.status = STATUS.END;
-                    // this.score = event.data.score;
-                    // break;
+    async submit(){
+        if(!this.isReject){
+            const result = await Api.JudgeProject("passed", this.index, "");
+            if(result){
+                this.$router.push("/judge/game");
             }
-        });
+        }
     }
 }
 </script>

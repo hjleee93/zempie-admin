@@ -37,7 +37,7 @@ export default class extends Vue {
         { name: '카테고리', label: '카테고리', field: '카테고리' },
         { name: '제목', label: '제목', field: '제목' },
         { name: '조회수', label: '조회수', field: '조회수' },
-        { name: 'detail', label: "상세 보기"}
+        // { name: 'detail', label: "상세 보기"}
     ];
 
     moveCreatePage(){

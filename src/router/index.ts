@@ -15,8 +15,8 @@ import UserListSub from "../views/user/ListSubPage.vue";
 //커뮤니티
 import CommunityFAQ from "../views/community/FAQPage.vue";
 import CommunityFAQCreate from "../views/community/FAQCreatePage.vue";
-import CommunityQuestion from "../views/community/QuestionPage.vue";
-import CommunityQuestionSub from "../views/community/QuestionSubPage.vue";
+import CommunityInquiry from "../views/community/InquiryPage.vue";
+import CommunityInquirySub from "../views/community/InquirySubPage.vue";
 import CommunityNotice from "../views/community/NoticePage.vue";
 import CommunityNoticeCreate from "../views/community/NoticeCreatePage.vue";
 // 게임관리
@@ -124,15 +124,21 @@ const routes: Array<RouteConfig> = [
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {
-        path: "/community/question",
-        name: "CommunityQuestion",
-        component: CommunityQuestion,
+        path: "/community/faq/sub/:index",
+        name: "CommunityFAQCreate",
+        component: CommunityFAQCreate,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {
-        path: "/community/question/Sub/:index",
-        name: "CommunityQuestionSub",
-        component: CommunityQuestionSub,
+        path: "/community/inquiry",
+        name: "CommunityInquiry",
+        component: CommunityInquiry,
+        beforeEnter: (_to, _from, next) => {loginCheck(next)}
+    },
+    {
+        path: "/community/inquiry/sub/:index",
+        name: "CommunityInquirySub",
+        component: CommunityInquirySub,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {

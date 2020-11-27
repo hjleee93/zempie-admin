@@ -1,10 +1,9 @@
 import axios from "axios";
 import store from "../store/index";
-import config from "../util/config";
+import { Notify }from "quasar";
 
 const instance = axios.create({
-    baseURL: config.api,
-    timeout: 1000,
+    baseURL: process.env.VUE_APP_API_LINK
 });
 
 instance.interceptors.request.use(
@@ -22,14 +21,24 @@ instance.interceptors.response.use(
         return response;
     },
     async function(error) {
-        const errorAPI = error.config;
+        // console.log([error])
+        
+        const errorConfig = error.config;
         if (error.response.data.error == "Unauthorized") {
             const result = await store.dispatch("refreshToken");
             if(result){
-                return await instance(errorAPI);
+                return await instance(errorConfig);
             }
+        }else{
+            // Notify.create({
+            //     type: "negative",
+            //     message: error.response.data.error,
+            //     position: "top",
+            // });
         }
+        
         return Promise.reject(error);
+
     }
 );
 

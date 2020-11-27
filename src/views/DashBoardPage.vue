@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="row q-mb-md">
-            <div class="col">
+            <div class="col-12 col-lg-6 q-pa-sm">
                 <line-chart label="접속자 수" :data="accessorData">
                     <q-btn-toggle
                         v-model="accessorSelected"
@@ -16,10 +16,8 @@
                     />
                 </line-chart>
             </div>
-        </div>
 
-        <div class="row">
-            <div class="col">
+            <div class="col-12 col-lg-6 q-pa-sm">
                 <line-chart label="플레이 수" :data="playData">
                     <q-btn-toggle
                         v-model="playSelected"
@@ -51,7 +49,7 @@ export default class extends Vue {
     accessorData = [24, 14, 14, 25, 29, 27, 95];
     playData = [11, 22, 82, 29, 54, 52, 24];
 
-    accessorSelected = "day"
-    playSelected = "day"
+    accessorSelected = "day";
+    playSelected = "day";
 }
 </script>

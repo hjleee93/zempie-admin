@@ -1,7 +1,23 @@
 <template>
     <div class="notice-create">
-        <div class="q-mb-md">
-            <q-input outlined v-model="title" label="제목" />
+        <div class="q-mb-md row justify-start items-center">
+            <div class="col-12 col-md-2 text-weight-bold text-h6">
+                제목
+            </div>
+            
+            <div class="col-12 col-md-10">
+                <q-input outlined v-model="title" label="제목" />
+            </div>
+        </div>
+
+        <div class="row justify-start q-mb-md items-center">
+            <div class="col-12 col-md-2 text-weight-bold text-h6">
+                카테고리
+            </div>
+
+            <div class="col-12 col-md-10">
+                <q-select outlined v-model="category" :options="options" />
+            </div>
         </div>
 
         <div class="q-mb-md">
@@ -10,14 +26,13 @@
 
         <div class="row justify-between">
             <q-btn class="q-pl-md q-pr-md" color="primary" label="취소" @click="cancel" />
-            <q-btn class="q-pl-md q-pr-md" color="primary" label="등록" @click="submit" />
+            <q-btn class="q-pl-md q-pr-md" color="primary" label="등록" @click="submit" :disable="submitDisble" />
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import { Notify } from "quasar";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import Api from "../../util/Api";
 
 @Component({
@@ -26,33 +41,39 @@ import Api from "../../util/Api";
 export default class extends Vue {
     title = "";
     content = "";
+    category = "공지";
+    options = [
+        "공지", "점검", "업데이트", "이벤트", "기타"
+    ];
+
+    submitDisble = true;
 
     cancel() {
         this.$router.go(-1);
     }
 
-    async submit() {
+    @Watch("title")
+    onChangeTitle(){
+        this.onChange();
+    }
+
+    @Watch("content")
+    onChangeContent(){
+        this.onChange();
+    }
+
+    onChange(){
         if(this.title.trim() == "" || this.content.trim() == ""){
-            Notify.create({
-                type: "negative",
-                message: "내용을 전부 채워주시기 바랍니다.",
-                position: "top",
-            });
+            this.submitDisble = true;
+        }else{
+            this.submitDisble = false;
         }
-        const result = await Api.addNotice(this.title, this.content);
+    } 
+
+    async submit() {
+        const result = await Api.addNotice(this.title, this.content, this.options.indexOf(this.category));
         if (result) {
-            Notify.create({
-                type: "positive",
-                message: "공지사항이 성공적으로 작성되었습니다.",
-                position: "top",
-            });
             this.$router.push("/community/notice");
-        } else {
-            Notify.create({
-                type: "negative",
-                message: "공지사항을 작성하는 도중에 문제가 발생하였습니다.",
-                position: "top",
-            });
         }
     }
 }

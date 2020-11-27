@@ -5,7 +5,6 @@ import { getCookie, setCookie, deleteCookie } from "../util/Cookie";
 import axios from "axios";
 import { Notify } from "quasar";
 import router from "../router/index";
-import config from "../util/config";
 
 Vue.use(Vuex);
 interface State{
@@ -62,6 +61,7 @@ const store: StoreOptions<State> = {
 
                 return true;
             }catch(error){
+                // console.log([error]);
                 return false;
             }
         },
@@ -75,7 +75,7 @@ const store: StoreOptions<State> = {
             try{
                 const result = await axios({
                     method: "POST",
-                    url: config.api + "/api/v1/admin/token",
+                    url: process.env.VUE_APP_API_LINK + "/api/v1/admin/token",
                     params,
                     headers: {
                         'Content-Type': "application/x-www-form-urlencoded"
@@ -85,6 +85,7 @@ const store: StoreOptions<State> = {
                 setCookie("access_token", result.data.result.access_token);
                 return true;
             }catch(error){
+                // console.log([error]);
                 Notify.create({
                     type: "negative",
                     message: '해당 계정의 토큰이 만료되었습니다. 다시 로그인해주시기 바랍니다.',
@@ -110,7 +111,7 @@ const store: StoreOptions<State> = {
                 context.state.name = result.data.result.name;
                 context.state.level = result.data.result.level;
                 context.state.subLevel = result.data.result.sub_level;
-                context.state.id = result.data.data.id;
+                // context.state.id = result.data.data.id;
             }catch(error){
                 // console.log([error]);
             }
