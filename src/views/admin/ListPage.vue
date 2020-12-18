@@ -1,10 +1,8 @@
 <template>
     <div>
-        <SubButtonTable :rows="rows" :columns="columns" rowKey="id" @subEvent="openPopup" v-if="$store.state.level >= 10" icon="create" @movePage="movePage">
+        <MainTable rowKey="id" :columns="columns" apiLink="admin/list" columnName="admins" @subEvent="openPopup">
             <q-btn color="primary" @click="moveSubPage">관리자 생성</q-btn>
-        </SubButtonTable>
-
-        <Table :rows="rows" :columns="columns" rowKey="id" v-else @movePage="movePage" />
+        </MainTable>
 
         <q-dialog v-model="levelPopup" v-if="selectedRow != null">
             <q-card class="my-card" style="width: 600px;" v-if="selectedRow.level < 10">
@@ -50,34 +48,23 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import SubButtonTable from "../../components/SubButtonTable.vue";
-import Table from "../../components/Table.vue";
+import MainTable, { TableBus } from "../../components/MainTable.vue";
 import Api from "../../util/Api";
 import { Notify } from "quasar";
 
 @Component({
     components: {
-        SubButtonTable,
-        Table,
+        MainTable,
     },
 })
 export default class extends Vue {
-    rows: any[] = [];
-
-    get columns() {
-        const columns = [
-            { label: "아이디", name: "account", field: "account", align: "left", sortable: true, sort: ()=>false },
-            { label: "이름", name: "name", field: "name", align: "left", sortable: true, sort: ()=>false },
-            { label: "권한", name: "level", field: "level", align: "left", sortable: true, sort: ()=>false },
-            { label: "생성일", name: "created_at", field: "created_at", align: "left", sortable: true, sort: ()=>false },
-            { label: "권한 변경", name: "sub" },
-        ];
-        if (this.$store.state.level < 3) {
-            columns.splice(columns.length - 1, 1);
-        }
-        return columns;
-    }
-    
+    columns = [
+        { label: "인덱스", name: "id", field: "id", align: "left", sortable: true },
+        { label: "계정", name: "account", field: "account", align: "left", sortable: true },
+        { label: "이름", name: "name", field: "name", align: "left", sortable: true },
+        { label: "권한", name: "level", field: "level", align: "left", sortable: true, event: true },
+        { label: "생성일", name: "created_at", field: "created_at", align: "left", sortable: true },
+    ];
     levelPopup = false;
     selectedRow = {
         level: 1,
@@ -97,16 +84,6 @@ export default class extends Vue {
         { label: "심사", value: 5 },
         { label: "게임관리", value: 6 },
     ];
-    lastMove = {
-        limit: 10,
-        offset: 0,
-        sort: "id",
-        dir: "asc",
-    };
-
-    async created() {
-        await this.movePage(10, 0, "id", "asc");
-    }
 
     moveSubPage() {
         this.$router.push(this.$route.path + "/create");
@@ -136,27 +113,9 @@ export default class extends Vue {
         }
         const result = await Api.setAdminLevel(id, level);
         if (result) {
-            this.movePage(this.lastMove.limit, this.lastMove.offset, this.lastMove.sort, this.lastMove.dir);
+            TableBus.$emit("reload");
             this.levelPopup = false;
         }
-    }
-
-    async movePage(limit: number, offset: number, sort: string, dir: string) {
-        const result = await Api.getAdminList(limit, offset, sort, dir);
-        const admins = new Array(result.count).fill({id:null});
-        for(let i = 0; i < admins.length; i++){
-            admins[i] = this.rows[i];
-        }
-        this.rows = admins;
-        for(let i = 0; i < result.admins.length; i++){
-            this.rows[offset + i] = result.admins[i];
-            this.rows[offset + i]["created_at"] = new Date(this.rows[offset + i]['created_at']).toLocaleString();
-        }
-        
-        this.lastMove.limit = limit;
-        this.lastMove.offset = offset;
-        this.lastMove.sort = sort;
-        this.lastMove.dir = dir;
     }
 }
 </script>

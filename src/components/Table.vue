@@ -25,7 +25,7 @@ export default class extends Vue {
     page = 1;
 
     pagination = {
-        rowsPerPage: 10,
+        rowsPerPage: 20,
         sortBy: null,
         descending: false,
         page: 1

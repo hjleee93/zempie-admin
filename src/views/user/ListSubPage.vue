@@ -120,7 +120,7 @@
                 </q-tab-panel>
                 
                 <q-tab-panel name="itemUsed">
-                   아이템 사용 기록
+                    아이템 사용 기록
                 </q-tab-panel>
 
                 <q-tab-panel name="exchange">
@@ -132,7 +132,9 @@
                 </q-tab-panel>
 
                 <q-tab-panel name="info">
-                    <DetailTable :rows="rows"  :rowKey="rowKey" :columns="columns" link="/community/inquiry/sub/" />
+                    <!-- <DetailTable :rows="rows"  :rowKey="rowKey" :columns="columns" link="/community/inquiry/sub/" /> -->
+
+                    <MainTable rowKey="id" :columns="columns" apiLink="support/inquiries" columnName="inquiries" @subEvent="subEvent" :apiParam="{user_id: index}" />
                 </q-tab-panel>
             </q-tab-panels>
         </q-card>
@@ -143,12 +145,14 @@
 import { Component, Vue } from "vue-property-decorator";
 import LineChart from "../../components/LineChart.vue";
 import DetailTable from "../../components/DetailTable.vue";
+import MainTable from "../../components/MainTable.vue";
 // import Api from "../../util/Api";
 
 @Component({
     components: {
         LineChart,
         DetailTable,
+        MainTable,
     },
 })
 export default class extends Vue {
@@ -157,24 +161,24 @@ export default class extends Vue {
 
     rowKey = "번호"
 
-    rows = [
-        {
-            "번호" : "1",
-            "아이디" : "person1",
-            "카테고리" : "결제",
-            "제목" : "결제가 2번 되었습니다.",
-            "상태" : "답변완료",
-            "등록일" : "2020.10.12 10.44.12",
-        },
-        {
-            "번호" : "2",
-            "아이디" : "person2",
-            "카테고리" : "건의",
-            "제목" : "개발자 아이템을 만들어 주세요",
-            "상태" : "대기",
-            "등록일" : "2020.10.11 10.44.12",
-        },
-    ];
+    // rows = [
+    //     {
+    //         "번호" : "1",
+    //         "아이디" : "person1",
+    //         "카테고리" : "결제",
+    //         "제목" : "결제가 2번 되었습니다.",
+    //         "상태" : "답변완료",
+    //         "등록일" : "2020.10.12 10.44.12",
+    //     },
+    //     {
+    //         "번호" : "2",
+    //         "아이디" : "person2",
+    //         "카테고리" : "건의",
+    //         "제목" : "개발자 아이템을 만들어 주세요",
+    //         "상태" : "대기",
+    //         "등록일" : "2020.10.11 10.44.12",
+    //     },
+    // ];
 
     columns = [
         { name: '번호', label:"번호", field: '번호', align: 'left' },

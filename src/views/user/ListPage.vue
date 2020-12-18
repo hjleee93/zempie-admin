@@ -16,7 +16,7 @@
             </div>
         </div> -->
 
-        <SubButtonTable rowKey="id" icon="pageview" :rows="viewRows" :columns="columns" @subEvent="openPopup" @movePage="movePage" />
+        <MainTable rowKey="id" :columns="columns" apiLink="user/list" columnName="users" @subEvent="openPopup" />
 
         <q-dialog v-model="popup" v-if="selectedItem != null">
             <q-card style="width: 700px; max-width: 80vw; height: 500px;">
@@ -33,15 +33,6 @@
 
                 <q-tab-panels v-model="tab" animated>
                     <q-tab-panel name="data">
-                        <div class="row q-mb-md">
-                            <div class="col-12 text-weight-bold text-h6">
-                                ID
-                            </div>
-
-                            <div class="col-12">
-                                {{ selectedItem.id }}
-                            </div>
-                        </div>
                         <div class="row q-mb-md">
                             <div class="col-12 text-weight-bold text-h6">
                                 이름
@@ -69,6 +60,36 @@
                                 {{ selectedItem.email }}
                             </div>
                         </div>
+                        <div class="row q-mb-md">
+                            <div class="col-12 text-weight-bold text-h6">
+                                개발자 여부
+                            </div>
+
+                            <div class="col-12">
+                                {{ selectedItem.is_developer }}
+                            </div>
+                        </div>
+                        <div class="row q-mb-md">
+                            <div class="col-12 text-weight-bold text-h6">
+                                채널
+                            </div>
+
+                            <div class="col-12">
+                                <a :href="channelLink" target="_blank">
+                                    채널 열기
+                                </a>
+                                <!-- {{ selectedItem.is_developer }} -->
+                            </div>
+                        </div>
+                        <div class="row q-mb-md">
+                            <div class="col-12 text-weight-bold text-h6">
+                                정지 횟수
+                            </div>
+
+                            <div class="col-12">
+                                {{ selectedItem.banned }}
+                            </div>
+                        </div>
 
                         <div class="row q-mb-md">
                             <q-btn color="primary" class="q-mr-sm" label="정지" />
@@ -94,7 +115,14 @@
                     </q-tab-panel> -->
 
                     <q-tab-panel name="info">
-                        <SubButtonTable rowKey="id" icon="pageview" :rows="subrows" :columns="subcolumns" @movePage="moveSubPage" @subEvent="moveInquirySubPage" />
+                        <MainTable 
+                            rowKey="id" 
+                            :columns="subcolumns" 
+                            apiLink="support/inquiries" 
+                            columnName="inquiries" 
+                            @subEvent="moveInquirySubPage" 
+                            :apiParam="{user_id: selectedItem.id}"
+                        /> 
                     </q-tab-panel>
                 </q-tab-panels>
             </q-card>
@@ -105,10 +133,14 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import SubButtonTable from "../../components/SubButtonTable.vue";
+import MainTable from "../../components/MainTable.vue";
 import Api from "../../util/Api";
 
 @Component({
-    components: { SubButtonTable },
+    components: { 
+        SubButtonTable,
+        MainTable
+    },
 })
 export default class extends Vue {
     option = 1;
@@ -124,56 +156,28 @@ export default class extends Vue {
         {label: "상태", value: 1},
         {label: "가입/최종방문일", value: 2},
     ]
-
-    rows: any[] = [];
-
-    get viewRows(){
-        const rows = this.rows.map(x => {
-            x["created_at"] = new Date(x["created_at"]).toLocaleString();
-            x["updated_at"] = new Date(x["updated_at"]).toLocaleString();
-            return x;
-        })
-        return rows;
-    }
+    channelLink = "";
 
     columns = [
-        { label: "아이디", name: "id", field: "id", align: "left", sortable: true, sort: () => false },
-        { label: "닉네임", name: "name", field: "name", align: "left", sortable: true, sort: () => false },
-        { label: "생성일", name: "created_at", field: "created_at", align: "left", sortable: true, sort: () => false },
-        // { label: "최종 방문일", name: "updated_at",  field: "updated_at", align: "left", sortable: true, sort: () => false },
-        { label: "상세 보기", name: "sub", },
+        { label: "인덱스", name: "id", field: "id", align: "left", sortable: true },
+        { label: "닉네임", name: "name", field: "name", align: "left", sortable: true, event: true },
+        { label: "이메일", name: "email", field: "email", align: "left", sortable: true },
+        { label: "계정 생성일", name: "created_at", field: "created_at", align: "left", sortable: true },
     ];
 
     openPopup(row: any) {
         this.selectedItem = JSON.parse(JSON.stringify(row));
         this.popup = true;
         this.tab = "data";
-        this.subrows = [];
+        this.channelLink = process.env.VUE_APP_ZEMPIE_LINK+'channel/'+this.selectedItem.channel_id;
     }
 
-    async created() {
-        await this.movePage(30, 0, "id", "asc");
-    }
-
-    async movePage(limit: number, offset: number, sort: string, dir: string) {
-        const result = await Api.getUserList(limit, offset, sort, dir);
-        if(result !== false){
-            const users = new Array(result.count);
-            for (let i = 0; i < users.length; i++) {
-                users[i] = this.rows[i];
-            }
-            this.rows = users;
-            for (let i = 0; i < result.users.length; i++) {
-                this.rows[offset + i] = result.users[i];
-            }
-        }
-    }
+    // async created() {}
 
     selectedItem: any = null;
     popup = false;
     tab = "data";
 
-    subrows: any[] = [];
     subCategory = [
         "버그/기술",
         "불량 유저",
@@ -185,29 +189,14 @@ export default class extends Vue {
     ]
 
     subcolumns = [
-        { label: "번호", name: "id", field: "id", align: "left", sortable: true, sort: () => false},
-        { label: "카테고리", name: "category", field: "category", sortable: true, sort: () => false},
-        { label: "제목", name: "title", field: "title", sortable: true, sort: () => false},
-        { label: "질문일", name: "date", field: "date", sortable: true, sort: () => false},
-        { label: "상세 보기", name: "sub" },
+        { label: "번호", name: "id", field: "id", align: "left", sortable: true},
+        { label: "카테고리", name: "category", field: "category", align: "left", sortable: true},
+        { label: "제목", name: "title", field: "title", align: "left", sortable: true, event: true},
+        { label: "질문일", name: "asked_at", field: "asked_at", align: "left", sortable: true},
     ];
 
-    async moveSubPage(limit: number, offset: number, sort: string, dir: string) {
-        const result = await Api.getUserInquiry(limit, offset, sort, dir, this.selectedItem.id);
-        const inquiries = new Array(result.count);
-        for (let i = 0; i < this.subrows.length; i++) {
-            inquiries[i] = this.subrows[i];
-        }
-        this.subrows = inquiries;
-        for (let i = 0; i < result.inquiries.length; i++) {
-            this.subrows[offset + i] = result.inquiries[i];
-            this.subrows[offset + i].date = new Date(this.subrows[offset + i].asked_at).toLocaleString();
-            this.subrows[offset + i].category = this.subCategory[this.subrows[offset + i].category];
-        }
-    }
-
-    moveInquirySubPage(item: any){
-        this.$router.push("/community/inquiry/sub/"+item.id);
+    moveInquirySubPage( row: any ){
+        this.$router.push("/community/inquiry/sub/" + row.id);
     }
 }
 </script>

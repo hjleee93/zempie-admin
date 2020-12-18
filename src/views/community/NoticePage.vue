@@ -1,8 +1,14 @@
 <template>
     <div>
-        <SubButtonTable :rows="rows" rowKey="id" :columns="columns" icon="pageview" @subEvent="openPopup" @movePage="movePage">
+        <MainTable 
+        rowKey="id" 
+        :columns="columns" 
+        apiLink="support/notices" 
+        columnName="notices" 
+        @subEvent="openPopup"
+        refs="table"> 
             <q-btn class="q-mr-sm" color="primary" label="새 공지사항 작성" @click="moveCreatePage" />
-        </SubButtonTable>
+        </MainTable>
 
         <q-dialog v-model="popup" v-if="selectedItem != null">
             <q-card style="wdith: 1200px; max-width: 1200px;">
@@ -51,12 +57,15 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import SubButtonTable from "../../components/SubButtonTable.vue";
+import MainTable from "../../components/MainTable.vue";
+import { TableBus } from "../../components/MainTable.vue";
 import Api from "../../util/Api";
 import { Notify, Dialog } from "quasar";
 
 @Component({
-    components: { SubButtonTable },
+    components: { 
+        MainTable,
+    },
 })
 export default class extends Vue {
     rows: any[] = [];
@@ -64,11 +73,9 @@ export default class extends Vue {
     selectedItem: any = null;
 
     columns = [
-        { label: "번호", name: "id", field: "id", align: "left", sortable: true, sort: () => false},
-        { label: "카테고리", name: "category", field: "category", align: "left", sortable: true, sort: () => false},
-        { label: "제목", name: "title", field: "title", align: "left", sortable: true, sort: () => false},
-        // { label: "조회수", name: "조회수", field: "title"},
-        { label: "상세 보기", name: "sub" },
+        { label: "인덱스", name: "id", field: "id", align: "left", sortable: true},
+        { label: "카테고리", name: "category", field: "category", align: "left", sortable: true},
+        { label: "제목", name: "title", field: "title", align: "left", sortable: true, event: true},
     ];
 
     moveCreatePage() {
@@ -78,10 +85,6 @@ export default class extends Vue {
     openPopup(row: any){
         this.popup = true;
         this.selectedItem = JSON.parse(JSON.stringify(row));
-    }
-
-    async created() {
-        await this.movePage(10, 0, "id", "asc");
     }
 
     deleteNotice() {
@@ -94,7 +97,7 @@ export default class extends Vue {
             const result = await Api.deleteNotice(this.selectedItem.id);
             if (result) {
                 this.selectedItem = null;
-                this.movePage(this.lastMove.limit, this.lastMove.offset, this.lastMove.sort, this.lastMove.dir);
+                TableBus.$emit("reload");
             }
         })
     }
@@ -113,35 +116,8 @@ export default class extends Vue {
         const result = await Api.modifyNotice(this.selectedItem.id, this.selectedItem.title, this.selectedItem.content, this.options.indexOf(this.selectedItem.category));
         if (result) {
             this.popup = false;
-            this.movePage(this.lastMove.limit, this.lastMove.offset, this.lastMove.sort, this.lastMove.dir);
+            TableBus.$emit("reload");
         }
-    }
-
-
-    lastMove = {
-        limit: 0,
-        offset: 0,
-        sort: "",
-        dir: ""
-    }
-
-    async movePage(limit: number, offset: number, sort: string, dir: string) {
-        const result = await Api.getNoticeList(limit, offset, sort, dir);
-        const notices = new Array(result.count).fill({id:null});
-        for(let i = 0; i < notices.length; i++){
-            notices[i] = this.rows[i];
-        }
-        this.rows = notices;
-            
-        for(let i = 0; i < result.notices.length; i++){
-            this.rows[offset + i] = result.notices[i];
-            this.rows[offset + i].category = this.options[this.rows[offset + i].category];
-        }
-        
-        this.lastMove.limit = limit;
-        this.lastMove.offset = offset;
-        this.lastMove.sort = sort;
-        this.lastMove.dir = dir;
     }
 }
 </script>

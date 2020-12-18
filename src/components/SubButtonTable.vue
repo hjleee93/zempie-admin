@@ -1,6 +1,6 @@
 <template>
     <q-table :data="rows" :filter="filter" row-key="null" :columns="columns" :pagination.sync="pagination" :rows-per-page-options="[5, 10, 15, 20, 30]" >
-        <template v-slot:top-left>
+        <template v-slot:top-right>
             <slot></slot>
         </template>
 
@@ -30,7 +30,7 @@ export default class extends Vue {
     filter = "";
 
     pagination = {
-        rowsPerPage: 10,
+        rowsPerPage: 20,
         sortBy: null,
         descending: false,
         page: 1,

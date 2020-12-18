@@ -23,7 +23,7 @@
             </q-toolbar>
         </q-header>
 
-        <q-dialog v-model="passwordPopup">
+        <q-dialog v-model="passwordPopup" persistent>
             <q-card class="my-card" style="width: 600px;">
                 <q-card-section class="q-pt-none q-ma-md">
                     <div class="row items-center q-mb-md">
