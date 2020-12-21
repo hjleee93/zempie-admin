@@ -24,16 +24,16 @@
             <q-editor v-model="content" min-height="10rem" />
         </div>
 
-        <div class="row justify-between">
-            <q-btn class="q-pl-md q-pr-md" color="primary" label="취소" @click="cancel" />
-            <q-btn class="q-pl-md q-pr-md" color="primary" label="등록" @click="submit" :disable="submitDisble" />
+        <div class="row">
+            <q-btn class="q-pl-md q-pr-md q-mr-md" color="primary" label="취소" @click="cancel" />
+            <q-btn class="q-pl-md q-pr-md" color="positive" label="등록" @click="submit" :disable="submitDisble" />
         </div>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
-import Api from "../../util/Api";
+import Api from "@/util/Api";
 
 @Component({
     components: {},

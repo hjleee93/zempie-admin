@@ -23,11 +23,11 @@
         <div class="row q-mb-md">
             <div class="col text-weight-bold">
                 <q-input
-                    v-model="data.text"
-                    filled
-                    type="textarea"
-                    readonly
-                    />
+                v-model="data.text"
+                filled
+                type="textarea"
+                readonly
+                />
             </div>
         </div>
         <div class="row q-mb-md" v-if="data.response != null">
@@ -47,9 +47,9 @@
             </div>
         </div>
 
-        <div class="row justify-between">
-            <q-btn color="primary" label="취소" @click="cancel" />
-            <q-btn color="primary" label="등록" :disable="!submitCheck" @click="submit" />
+        <div class="row">
+            <q-btn class="q-pl-md q-pr-md q-mr-md" color="primary" label="취소" @click="cancel" />
+            <q-btn class="q-pl-md q-pr-md" color="positive" label="등록" :disable="!submitCheck" @click="submit" />
         </div>
     </div>
 </template>

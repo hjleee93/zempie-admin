@@ -6,11 +6,12 @@
         apiLink="support/notices" 
         columnName="notices" 
         @subEvent="openPopup"
-        refs="table"> 
+        refs="table"
+        > 
             <q-btn class="q-mr-sm" color="primary" label="새 공지사항 작성" @click="moveCreatePage" />
         </MainTable>
 
-        <q-dialog v-model="popup" v-if="selectedItem != null">
+        <q-dialog v-model="popup" v-if="selectedItem != null" persistent>
             <q-card style="wdith: 1200px; max-width: 1200px;">
                 <q-card-section>
                     <div class="row items-center q-ma-md">
@@ -57,9 +58,9 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import MainTable from "../../components/MainTable.vue";
-import { TableBus } from "../../components/MainTable.vue";
-import Api from "../../util/Api";
+import MainTable from "@/components/MainTable.vue";
+import { TableBus } from "@/components/MainTable.vue";
+import Api from "@/util/Api";
 import { Notify, Dialog } from "quasar";
 
 @Component({

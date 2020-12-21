@@ -1,10 +1,10 @@
 import Vue from "vue";
 import Vuex, { StoreOptions } from "vuex";
-import Gate from "../util/Gate";
-import { getCookie, setCookie, deleteCookie } from "../util/Cookie";
+import Gate from "@/util/Gate";
+import { getCookie, setCookie, deleteCookie } from "@/util/Cookie";
 import axios from "axios";
 import { Notify } from "quasar";
-import router from "../router/index";
+import router from "@/router/index";
 
 Vue.use(Vuex);
 interface State{

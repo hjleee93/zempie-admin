@@ -6,15 +6,14 @@
             apiLink="support/inquiries" 
             columnName="inquiries" 
             @subEvent="moveSubPage"
-            refs="table" 
         />
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import MainTable from "../../components/MainTable.vue";
-import Api from "../../util/Api";
+import MainTable from "@/components/MainTable.vue";
+import Api from "@/util/Api";
 
 @Component({
     components: { 

@@ -1,6 +1,6 @@
 <template>
     <div class="admin-list-create">
-        <div class="row items-center">
+        <div class="row items-center q-mb-md">
             <div class="label-area text-weight-bold text-h6">
                 관리자 아이디
             </div>
@@ -10,7 +10,7 @@
             </div>
         </div>
 
-        <div class="row items-center">
+        <div class="row items-center q-mb-md">
             <div class="label-area text-weight-bold text-h6">
                 관리자 비밀번호
             </div>
@@ -20,7 +20,7 @@
             </div>
         </div>
 
-        <div class="row items-center">
+        <div class="row items-center q-mb-md">
             <div class="label-area text-weight-bold text-h6">
                 관리자 이름
             </div>
@@ -30,7 +30,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row q-mb-md">
             <div class="label-area text-weight-bold text-h6 q-pt-md">
                 권한
             </div>
@@ -40,7 +40,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row q-mb-md">
             <div class="label-area text-weight-bold text-h6 q-pt-md">
                 권한 영역
             </div>
@@ -51,16 +51,15 @@
         </div>
 
         <div class="row">
-            <div class="col-12">
-                <q-btn class="q-pl-md q-pr-md" color="primary" label="등록" @click="submit" />
-            </div>
+            <q-btn class="q-pl-md q-pr-md q-mr-md" color="primary" label="취소" @click="cancel" />
+            <q-btn class="q-pl-md q-pr-md" color="positive" label="등록" @click="submit" :disable="!submitCheck" />
         </div>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import Api from "../../util/Api";
+import Api from "@/util/Api";
 import { Notify } from "quasar";
 
 @Component({
@@ -100,8 +99,12 @@ export default class extends Vue {
         return result;
     }
 
+    get submitCheck(){
+        return this.account.trim() != "" && this.password.trim() != "" && this.name.trim() != "" && this.level != null;
+    }
+
     async submit() {
-        if (this.account.trim() == "" && this.password.trim() == "" || this.name.trim() == "" || this.level == null) {    
+        if (this.account.trim() == "" && this.password.trim() == "" && this.name.trim() == "" && this.level == null) {    
             return Notify.create({
                 type: "negative",
                 message: `내용을 전부 채워주시기 바랍니다.`,
@@ -113,15 +116,15 @@ export default class extends Vue {
             this.$router.push("/admin/list");
         }
     }
+
+    cancel(){
+        this.$router.go(-1);
+    }
 }
 </script>
 
 <style lang="scss">
 .admin-list-create {
-    .row {
-        margin: 4px 0;
-    }
-
     .label-area {
         min-width: 200px;
         max-width: 200px;

@@ -143,15 +143,15 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import LineChart from "../../components/LineChart.vue";
-import DetailTable from "../../components/DetailTable.vue";
-import MainTable from "../../components/MainTable.vue";
-// import Api from "../../util/Api";
+import LineChart from "@/components/LineChart.vue";
+// import DetailTable from "@/components/DetailTable.vue";
+import MainTable from "@/components/MainTable.vue";
+// import Api from "@/util/Api";
 
 @Component({
     components: {
         LineChart,
-        DetailTable,
+        // DetailTable,
         MainTable,
     },
 })
@@ -161,24 +161,7 @@ export default class extends Vue {
 
     rowKey = "번호"
 
-    // rows = [
-    //     {
-    //         "번호" : "1",
-    //         "아이디" : "person1",
-    //         "카테고리" : "결제",
-    //         "제목" : "결제가 2번 되었습니다.",
-    //         "상태" : "답변완료",
-    //         "등록일" : "2020.10.12 10.44.12",
-    //     },
-    //     {
-    //         "번호" : "2",
-    //         "아이디" : "person2",
-    //         "카테고리" : "건의",
-    //         "제목" : "개발자 아이템을 만들어 주세요",
-    //         "상태" : "대기",
-    //         "등록일" : "2020.10.11 10.44.12",
-    //     },
-    // ];
+    // rows = [];
 
     columns = [
         { name: '번호', label:"번호", field: '번호', align: 'left' },
@@ -190,19 +173,6 @@ export default class extends Vue {
         { name: 'detail', label: "상세 보기"}
     ];
 
-    link = "";
-
-    userData = {
-
-    }
-
-    async created(){
-        if(this.$store.getters.isLogin){
-            // const userData = await Api.getUserData(this.index);
-            // if(userData.length > 0){
-            //     this.userData = userData[0];
-            // }
-        }
-    }
+    // async created(){}
 }
 </script>

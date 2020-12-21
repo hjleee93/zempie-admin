@@ -1,6 +1,6 @@
 import axios from "axios";
-import store from "../store/index";
-import { Notify }from "quasar";
+import store from "@/store/index";
+// import { Notify }from "quasar";
 
 const instance = axios.create({
     baseURL: process.env.VUE_APP_API_LINK
@@ -21,7 +21,10 @@ instance.interceptors.response.use(
         return response;
     },
     async function(error) {
-        // console.log([error])
+        if(process.env.NODE_ENV == "local"){
+            // console.log([error])
+            console.info([error]);
+        }
         
         const errorConfig = error.config;
         if (error.response.data.error == "Unauthorized") {

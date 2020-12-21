@@ -1,19 +1,34 @@
 <template>
     <div>
-        <CheckTable :rows="rows" rowKey="번호" :columns="columns" link="/community/faq/sub/" @selectEvent="selectItem" >
+        <CheckTable :rows="rows" rowKey="id" :columns="columns" link="/community/faq/sub/" @selectEvent="selectItem" >
             <q-btn class="q-mr-sm" color="primary" label="새 글작성" @click="moveCreatePage" />
             <q-btn class="q-mr-sm" color="primary" label="편집" />
             <q-btn class="q-mr-sm" color="primary" label="삭제" />
         </CheckTable>
+        <!-- <MainTable
+        rowKey="id" 
+        :columns="columns" 
+        apiLink="studio/versions" 
+        columnName="notices" 
+        @subEvent="moveSubPage"
+        >
+            <q-btn class="q-mr-sm" color="primary" label="새 글작성" @click="moveCreatePage" />
+            <q-btn class="q-mr-sm" color="primary" label="편집" />
+            <q-btn class="q-mr-sm" color="primary" label="삭제" />
+        </MainTable> -->
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import CheckTable from "../../components/CheckTable.vue";
+import CheckTable from "@/components/CheckTable.vue";
+import MainTable from "@/components/MainTable.vue";
 
 @Component({
-    components: {CheckTable},
+    components: {
+        CheckTable,
+        MainTable
+    },
 })
 export default class extends Vue {
     selectedItem = null;
@@ -33,11 +48,11 @@ export default class extends Vue {
     ]
 
     columns = [
-        { name: '번호', label:"번호", field: '번호' },
-        { name: '카테고리', label: '카테고리', field: '카테고리' },
-        { name: '제목', label: '제목', field: '제목' },
-        { name: '조회수', label: '조회수', field: '조회수' },
-        // { name: 'detail', label: "상세 보기"}
+        { name: '번호', label:"번호", field: '번호', align: "left" },
+        { name: '카테고리', label: '카테고리', field: '카테고리', align: "left" },
+        { name: '제목', label: '제목', field: '제목', align: "left" },
+        { name: '조회수', label: '조회수', field: '조회수', align: "left" },
+        { name: 'detail', label: "상세 보기"}
     ];
 
     moveCreatePage(){

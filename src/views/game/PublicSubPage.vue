@@ -105,7 +105,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import LineChart from "../../components/LineChart.vue";
+import LineChart from "@/components/LineChart.vue";
 
 @Component({
     components: {

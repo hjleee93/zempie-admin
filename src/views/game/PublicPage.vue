@@ -1,13 +1,13 @@
 <template>
     <div>
-        <DetailTable :rows="rows" row-key="번호" :columns="columns" link="/game/formally/sub/" />
+        <DetailTable :rows="rows" row-key="번호" :columns="columns" link="/game/public/sub/" />
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import DetailTable from "../../components/DetailTable.vue";
-import Api from "../../util/Api";
+import DetailTable from "@/components/DetailTable.vue";
+import Api from "@/util/Api";
 
 @Component({
     components: {

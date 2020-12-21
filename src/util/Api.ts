@@ -1,4 +1,4 @@
-import Gate from "../util/Gate";
+import Gate from "@/util/Gate";
 import { Notify } from "quasar";
 
 export default class Api{
@@ -445,20 +445,20 @@ export default class Api{
 
     /* 게임 관리 */
 
-    static async getGameList(){
-        try{
-            const result = await Gate({
-                method: "GET",
-                url: `/api/v1/games`,
-                headers: {
-                    "Content-Type": "application/json",
-                }
-            });
-            return result.data.result;
-        }catch(error){
-            return false;
-        }
-    }
+    // static async getGameList(){
+    //     try{
+    //         const result = await Gate({
+    //             method: "GET",
+    //             // url: `/api/v1/games`,
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             }
+    //         });
+    //         return result.data.result;
+    //     }catch(error){
+    //         return false;
+    //     }
+    // }
 
     /* 게임 관리 */
 

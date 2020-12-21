@@ -18,8 +18,8 @@
 
         <MainTable rowKey="id" :columns="columns" apiLink="user/list" columnName="users" @subEvent="openPopup" />
 
-        <q-dialog v-model="popup" v-if="selectedItem != null">
-            <q-card style="width: 700px; max-width: 80vw; height: 500px;">
+        <q-dialog v-model="popup" v-if="selectedItem != null" persistent>
+            <q-card style="width: 1000px; max-width: 80vw; height: 600px;">
                 <q-tabs v-model="tab" dense class="text-grey" active-color="primary" indicator-color="primary" align="justify" narrow-indicator>
                     <q-tab name="data" label="정보" />
                     <!-- <q-tab name="item" label="보유 아이템" />
@@ -31,7 +31,7 @@
 
                 <q-separator />
 
-                <q-tab-panels v-model="tab" animated>
+                <q-tab-panels v-model="tab" animated style="height: calc(100% - 90px);">
                     <q-tab-panel name="data">
                         <div class="row q-mb-md">
                             <div class="col-12 text-weight-bold text-h6">
@@ -125,6 +125,12 @@
                         /> 
                     </q-tab-panel>
                 </q-tab-panels>
+
+                <q-separator />
+
+                <q-card-actions align="right">
+                    <q-btn v-close-popup color="primary" label="닫기" />
+                </q-card-actions>
             </q-card>
         </q-dialog>
     </div>
@@ -132,13 +138,11 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import SubButtonTable from "../../components/SubButtonTable.vue";
-import MainTable from "../../components/MainTable.vue";
-import Api from "../../util/Api";
+import MainTable from "@/components/MainTable.vue";
+import Api from "@/util/Api";
 
 @Component({
-    components: { 
-        SubButtonTable,
+    components: {
         MainTable
     },
 })
@@ -189,10 +193,11 @@ export default class extends Vue {
     ]
 
     subcolumns = [
-        { label: "번호", name: "id", field: "id", align: "left", sortable: true},
-        { label: "카테고리", name: "category", field: "category", align: "left", sortable: true},
+        { label: "인덱스", name: "id", field: "id", align: "left", sortable: true},
         { label: "제목", name: "title", field: "title", align: "left", sortable: true, event: true},
+        { label: "카테고리", name: "category", field: "category", align: "left", sortable: true},
         { label: "질문일", name: "asked_at", field: "asked_at", align: "left", sortable: true},
+        { label: "상태", name: "state", field: "state", align: "left", sortable: true},
     ];
 
     moveInquirySubPage( row: any ){

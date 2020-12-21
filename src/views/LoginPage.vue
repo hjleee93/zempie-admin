@@ -25,12 +25,11 @@
 </template>
 
 <script lang="ts">
-    import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import { Notify } from "quasar";
 
 @Component
 export default class extends Vue {
-    loginDialog = false;
     account = "";
     password = "";
 

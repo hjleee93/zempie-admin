@@ -1,6 +1,46 @@
 <template>
     <div>
         <div class="row q-mb-md">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-12 col-sm-6 col-lg-3 q-pa-sm">
+                        <q-card class="bg-white full-width">
+                            <q-card-section>
+                                <div class="row jusify-bewween items-center no-wrap">
+                                    <div class="col">
+                                        <div class="text-h6 text-black text-center">총 접속자 수</div>
+                                    </div>
+                                </div>
+                            </q-card-section>
+
+                            <q-card-section>
+                                <div class="text-h3 text-center q-pt-md q-pb-md">
+                                    3
+                                </div>
+                            </q-card-section>
+                        </q-card>
+                    </div>
+
+                    <div class="col-12 col-sm-6 col-lg-3 q-pa-sm">
+                        <q-card class="bg-white full-width">
+                            <q-card-section>
+                                <div class="row jusify-bewween items-center no-wrap">
+                                    <div class="col">
+                                        <div class="text-h6 text-black text-center">총 접속자 수</div>
+                                    </div>
+                                </div>
+                            </q-card-section>
+
+                            <q-card-section>
+                                <div class="text-h3 text-center q-pt-md q-pb-md">
+                                    3,342
+                                </div>
+                            </q-card-section>
+                        </q-card>
+                    </div>
+                </div>
+            </div>
+
             <div class="col-12 col-lg-6 q-pa-sm">
                 <line-chart label="접속자 수" :data="accessorData">
                     <q-btn-toggle
@@ -38,7 +78,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import LineChart from "../components/LineChart.vue";
+import LineChart from "@/components/LineChart.vue";
 
 @Component({
     components: {

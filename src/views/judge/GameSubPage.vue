@@ -53,15 +53,16 @@
         </q-expansion-item> -->
 
         <div class="row q-gutter-md">
+            <q-btn class="q-pl-md q-pr-md" color="primary" label="취소" @click="cancel" />
             <q-btn class="q-pl-md q-pr-md" :disable="!isReject" color="red" label="반려" @click="reject" />
-            <q-btn class="q-pl-md q-pr-md" :disable="isReject" color="primary" label="승인" @click="submit" />
+            <q-btn class="q-pl-md q-pr-md" :disable="isReject" color="positive" label="승인" @click="submit" />
         </div>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import Api from "../../util/Api";
+import Api from "@/util/Api";
 import { Notify } from "quasar";
 
 @Component({
@@ -128,6 +129,10 @@ export default class extends Vue {
                 this.$router.push("/judge/game");
             }
         }
+    }
+
+    cancel(){
+        this.$router.go(-1);
     }
 }
 </script>

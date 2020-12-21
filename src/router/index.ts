@@ -2,35 +2,37 @@ import Vue from "vue";
 import VueRouter, { NavigationGuardNext, RouteConfig } from "vue-router";
 
 // 기본 페이지
-import Login from "../views/LoginPage.vue";
-import DashBoard from "../views/DashBoardPage.vue";
-import NotFoundPage from "../views/NotFoundPage.vue";
+import Login from "@/views/LoginPage.vue";
+import DashBoard from "@/views/DashBoardPage.vue";
+import NotFoundPage from "@/views/NotFoundPage.vue";
 // 관리자
-import AdminList from "../views/admin/ListPage.vue";
-import AdminListCreate from "../views/admin/ListCreatePage.vue";
-import AdminLog from "../views/admin/LogPage.vue";
+import AdminList from "@/views/admin/ListPage.vue";
+import AdminListCreate from "@/views/admin/ListCreatePage.vue";
+import AdminLog from "@/views/admin/LogPage.vue";
 // 사용자
-import UserList from "../views/user/ListPage.vue";
-import UserListSub from "../views/user/ListSubPage.vue";
+import UserList from "@/views/user/ListPage.vue";
+import UserListSub from "@/views/user/ListSubPage.vue";
 //커뮤니티
-import CommunityFAQ from "../views/community/FAQPage.vue";
-import CommunityFAQCreate from "../views/community/FAQCreatePage.vue";
-import CommunityInquiry from "../views/community/InquiryPage.vue";
-import CommunityInquirySub from "../views/community/InquirySubPage.vue";
-import CommunityNotice from "../views/community/NoticePage.vue";
-import CommunityNoticeCreate from "../views/community/NoticeCreatePage.vue";
+import CommunityFAQ from "@/views/community/FAQPage.vue";
+import CommunityFAQCreate from "@/views/community/FAQCreatePage.vue";
+import CommunityFAQSub from "@/views/community/FAQSubPage.vue";
+
+import CommunityInquiry from "@/views/community/InquiryPage.vue";
+import CommunityInquirySub from "@/views/community/InquirySubPage.vue";
+
+import CommunityNotice from "@/views/community/NoticePage.vue";
+import CommunityNoticeCreate from "@/views/community/NoticeCreatePage.vue";
 // 게임관리
-import GameChallenge from "../views/game/ChallengePage.vue";
-import GameFormally from "../views/game/FormallyPage.vue";
-import GameFormallySub from "../views/game/FormallySubPage.vue";
+import GameChallenge from "@/views/game/ChallengePage.vue";
+import GamePublic from "@/views/game/PublicPage.vue";
+import GamePublicSub from "@/views/game/PublicSubPage.vue";
 // 심사
-import JudgeGame from "../views/judge/GamePage.vue";
-import JudgeGameSub from "../views/judge/GameSubPage.vue";
-import JudgeLog from "../views/judge/LogPage.vue";
+import JudgeGame from "@/views/judge/GamePage.vue";
+import JudgeGameSub from "@/views/judge/GameSubPage.vue";
+import JudgeLog from "@/views/judge/LogPage.vue";
 
 
 
-// import store from "../store/index";
 import {Notify} from "quasar";
 import store from '@/store';
 
@@ -63,22 +65,25 @@ Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
     { path: "*", name: "notFoundPage", component: NotFoundPage },
-    {
-        // 로그인 페이지
+
+    /* 로그인 페이지 */
+    { 
         path: "/login",
         name: "Login",
         component: Login,
     },
+    /* 로그인 페이지 */
 
+    /* 대쉬보드 */
     {
-        // 대쉬보드
         path: "/",
         name: "DashBoard",
         component: DashBoard,
     },
+    /* 대쉬보드 */
 
+    /* 관리자 */
     {
-        // 관리자
         path: "/admin/list",
         name: "AdminList",
         component: AdminList,
@@ -96,9 +101,10 @@ const routes: Array<RouteConfig> = [
         component: AdminLog,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
+    /* 관리자 */
 
+    /* 회원 관리 */
     {
-        // 회원 관리
         path: "/user/list",
         name: "UserList",
         component: UserList,
@@ -110,8 +116,10 @@ const routes: Array<RouteConfig> = [
         component: UserListSub,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
+    /* 회원 관리 */
+
+    /* 커뮤니티 */
     {
-        // 커뮤니티
         path: "/community/faq",
         name: "CommunityFAQ",
         component: CommunityFAQ,
@@ -125,8 +133,8 @@ const routes: Array<RouteConfig> = [
     },
     {
         path: "/community/faq/sub/:index",
-        name: "CommunityFAQCreate",
-        component: CommunityFAQCreate,
+        name: "CommunityFAQSub",
+        component: CommunityFAQSub,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {
@@ -153,27 +161,31 @@ const routes: Array<RouteConfig> = [
         component: CommunityNoticeCreate,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
+    /* 커뮤니티 */
+
+    /* 게임 관리 */
     {
-        // 게임 관리
         path: "/game/challenge",
         name: "GameChallenge",
         component: GameChallenge,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {
-        path: "/game/formally",
-        name: "GameFormally",
-        component: GameFormally,
+        path: "/game/public",
+        name: "GamePublic",
+        component: GamePublic,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {
-        path: "/game/formally/sub/:index",
-        name: "GameFormallySub",
-        component: GameFormallySub,
+        path: "/game/public/sub/:index",
+        name: "GamePublicSub",
+        component: GamePublicSub,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
+    /* 게임 관리 */
+
+    /* 게임 심사 */
     {
-        // 게임 심사
         path: "/judge/game",
         name: "JudgeGame",
         component: JudgeGame,
@@ -191,6 +203,7 @@ const routes: Array<RouteConfig> = [
         component: JudgeLog,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
+    /* 게임 심사 */
 ];
 
 const router = new VueRouter({

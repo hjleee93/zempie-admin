@@ -1,41 +1,40 @@
 <template>
     <q-table 
-        :data="rows" 
-        :filter="filter" 
-        row-key="id" 
-        :columns="columns" 
-        :pagination.sync="pagination" 
-        :rows-per-page-options="[5, 10, 15, 20, 30]" 
-        :title="title"
+    :data="rows" 
+    row-key="id" 
+    :columns="columns" 
+    :pagination.sync="pagination" 
+    :rows-per-page-options="pageOption" 
+    :title="title"
+    :selection="selection || 'none'"
+    :selected.sync="selected"
     >
         <template v-slot:top-right>
             <slot></slot>
+            
+            <!-- <q-input borderless dense debounce="300" v-model="filter" placeholder="Search" class="q-ml-md">
+                <template v-slot:append>
+                    <q-icon name="search" />
+                </template>
+            </q-input> -->
         </template>
 
         <template v-slot:body-cell="props">
             <q-td :props="props">
-                <div v-if="!props.col.event">
-                    {{rows[props.rowIndex][props.col.field]}}
+                <div v-if="props.col.event">
+                    <a href="#" @click="(event)=>{event.preventDefault();subEvent(props.row)}">{{rows[props.rowIndex][props.col.field]}}</a>
                 </div>
                 <div v-else>
-                    <a href="#" @click="(event)=>{event.preventDefault();subEvent(props.row)}">{{rows[props.rowIndex][props.col.field]}}</a>
+                    {{rows[props.rowIndex][props.col.field]}}
                 </div>
             </q-td>
         </template>
-
-        <!-- <template v-slot:top-right>
-            <q-input borderless dense debounce="300" v-model="filter" placeholder="Search">
-                <template v-slot:append>
-                    <q-icon name="search" />
-                </template>
-            </q-input>
-        </template> -->
     </q-table>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop, Watch } from "vue-property-decorator";
-import Api from "../util/Api";
+import Api from "@/util/Api";
 
 export const TableBus = new Vue();
 
@@ -51,9 +50,11 @@ export default class extends Vue {
         descending: false,
         page: 1,
     };
+    pageOption = [5, 10, 15, 20, 30]
 
-    // @Prop() rows: any;
     rows: any = [];
+
+    selected : any = [];
 
     @Prop() rowKey!: string;
     @Prop() columns!: any[];
@@ -61,6 +62,7 @@ export default class extends Vue {
     @Prop() columnName!: string;
     @Prop() title!: string;
     @Prop() apiParam!: any;
+    @Prop() selection!: string;
 
     subEvent( row: any ){
         this.$emit('subEvent', row);
@@ -69,6 +71,11 @@ export default class extends Vue {
     @Watch("pagination")
     async paginationChanged(){
         await this.movePage();
+    }
+
+    @Watch("selected")
+    onSelectedChanged(){
+        this.$emit('selectEvent', this.selected);
     }
 
     async mounted(){
@@ -112,10 +119,10 @@ export default class extends Vue {
         }
 
         const result = await Api.getList(this.apiLink, params.toString());
-        const rows = new Array(result.count).fill({id:null});
+        const rows = new Array(result.count || 0).fill({id:null});
 
         if(this.rows.length == 0){
-            this.rows = new Array(result.count).fill({id:null});
+            this.rows = new Array(result.count || 0).fill({id:null});
         }
 
         for(let i = 0; i < this.rows.length; i++){
@@ -123,40 +130,56 @@ export default class extends Vue {
         }
 
         this.rows = rows;
+        if(result[this.columnName] == null){
+            for(let i = 0; i < result.length; i++){
+                let index = offset + i;
+                this.rows[index] = result[i];
 
-        for(let i = 0; i < result[this.columnName].length; i++){
-            let index = offset + i;
-            this.rows[index] = result[this.columnName][i];
+                if(this.rows[index].created_at != null && this.rows[index].created_at != ""){
+                    this.rows[index].created_at = new Date(this.rows[index].created_at).toLocaleString();
+                }
 
-            if(this.rows[index].created_at != null && this.rows[index].created_at != ""){
-                this.rows[index].created_at = new Date(this.rows[index].created_at).toLocaleString();
+                if(this.rows[index].project != null && this.rows[index].created_at != ""){
+                    this.rows[index].title = this.rows[index].project.name;
+                }
             }
+            this.pageOption = [0];
+            this.pagination.rowsPerPage = 0;
+        }else{
+            for(let i = 0; i < result[this.columnName].length; i++){
+                let index = offset + i;
+                this.rows[index] = result[this.columnName][i];
 
-            if(this.rows[index].admin != null){
-                this.rows[index].admin_account = this.rows[index].admin.account;
-                this.rows[index].admin_name = this.rows[index].admin.name;
-                this.rows[index].admin_level = this.rows[index].admin.level;
-            }
+                if(this.rows[index].created_at != null && this.rows[index].created_at != ""){
+                    this.rows[index].created_at = new Date(this.rows[index].created_at).toLocaleString();
+                }
 
-            if(this.rows[index].asked_at != null && this.rows[index].asked_at != ""){
-                this.rows[index].asked_at = new Date(this.rows[index].asked_at).toLocaleString();
-            }
+                if(this.rows[index].admin != null){
+                    this.rows[index].admin_account = this.rows[index].admin.account;
+                    this.rows[index].admin_name = this.rows[index].admin.name;
+                    this.rows[index].admin_level = this.rows[index].admin.level;
+                }
 
-            if(this.columnName == "inquiries" && this.rows[index].category != null ){
-                this.rows[index].category = this.inquiryCategory[this.rows[index].category];
-            }
+                if(this.rows[index].asked_at != null && this.rows[index].asked_at != ""){
+                    this.rows[index].asked_at = new Date(this.rows[index].asked_at).toLocaleString();
+                }
 
-            if(this.columnName == "inquiries"){
-                this.rows[index].userName = this.rows[index].user.name
-                this.rows[index].state = this.rows[index].response == null ? "대기" : "답변 완료"
-            }
+                if(this.columnName == "inquiries" && this.rows[index].category != null ){
+                    this.rows[index].category = this.inquiryCategory[this.rows[index].category];
+                }
 
-            if(this.columnName == "notices" && this.rows[index].category != null ){
-                this.rows[index].category = this.noticeCategory[this.rows[index].category];
-            }
+                if(this.columnName == "inquiries"){
+                    this.rows[index].userName = this.rows[index].user.name
+                    this.rows[index].state = this.rows[index].response == null ? "대기" : "답변 완료"
+                }
 
-            if(this.rows[index].email == null){
-                this.rows[index].email = "없음";
+                if(this.columnName == "notices" && this.rows[index].category != null ){
+                    this.rows[index].category = this.noticeCategory[this.rows[index].category];
+                }
+
+                if(this.columnName == "users" && this.rows[index].email == null){
+                    this.rows[index].email = "없음";
+                }
             }
         }
     }

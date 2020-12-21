@@ -78,12 +78,12 @@
                         <q-expansion-item :key="index" expand-separator :icon="categoryItem.icon" :label="categoryItem.label" v-if="categoryItem.sub != false">
                             <q-list>
                                 <q-item
-                                    :key="categoryItem.label + subIndex"
-                                    clickable
-                                    v-ripple
-                                    v-for="(subItem, subIndex) in categoryItem.sub"
-                                    @click="movepath(categoryItem.path + subItem.path)"
-                                    :class="'q-pl-xl ' + getIsActive(subItem)"
+                                :key="categoryItem.label + subIndex"
+                                clickable
+                                v-ripple
+                                v-for="(subItem, subIndex) in categoryItem.sub"
+                                @click="movepath(categoryItem.path + subItem.path)"
+                                :class="'q-pl-xl ' + getIsActive(subItem)"
                                 >
                                     <q-item-section>
                                         {{ subItem.label }}
@@ -211,7 +211,7 @@ export default class MainLayout extends Vue {
             sub: [
                 {
                     label: "정식 게임",
-                    path: "/formally",
+                    path: "/public",
                 },
                 {
                     label: "도전 게임",
@@ -252,7 +252,7 @@ export default class MainLayout extends Vue {
             title: "공지사항 상세보기",
         },
         {
-            path: "/game/formally/sub/",
+            path: "/game/public/sub/",
             title: "정식 게임 상세보기",
         },
         {

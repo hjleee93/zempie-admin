@@ -4,7 +4,7 @@
             <q-btn color="primary" @click="moveSubPage">관리자 생성</q-btn>
         </MainTable>
 
-        <q-dialog v-model="levelPopup" v-if="selectedRow != null">
+        <q-dialog v-model="levelPopup" v-if="selectedRow != null" :persistent="selectedRow.level < 10">
             <q-card class="my-card" style="width: 600px;" v-if="selectedRow.level < 10">
                 <q-card-section class="q-pt-none">
                     <div class="items-center q-ma-md">
@@ -30,7 +30,6 @@
                     </div>
                 </q-card-section>
 
-
                 <q-separator />
 
                 <q-card-actions align="right">
@@ -48,8 +47,8 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import MainTable, { TableBus } from "../../components/MainTable.vue";
-import Api from "../../util/Api";
+import MainTable, { TableBus } from "@/components/MainTable.vue";
+import Api from "@/util/Api";
 import { Notify } from "quasar";
 
 @Component({
@@ -60,7 +59,7 @@ import { Notify } from "quasar";
 export default class extends Vue {
     columns = [
         { label: "인덱스", name: "id", field: "id", align: "left", sortable: true },
-        { label: "계정", name: "account", field: "account", align: "left", sortable: true },
+        // { label: "아이디", name: "account", field: "account", align: "left", sortable: true },
         { label: "이름", name: "name", field: "name", align: "left", sortable: true },
         { label: "권한", name: "level", field: "level", align: "left", sortable: true, event: true },
         { label: "생성일", name: "created_at", field: "created_at", align: "left", sortable: true },
