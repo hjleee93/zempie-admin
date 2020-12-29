@@ -53,7 +53,7 @@
         </q-expansion-item> -->
 
         <div class="row q-gutter-md">
-            <q-btn class="q-pl-md q-pr-md" color="primary" label="취소" @click="cancel" />
+            <q-btn class="q-pl-md q-pr-md" color="grey" outline label="취소" @click="cancel" />
             <q-btn class="q-pl-md q-pr-md" :disable="!isReject" color="red" label="반려" @click="reject" />
             <q-btn class="q-pl-md q-pr-md" :disable="isReject" color="positive" label="승인" @click="submit" />
         </div>
@@ -111,6 +111,25 @@ export default class extends Vue {
         this.title = result.project.name;
         this.description = result.project.description;
         this.imgLink = result.project.picture;
+
+        // (this.$refs.game as HTMLIFrameElement).onload = () => {
+        //     let childWindow = (this.$refs.game as HTMLIFrameElement).contentWindow;
+        //     if(childWindow != null){
+        //         childWindow.addEventListener("keydown", (event) => {
+        //             console.log(event);
+        //             if([32, 37, 38, 39, 40].indexOf(event.keyCode) > -1) {
+        //                 event.preventDefault();
+        //             }
+        //         });
+        //     }
+        // }
+        
+
+        // window.addEventListener("keydown", (event) => {
+        //     if([32, 37, 38, 39, 40].indexOf(event.keyCode) > -1) {
+        //         event.preventDefault();
+        //     }
+        // });
     }
 
     async reject(){

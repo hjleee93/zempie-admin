@@ -1,6 +1,6 @@
 import axios from "axios";
 import store from "@/store/index";
-// import { Notify }from "quasar";
+import { Notify }from "quasar";
 
 const instance = axios.create({
     baseURL: process.env.VUE_APP_API_LINK
@@ -22,8 +22,13 @@ instance.interceptors.response.use(
     },
     async function(error) {
         if(process.env.NODE_ENV == "local"){
-            // console.log([error])
-            console.info([error]);
+            console.log([error]);
+            
+            Notify.create({
+                type: "negative",
+                message: error,
+                position: "top",
+            });
         }
         
         const errorConfig = error.config;

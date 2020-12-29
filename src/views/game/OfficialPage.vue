@@ -10,6 +10,12 @@
             >
                 <template v-slot:top-right>
                     
+                    
+                    <!-- <q-input borderless dense debounce="300" v-model="filter" placeholder="Search" class="q-ml-md">
+                        <template v-slot:append>
+                            <q-icon name="search" />
+                        </template>
+                    </q-input> -->
                 </template>
 
                 <template v-slot:body-cell="props">
@@ -31,7 +37,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 
-import Query from "../../query/ChallengeGameQuery";
+import Query from "../../query/OfficialGameQuery";
 
 
 @Component({
@@ -61,7 +67,6 @@ export default class extends Vue {
                 }else{
                     x.developer = "이름 없음";
                 }
-                
                 x.created_date = new Date(x.created_at).toLocaleString();
                 const state = x.enabled;
                 x.state = "배포 중";
@@ -87,7 +92,7 @@ export default class extends Vue {
     }
 
     subEvent( rows: any ){
-        this.$router.push("/game/challenge/sub/" + rows.id);
+        this.$router.push("/game/official/sub/" + rows.id);
     }
 }
 </script>

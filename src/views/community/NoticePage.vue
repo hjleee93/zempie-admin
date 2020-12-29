@@ -13,8 +13,8 @@
 
         <q-dialog v-model="popup" v-if="selectedItem != null" persistent>
             <q-card style="wdith: 1200px; max-width: 1200px;">
-                <q-card-section>
-                    <div class="row items-center q-ma-md">
+                <q-card-section class="q-pa-md">
+                    <div class="row items-center">
                         <div class="row items-center q-mb-md" style="width: 100%;">
                             <div class="col-3">
                                 제목
@@ -33,7 +33,7 @@
                             </div>
                         </div>
 
-                        <div class="row items-center q-mb-md" style="width: 100%;">
+                        <div class="row items-center" style="width: 100%;">
                             <div class="col-3">
                                 내용
                             </div>

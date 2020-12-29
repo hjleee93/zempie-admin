@@ -3,7 +3,7 @@
         <q-card-section class="bg-blue-grey-8">
             <div class="row jusify-bewween items-center no-wrap">
                 <div class="col">
-                    <div class="text-h6 text-white text-left">{{ label }}</div>
+                    <div class="text-h6 text-white text-left">{{ title }}</div>
                 </div>
 
                 <div class="col row justify-end">
@@ -25,10 +25,10 @@ import Chart from "chart.js";
     components: {},
 })
 export default class extends Vue {
-    @Prop()
-    data: any;
-    @Prop()
-    label: string|undefined;
+    @Prop() data: any;
+    @Prop() title!: string;
+    @Prop() label!: string;
+    @Prop() labelList!: string[];
 
     chart: any = null;
 
@@ -49,11 +49,11 @@ export default class extends Vue {
         const myChart = new Chart(ctx, {
             type: "line",
             data: {
-                labels: [1500, 1600, 1700, 1750, 1800, 1850, 1900],
+                labels: this.labelList,
                 datasets: [
                     {
                         data: this.data,
-                        label: "Asia",
+                        label: this.label,
                         fill: false,
                         lineTension: 0,
                         pointRadius: 10,

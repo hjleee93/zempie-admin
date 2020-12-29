@@ -8,6 +8,14 @@
                     Zempie admin page
                 </q-toolbar-title>
 
+                <q-btn round flat @click="changeDark" v-if="$q.screen.name != 'xs'">
+                    <q-icon name="nights_stay" />
+
+                    <q-tooltip>
+                        다크모드
+                    </q-tooltip>
+                </q-btn>
+
                 <q-btn flat @click="openPasswordPopup" v-if="$q.screen.name != 'xs'">
                     <q-icon name="person" />
                     {{$store.state.name}}
@@ -25,7 +33,7 @@
 
         <q-dialog v-model="passwordPopup" persistent>
             <q-card class="my-card" style="width: 600px;">
-                <q-card-section class="q-pt-none q-ma-md">
+                <q-card-section class="q-pa-md">
                     <div class="row items-center q-mb-md">
                         <div class="col-12">
                             이름
@@ -59,6 +67,12 @@
         <q-drawer v-model="left" show-if-above side="left" bordered content-class="bg-grey-2">
             <q-scroll-area class="fit">
                 <q-list>
+                    <div style="width: 100%">
+                        <q-btn flat @click="changeDark" v-if="$q.screen.name == 'xs'" style="width: 100%;">
+                            <q-icon name="nights_stay" /> 다크모드
+                        </q-btn>    
+                    </div>
+
                     <q-btn flat @click="openPasswordPopup" v-if="$q.screen.name == 'xs'" style="width: 50%;">
                         <q-icon name="person" />
                         {{$store.state.name}}
@@ -107,12 +121,14 @@
 
         <q-page-container>
             <div class="q-pa-md">
-                <div class="text-h5 text-weight-bold q-mb-md q-mt-md" v-if="isSubPage">
+                <div class="text-h6 text-weight-bold q-mb-md q-mt-md" v-if="isSubPage">
                     <span class="previousBtn" @click="movePreviousPage">&lt;</span>&nbsp;{{ activeTitle }}
                 </div>
                 <div class="text-h5 text-weight-bold q-mb-md q-mt-md" v-else>{{ activeCategory.label }}</div>
 
-                <slot></slot>
+                <div class="container">
+                    <slot></slot>
+                </div>
             </div>
         </q-page-container>
     </q-layout>
@@ -120,7 +136,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { Notify, Dialog } from "quasar";
+import { Notify, Dialog, LocalStorage } from "quasar";
 import Api from '@/util/Api';
 
 interface Category{
@@ -211,11 +227,11 @@ export default class MainLayout extends Vue {
             sub: [
                 {
                     label: "정식 게임",
-                    path: "/public",
+                    path: "/official",
                 },
                 {
                     label: "도전 게임",
-                    path: "/Challenge",
+                    path: "/challenge",
                 },
             ],
             path: "/game",
@@ -252,8 +268,12 @@ export default class MainLayout extends Vue {
             title: "공지사항 상세보기",
         },
         {
-            path: "/game/public/sub/",
+            path: "/game/official/sub/",
             title: "정식 게임 상세보기",
+        },
+        {
+            path: "/game/challenge/sub/",
+            title: "도전 게임 상세보기",
         },
         {
             path: "/judge/game/sub/",
@@ -344,6 +364,11 @@ export default class MainLayout extends Vue {
         }else{
             this.$store.dispatch("getAdminData");
         }
+        
+        let darkmode = await localStorage.getItem("ZA_darkmode");
+        if(darkmode == "true"){
+            this.changeDark();
+        }
     }
 
     movepath(path: string) {
@@ -389,6 +414,14 @@ export default class MainLayout extends Vue {
             this.passwordPopup = false;
         }
     }
+
+    dark = false;
+
+    changeDark(){
+        this.dark = !this.dark;
+        this.$q.dark.set(this.dark);
+        localStorage.setItem("ZA_darkmode", this.dark.toString());
+    }
 }
 </script>
 
@@ -396,11 +429,34 @@ export default class MainLayout extends Vue {
 .active {
     background-color: #3f51b5;
     * {
-        color: white;
+        color: white !important;
     }
 }
 
 .previousBtn {
     cursor: pointer;
+}
+
+.container{
+    max-width: 1440px;
+    min-width: 300px;
+
+    & > div{
+        width: 100%;
+    }
+}
+
+.q-drawer{
+    * {
+        color: black;
+    }
+}
+
+.q-table__container{
+    width: 100% !important;
+}
+
+a{
+    color: currentColor;
 }
 </style>

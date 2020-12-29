@@ -19,7 +19,7 @@
         </div>
 
         <div class="row justify-between">
-            <q-btn class="q-pl-md q-pr-md" color="primary" label="취소" @click="cancel" />
+            <q-btn class="q-pl-md q-pr-md" color="grey" outline label="취소" @click="cancel" />
             <q-btn class="q-pl-md q-pr-md" color="primary" label="등록" @click="submit" />
         </div>
     </div>

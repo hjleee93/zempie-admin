@@ -47,7 +47,7 @@ export default class extends Vue {
     pagination = {
         rowsPerPage: 20,
         sortBy: null,
-        descending: false,
+        descending: true,
         page: 1,
     };
     pageOption = [5, 10, 15, 20, 30]
@@ -179,6 +179,19 @@ export default class extends Vue {
 
                 if(this.columnName == "users" && this.rows[index].email == null){
                     this.rows[index].email = "없음";
+                }
+
+                if(this.columnName == "logs" && this.rows[index].path != null){
+                    this.rows[index].path = this.rows[index].path.split("/")
+                    .map((text: any) => 
+                        text.replace("support", "커뮤니티")
+                            .replace("notice", "공지사항")
+                            .replace("mod", "수정")
+                            .replace("del", "삭제")
+                            .replace("response", "문의 답변")
+                    )
+                    .join(" ");
+                    console.log(this.rows[index].path);
                 }
             }
         }

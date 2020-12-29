@@ -24,8 +24,9 @@ import CommunityNotice from "@/views/community/NoticePage.vue";
 import CommunityNoticeCreate from "@/views/community/NoticeCreatePage.vue";
 // 게임관리
 import GameChallenge from "@/views/game/ChallengePage.vue";
-import GamePublic from "@/views/game/PublicPage.vue";
-import GamePublicSub from "@/views/game/PublicSubPage.vue";
+import GameChallengeSub from "@/views/game/ChallengeSubPage.vue";
+import GameOfficial from "@/views/game/OfficialPage.vue";
+import GameOfficialSub from "@/views/game/OfficialSubPage.vue";
 // 심사
 import JudgeGame from "@/views/judge/GamePage.vue";
 import JudgeGameSub from "@/views/judge/GameSubPage.vue";
@@ -171,15 +172,21 @@ const routes: Array<RouteConfig> = [
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {
-        path: "/game/public",
-        name: "GamePublic",
-        component: GamePublic,
+        path: "/game/challenge/sub/:index",
+        name: "GameChallengeSub",
+        component: GameChallengeSub,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {
-        path: "/game/public/sub/:index",
-        name: "GamePublicSub",
-        component: GamePublicSub,
+        path: "/game/official",
+        name: "GameOfficial",
+        component: GameOfficial,
+        beforeEnter: (_to, _from, next) => {loginCheck(next)}
+    },
+    {
+        path: "/game/official/sub/:index",
+        name: "GameOfficialSub",
+        component: GameOfficialSub,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     /* 게임 관리 */

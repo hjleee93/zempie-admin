@@ -5,7 +5,7 @@
                 관리자 아이디
             </div>
 
-            <div class="col-12 col-md-4">
+            <div class="col-12 col-md-8">
                 <q-input outlined v-model="account" label="Account" :rules="[(val) => adminAccountRule(val) || '중복되는 아이디입니다.']" />
             </div>
         </div>
@@ -15,7 +15,7 @@
                 관리자 비밀번호
             </div>
 
-            <div class="col-12 col-md-4">
+            <div class="col-12 col-md-8">
                 <q-input outlined v-model="password" label="Password" />
             </div>
         </div>
@@ -25,7 +25,7 @@
                 관리자 이름
             </div>
 
-            <div class="col-12 col-md-4">
+            <div class="col-12 col-md-8">
                 <q-input outlined v-model="name" label="Name" />
             </div>
         </div>
@@ -35,7 +35,7 @@
                 권한
             </div>
 
-            <div class="col-12 col-md-4 q-pt-sm">
+            <div class="col-12 col-md-8 q-pt-sm">
                 <q-option-group v-model="level" :options="levelOptions" color="primary" type="radio" />
             </div>
         </div>
@@ -51,7 +51,7 @@
         </div>
 
         <div class="row">
-            <q-btn class="q-pl-md q-pr-md q-mr-md" color="primary" label="취소" @click="cancel" />
+            <q-btn class="q-pl-md q-pr-md q-mr-md" color="grey" outline label="취소" @click="cancel" />
             <q-btn class="q-pl-md q-pr-md" color="positive" label="등록" @click="submit" :disable="!submitCheck" />
         </div>
     </div>

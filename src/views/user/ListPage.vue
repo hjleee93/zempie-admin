@@ -20,18 +20,17 @@
 
         <q-dialog v-model="popup" v-if="selectedItem != null" persistent>
             <q-card style="width: 1000px; max-width: 80vw; height: 600px;">
-                <q-tabs v-model="tab" dense class="text-grey" active-color="primary" indicator-color="primary" align="justify" narrow-indicator>
+                <q-tabs v-model="tab" dense class="text-grey" style="height: 50px;" active-color="primary" indicator-color="primary" align="justify" narrow-indicator>
                     <q-tab name="data" label="정보" />
-                    <!-- <q-tab name="item" label="보유 아이템" />
-                    <q-tab name="itemUsed" label="아이템 사용 기록" />
-                    <q-tab name="exchange" label="환전 기록" />
-                    <q-tab name="game" label="게임 기록" /> -->
+                    <!-- <q-tab name="item" label="보유 아이템" /> -->
+                    <q-tab name="games" label="업로드 게임" />
+                    <q-tab name="logs" label="심사 로그" />
                     <q-tab name="info" label="1:1 문의" />
                 </q-tabs>
 
                 <q-separator />
 
-                <q-tab-panels v-model="tab" animated style="height: calc(100% - 90px);">
+                <q-tab-panels v-model="tab" animated style="height: calc(100% - 104px);">
                     <q-tab-panel name="data">
                         <div class="row q-mb-md">
                             <div class="col-12 text-weight-bold text-h6">
@@ -100,21 +99,21 @@
 
                     <!-- <q-tab-panel name="item">
                         보유 아이템
-                    </q-tab-panel>
-
-                    <q-tab-panel name="itemUsed">
-                        아이템 사용 기록
-                    </q-tab-panel>
-
-                    <q-tab-panel name="exchange">
-                        환전 기록
-                    </q-tab-panel>
-
-                    <q-tab-panel name="game">
-                        게임 기록
                     </q-tab-panel> -->
 
-                    <q-tab-panel name="info">
+                    <q-tab-panel name="games">
+                        업로드 게임
+
+                        ----- 테이블 -----
+                    </q-tab-panel>
+
+                    <q-tab-panel name="logs">
+                        업로드 게임
+
+                        ----- 테이블 -----
+                    </q-tab-panel>
+
+                    <q-tab-panel name="info" class="q-pb-md">
                         <MainTable 
                             rowKey="id" 
                             :columns="subcolumns" 
@@ -173,7 +172,7 @@ export default class extends Vue {
         this.selectedItem = JSON.parse(JSON.stringify(row));
         this.popup = true;
         this.tab = "data";
-        this.channelLink = process.env.VUE_APP_ZEMPIE_LINK+'channel/'+this.selectedItem.channel_id;
+        this.channelLink = process.env.VUE_APP_ZEMPIE_LINK + 'channel/' + this.selectedItem.channel_id;
     }
 
     // async created() {}

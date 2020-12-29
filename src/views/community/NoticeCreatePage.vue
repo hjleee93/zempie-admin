@@ -25,7 +25,7 @@
         </div>
 
         <div class="row">
-            <q-btn class="q-pl-md q-pr-md q-mr-md" color="primary" label="취소" @click="cancel" />
+            <q-btn class="q-pl-md q-pr-md q-mr-md" color="grey" outline label="취소" @click="cancel" />
             <q-btn class="q-pl-md q-pr-md" color="positive" label="등록" @click="submit" :disable="submitDisble" />
         </div>
     </div>

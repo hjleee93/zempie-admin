@@ -6,8 +6,8 @@
 
         <q-dialog v-model="levelPopup" v-if="selectedRow != null" :persistent="selectedRow.level < 10">
             <q-card class="my-card" style="width: 600px;" v-if="selectedRow.level < 10">
-                <q-card-section class="q-pt-none">
-                    <div class="items-center q-ma-md">
+                <q-card-section class="q-pt-none q-pa-md">
+                    <div class="items-center">
                         <div class="row items-center" v-if="$store.state.level >= 10">
                             <div class="col-12">
                                 권한
