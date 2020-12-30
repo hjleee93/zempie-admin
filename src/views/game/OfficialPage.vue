@@ -38,6 +38,7 @@
 import { Component, Vue } from "vue-property-decorator";
 
 import Query from "../../query/OfficialGameQuery";
+import gql from "graphql-tag";
 
 
 @Component({
@@ -87,8 +88,38 @@ export default class extends Vue {
         { field: "state", name: "state", label: "상태", align: "left" },
     ];
 
-    created(){
-        this.$apollo.queries.gameGet.refetch();
+    async created(){
+        // this.$apollo.queries.gameGet.refetch();
+
+        // let count = 1;
+        // let limit = 10;
+        // let offset = 0;
+        // while(count != 0){
+        //     const data = await this.$apollo.query({
+        //         query: gql`
+        //             query gameGet($limit: Int, $offset: Int) {
+        //                 gameGet(where: {official: true}, limit: $limit, offset: $offset) {
+        //                     id
+        //                     title
+        //                     user{
+        //                         id
+        //                         name
+        //                     }
+        //                     version
+        //                     enabled
+        //                     created_at
+        //                 }
+        //             }
+        //         `,
+        //         variables: {
+        //             limit: limit,
+        //             offset: offset
+        //         }
+        //     });
+
+        //     offset += limit;
+        //     count = data.data.gameGet.length
+        // }
     }
 
     subEvent( rows: any ){

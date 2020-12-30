@@ -191,7 +191,6 @@ export default class extends Vue {
     itemGet: any;
     async refresh(){
         this.$apollo.queries.itemGet.refetch();
-        console.log(this.itemGet);
     }
 }
 </script>

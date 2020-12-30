@@ -20,7 +20,7 @@
                                 제목
                             </div>
                             <div class="col-9">
-                                <q-input outlined v-model="selectedItem.title" label="title" />
+                                <q-input outlined v-model="selectedItem.title" placeholder="Title" />
                             </div>
                         </div>
 
@@ -58,10 +58,12 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import { Notify, Dialog } from "quasar";
 import MainTable from "@/components/MainTable.vue";
 import { TableBus } from "@/components/MainTable.vue";
 import Api from "@/util/Api";
-import { Notify, Dialog } from "quasar";
+import Config from "@/util/Config";
+
 
 @Component({
     components: { 
@@ -78,6 +80,10 @@ export default class extends Vue {
         { label: "카테고리", name: "category", field: "category", align: "left", sortable: true},
         { label: "제목", name: "title", field: "title", align: "left", sortable: true, event: true},
     ];
+
+    get options(){
+        return Config.noticeCategory;
+    }
 
     moveCreatePage() {
         this.$router.push(this.$route.path + "/create");
@@ -103,9 +109,6 @@ export default class extends Vue {
         })
     }
 
-    options = [
-        "공지", "점검", "업데이트", "이벤트", "기타"
-    ]
     async modifyNotice(){
         if(this.selectedItem.title.trim() == "" || this.selectedItem.content.trim() == ""){
             return Notify.create({
@@ -114,7 +117,12 @@ export default class extends Vue {
                 position: "top",
             });
         }
-        const result = await Api.modifyNotice(this.selectedItem.id, this.selectedItem.title, this.selectedItem.content, this.options.indexOf(this.selectedItem.category));
+        const result = await Api.modifyNotice(
+            this.selectedItem.id, 
+            this.selectedItem.title, 
+            this.selectedItem.content, 
+            Config.noticeCategory.indexOf(this.selectedItem.category)
+        );
         if (result) {
             this.popup = false;
             TableBus.$emit("reload");

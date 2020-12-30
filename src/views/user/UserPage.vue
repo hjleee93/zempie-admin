@@ -16,13 +16,12 @@
             </div>
         </div> -->
 
-        <MainTable rowKey="id" :columns="columns" apiLink="user/list" columnName="users" @subEvent="openPopup" />
+        <MainTable rowKey="id" :columns="columns" apiLink="user/list" columnName="users" @subEvent="subEvent" />
 
-        <q-dialog v-model="popup" v-if="selectedItem != null" persistent>
+        <!-- <q-dialog v-model="popup" v-if="selectedItem != null" persistent>
             <q-card style="width: 1000px; max-width: 80vw; height: 600px;">
                 <q-tabs v-model="tab" dense class="text-grey" style="height: 50px;" active-color="primary" indicator-color="primary" align="justify" narrow-indicator>
                     <q-tab name="data" label="정보" />
-                    <!-- <q-tab name="item" label="보유 아이템" /> -->
                     <q-tab name="games" label="업로드 게임" />
                     <q-tab name="logs" label="심사 로그" />
                     <q-tab name="info" label="1:1 문의" />
@@ -77,7 +76,6 @@
                                 <a :href="channelLink" target="_blank">
                                     채널 열기
                                 </a>
-                                <!-- {{ selectedItem.is_developer }} -->
                             </div>
                         </div>
                         <div class="row q-mb-md">
@@ -96,10 +94,6 @@
                             <q-btn color="primary" class="q-mr-sm" label="정지 취소" />
                         </div>
                     </q-tab-panel>
-
-                    <!-- <q-tab-panel name="item">
-                        보유 아이템
-                    </q-tab-panel> -->
 
                     <q-tab-panel name="games">
                         업로드 게임
@@ -131,7 +125,7 @@
                     <q-btn v-close-popup color="primary" label="닫기" />
                 </q-card-actions>
             </q-card>
-        </q-dialog>
+        </q-dialog> -->
     </div>
 </template>
 
@@ -159,7 +153,6 @@ export default class extends Vue {
         {label: "상태", value: 1},
         {label: "가입/최종방문일", value: 2},
     ]
-    channelLink = "";
 
     columns = [
         { label: "인덱스", name: "id", field: "id", align: "left", sortable: true },
@@ -168,39 +161,32 @@ export default class extends Vue {
         { label: "계정 생성일", name: "created_at", field: "created_at", align: "left", sortable: true },
     ];
 
-    openPopup(row: any) {
-        this.selectedItem = JSON.parse(JSON.stringify(row));
-        this.popup = true;
-        this.tab = "data";
-        this.channelLink = process.env.VUE_APP_ZEMPIE_LINK + 'channel/' + this.selectedItem.channel_id;
+    // channelLink = "";
+
+    subEvent(row: any) {
+        // this.selectedItem = JSON.parse(JSON.stringify(row));
+        // this.popup = true;
+        // this.tab = "data";
+        // this.channelLink = process.env.VUE_APP_ZEMPIE_LINK + 'channel/' + this.selectedItem.channel_id;
+        this.$router.push("/user/list/sub/" + row.id);
     }
 
     // async created() {}
 
     selectedItem: any = null;
-    popup = false;
-    tab = "data";
+    // popup = false;
+    // tab = "data";
 
-    subCategory = [
-        "버그/기술",
-        "불량 유저",
-        "계정",
-        "스튜디오",
-        "저작권",
-        "이벤트",
-        "기타"
-    ]
+    // subcolumns = [
+    //     { label: "인덱스", name: "id", field: "id", align: "left", sortable: true},
+    //     { label: "제목", name: "title", field: "title", align: "left", sortable: true, event: true},
+    //     { label: "카테고리", name: "category", field: "category", align: "left", sortable: true},
+    //     { label: "질문일", name: "asked_at", field: "asked_at", align: "left", sortable: true},
+    //     { label: "상태", name: "state", field: "state", align: "left", sortable: true},
+    // ];
 
-    subcolumns = [
-        { label: "인덱스", name: "id", field: "id", align: "left", sortable: true},
-        { label: "제목", name: "title", field: "title", align: "left", sortable: true, event: true},
-        { label: "카테고리", name: "category", field: "category", align: "left", sortable: true},
-        { label: "질문일", name: "asked_at", field: "asked_at", align: "left", sortable: true},
-        { label: "상태", name: "state", field: "state", align: "left", sortable: true},
-    ];
-
-    moveInquirySubPage( row: any ){
-        this.$router.push("/community/inquiry/sub/" + row.id);
-    }
+    // moveInquirySubPage( row: any ){
+    //     this.$router.push("/community/inquiry/sub/" + row.id);
+    // }
 }
 </script>

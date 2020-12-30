@@ -6,31 +6,32 @@ import Login from "@/views/LoginPage.vue";
 import DashBoard from "@/views/DashBoardPage.vue";
 import NotFoundPage from "@/views/NotFoundPage.vue";
 // 관리자
-import AdminList from "@/views/admin/ListPage.vue";
-import AdminListCreate from "@/views/admin/ListCreatePage.vue";
-import AdminLog from "@/views/admin/LogPage.vue";
+import Admin from "@/views/admin/AdminPage.vue";
+import AdminCreate from "@/views/admin/AdminCreatePage.vue";
+import AdminLog from "@/views/admin/AdminLogPage.vue";
 // 사용자
-import UserList from "@/views/user/ListPage.vue";
-import UserListSub from "@/views/user/ListSubPage.vue";
+import User from "@/views/user/UserPage.vue";
+import UserSub from "@/views/user/UserSubPage.vue";
 //커뮤니티
-import CommunityFAQ from "@/views/community/FAQPage.vue";
-import CommunityFAQCreate from "@/views/community/FAQCreatePage.vue";
-import CommunityFAQSub from "@/views/community/FAQSubPage.vue";
+import FAQ from "@/views/community/FAQPage.vue";
+import FAQCreate from "@/views/community/FAQCreatePage.vue";
+import FAQSub from "@/views/community/FAQSubPage.vue";
 
-import CommunityInquiry from "@/views/community/InquiryPage.vue";
-import CommunityInquirySub from "@/views/community/InquirySubPage.vue";
+import Inquiry from "@/views/community/InquiryPage.vue";
+import InquirySub from "@/views/community/InquirySubPage.vue";
 
-import CommunityNotice from "@/views/community/NoticePage.vue";
-import CommunityNoticeCreate from "@/views/community/NoticeCreatePage.vue";
+import Notice from "@/views/community/NoticePage.vue";
+import NoticeCreate from "@/views/community/NoticeCreatePage.vue";
+import NoticeSub from "@/views/community/NoticeSubPage.vue";
 // 게임관리
-import GameChallenge from "@/views/game/ChallengePage.vue";
-import GameChallengeSub from "@/views/game/ChallengeSubPage.vue";
-import GameOfficial from "@/views/game/OfficialPage.vue";
-import GameOfficialSub from "@/views/game/OfficialSubPage.vue";
+import Challenge from "@/views/game/ChallengePage.vue";
+import ChallengeSub from "@/views/game/ChallengeSubPage.vue";
+import Official from "@/views/game/OfficialPage.vue";
+import OfficialSub from "@/views/game/OfficialSubPage.vue";
 // 심사
-import JudgeGame from "@/views/judge/GamePage.vue";
-import JudgeGameSub from "@/views/judge/GameSubPage.vue";
-import JudgeLog from "@/views/judge/LogPage.vue";
+import Judge from "@/views/judge/JudgePage.vue";
+import JudgeSub from "@/views/judge/JudgeSubPage.vue";
+import JudgeLog from "@/views/judge/JudgeLogPage.vue";
 
 
 
@@ -86,14 +87,14 @@ const routes: Array<RouteConfig> = [
     /* 관리자 */
     {
         path: "/admin/list",
-        name: "AdminList",
-        component: AdminList,
+        name: "Admin",
+        component: Admin,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {
         path: "/admin/list/create",
-        name: "AdminListCreate",
-        component: AdminListCreate,
+        name: "AdminCreate",
+        component: AdminCreate,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {
@@ -108,13 +109,13 @@ const routes: Array<RouteConfig> = [
     {
         path: "/user/list",
         name: "UserList",
-        component: UserList,
+        component: User,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {
         path: "/user/list/sub/:index",
-        name: "UserListSub",
-        component: UserListSub,
+        name: "UserSub",
+        component: UserSub,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     /* 회원 관리 */
@@ -122,44 +123,50 @@ const routes: Array<RouteConfig> = [
     /* 커뮤니티 */
     {
         path: "/community/faq",
-        name: "CommunityFAQ",
-        component: CommunityFAQ,
+        name: "FAQ",
+        component: FAQ,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {
         path: "/community/faq/create",
-        name: "CommunityFAQCreate",
-        component: CommunityFAQCreate,
+        name: "FAQCreate",
+        component: FAQCreate,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {
         path: "/community/faq/sub/:index",
-        name: "CommunityFAQSub",
-        component: CommunityFAQSub,
+        name: "FAQSub",
+        component: FAQSub,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {
         path: "/community/inquiry",
-        name: "CommunityInquiry",
-        component: CommunityInquiry,
+        name: "Inquiry",
+        component: Inquiry,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {
         path: "/community/inquiry/sub/:index",
         name: "CommunityInquirySub",
-        component: CommunityInquirySub,
+        component: InquirySub,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {
         path: "/community/notice",
-        name: "CommunityNotice",
-        component: CommunityNotice,
+        name: "Notice",
+        component: Notice,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {
         path: "/community/notice/create",
-        name: "CommunityNoticeCreate",
-        component: CommunityNoticeCreate,
+        name: "NoticeCreate",
+        component: NoticeCreate,
+        beforeEnter: (_to, _from, next) => {loginCheck(next)}
+    },
+    {
+        path: "/community/notice/sub/:index",
+        name: "NoticeSub",
+        component: NoticeSub,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     /* 커뮤니티 */
@@ -168,25 +175,25 @@ const routes: Array<RouteConfig> = [
     {
         path: "/game/challenge",
         name: "GameChallenge",
-        component: GameChallenge,
+        component: Challenge,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {
         path: "/game/challenge/sub/:index",
-        name: "GameChallengeSub",
-        component: GameChallengeSub,
+        name: "ChallengeSub",
+        component: ChallengeSub,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {
         path: "/game/official",
-        name: "GameOfficial",
-        component: GameOfficial,
+        name: "Official",
+        component: Official,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {
         path: "/game/official/sub/:index",
-        name: "GameOfficialSub",
-        component: GameOfficialSub,
+        name: "OfficialSub",
+        component: OfficialSub,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     /* 게임 관리 */
@@ -194,14 +201,14 @@ const routes: Array<RouteConfig> = [
     /* 게임 심사 */
     {
         path: "/judge/game",
-        name: "JudgeGame",
-        component: JudgeGame,
+        name: "Judge",
+        component: Judge,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {
         path: "/judge/game/sub/:index",
-        name: "JudgeGameSub",
-        component: JudgeGameSub,
+        name: "JudgeSub",
+        component: JudgeSub,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {

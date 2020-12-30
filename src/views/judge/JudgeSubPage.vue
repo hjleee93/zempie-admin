@@ -1,63 +1,71 @@
 <template>
-    <div>
-        <q-expansion-item v-model="titleOption" :label="title" switch-toggle-side class="q-mb-md">
-            <q-card>
-                <q-card-section>
-                    <div class="row q-mb-md">
-                        <div class="text-weight-bold text-h6 col-12">
-                            자세한 설명
+    <q-card>
+        <q-card-section>
+            <q-expansion-item v-model="titleOption" :label="title" switch-toggle-side class="q-mb-md">
+                <q-card>
+                    <q-card-section>
+                        <div class="row q-mb-md">
+                            <div class="text-weight-bold text-h6 col-12">
+                                자세한 설명
+                            </div>
+
+                            <div class="col-12">
+                                <q-input v-model="description" filled type="textarea" readonly />
+                            </div>
                         </div>
 
-                        <div class="col-12">
-                            <q-input v-model="description" filled type="textarea" readonly />
+                        <div class="row">
+                            <div class="text-weight-bold text-h6 col-12">
+                                썸네일 이미지
+                            </div>
+
+                            <div class="col-12">
+                                <q-img :src="imgLink" :ratio="1" style="width:200px;" />
+                            </div>
                         </div>
+                    </q-card-section>
+                </q-card>
+            </q-expansion-item>
+
+            <div>
+                <iframe ref="game" :src="iframeLink" frameborder="0" width="100%" height="1000px"></iframe>
+            </div>
+            
+            <div class="q-mt-md q-mb-md">
+                <div class="row justify-start items-center">
+                    <div class="col-12 col-md-2 text-weight-bold">
+                        반려 사유
                     </div>
 
-                    <div class="row">
-                        <div class="text-weight-bold text-h6 col-12">
-                            썸네일 이미지
-                        </div>
-
-                        <div class="col-12">
-                            <q-img :src="imgLink" :ratio="1" style="width:200px;" />
-                        </div>
+                    <div class="col-12 col-md-10">
+                        <q-input v-model="reason" type="text" placeholder="Reason" />
                     </div>
-                </q-card-section>
-            </q-card>
-        </q-expansion-item>
-
-        <div>
-            <iframe ref="game" :src="iframeLink" frameborder="0" width="600px" height="800px"></iframe>
-        </div>
-
-        <div class="q-mt-md q-mb-md">
-            <div class="row justify-start items-center">
-                <div class="col-12 col-md-2 text-weight-bold text-h6">
-                    반려 사유
-                </div>
-
-                <div class="col-12 col-md-10">
-                    <q-input v-model="reason" outlined type="text" />
                 </div>
             </div>
-        </div>
 
-        <!-- <q-expansion-item v-model="judgeOption" label="심사 옵션" switch-toggle-side class="q-mb-md">
-            <q-card>
-                <q-card-section>
-                    <div class="row q-mb-md">
-                        <q-option-group inline v-model="selectedOption" :options="options" color="primary" type="checkbox" />
-                    </div>
-                </q-card-section>
-            </q-card>
-        </q-expansion-item> -->
+            <!-- <q-expansion-item v-model="judgeOption" label="심사 옵션" switch-toggle-side class="q-mb-md">
+                <q-card>
+                    <q-card-section>
+                        <div class="row q-mb-md">
+                            <q-option-group inline v-model="selectedOption" :options="options" color="primary" type="checkbox" />
+                        </div>
+                    </q-card-section>
+                </q-card>
+            </q-expansion-item> -->
+        </q-card-section>
+        
+        <q-separator />
 
-        <div class="row q-gutter-md">
-            <q-btn class="q-pl-md q-pr-md" color="grey" outline label="취소" @click="cancel" />
-            <q-btn class="q-pl-md q-pr-md" :disable="!isReject" color="red" label="반려" @click="reject" />
-            <q-btn class="q-pl-md q-pr-md" :disable="isReject" color="positive" label="승인" @click="submit" />
-        </div>
-    </div>
+        <q-card-section>
+            <div class="row q-gutter-md justify-end">
+                <q-btn class="q-pl-md q-pr-md" color="grey" outline label="취소" @click="cancel" />
+                <q-btn class="q-pl-md q-pr-md" :disable="!isReject" color="red" label="반려" @click="reject" />
+                <q-btn class="q-pl-md q-pr-md" :disable="isReject" color="positive" label="승인" @click="submit" />
+            </div>
+        </q-card-section>
+
+        
+    </q-card>
 </template>
 
 <script lang="ts">

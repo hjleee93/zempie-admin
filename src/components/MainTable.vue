@@ -35,6 +35,7 @@
 <script lang="ts">
 import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 import Api from "@/util/Api";
+import Config from "@/util/Config";
 
 export const TableBus = new Vue();
 
@@ -87,20 +88,6 @@ export default class extends Vue {
             await this.movePage();
         }); 
     }
-
-    inquiryCategory = [
-        "버그/기술",
-        "불량 유저",
-        "계정",
-        "스튜디오",
-        "저작권",
-        "이벤트",
-        "기타"
-    ]
-
-    noticeCategory = [
-        "공지", "점검", "업데이트", "이벤트", "기타"
-    ]
 
     async movePage() {
         const limit = this.pagination.rowsPerPage;
@@ -165,7 +152,7 @@ export default class extends Vue {
                 }
 
                 if(this.columnName == "inquiries" && this.rows[index].category != null ){
-                    this.rows[index].category = this.inquiryCategory[this.rows[index].category];
+                    this.rows[index].category = Config.inquiryCategory[this.rows[index].category];
                 }
 
                 if(this.columnName == "inquiries"){
@@ -174,7 +161,7 @@ export default class extends Vue {
                 }
 
                 if(this.columnName == "notices" && this.rows[index].category != null ){
-                    this.rows[index].category = this.noticeCategory[this.rows[index].category];
+                    this.rows[index].category = Config.noticeCategory[this.rows[index].category];
                 }
 
                 if(this.columnName == "users" && this.rows[index].email == null){
@@ -189,9 +176,10 @@ export default class extends Vue {
                             .replace("mod", "수정")
                             .replace("del", "삭제")
                             .replace("response", "문의 답변")
+                            .replace("admin", "관리자")
+                            .replace("add", "추가")
                     )
                     .join(" ");
-                    console.log(this.rows[index].path);
                 }
             }
         }

@@ -1,7 +1,7 @@
 <template>
     <div class="faq-create">
         <div class="q-mb-md">
-            <q-input outlined v-model="title" label="제목" />
+            <q-input outlined v-model="title" placeholder="Title" />
         </div>
 
         <div class="row justify-start q-mb-md items-center">

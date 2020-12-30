@@ -1,6 +1,6 @@
 <template>
     <q-layout view="hHh lpR fFf">
-        <q-header elevated class="glossy">
+        <q-header class="glossy">
             <q-toolbar>
                 <q-btn dense flat round icon="menu" @click="left = !left" />
 
@@ -40,7 +40,7 @@
                         </div>
 
                         <div class="col-12">
-                            <q-input outlined v-model="name" label="name" />
+                            <q-input v-model="name" placeholder="Name" />
                         </div>
                     </div>
 
@@ -50,7 +50,7 @@
                         </div>
 
                         <div class="col-12">
-                            <q-input outlined v-model="password" label="New password" />
+                            <q-input v-model="password" placeholder="Password" />
                         </div>
                     </div>
                 </q-card-section>
@@ -120,13 +120,17 @@
         </q-drawer>
 
         <q-page-container>
-            <div class="q-pa-md">
-                <div class="text-h6 text-weight-bold q-mb-md q-mt-md" v-if="isSubPage">
-                    <span class="previousBtn" @click="movePreviousPage">&lt;</span>&nbsp;{{ activeTitle }}
+            <div>
+                <div class="container q-pl-md q-pr-md">
+                    <div class="text-h5 text-weight-bold q-mb-md q-mt-md" v-if="isSubPage">
+                        <span class="previousBtn" @click="movePreviousPage">&lt;</span>&nbsp;{{ activeTitle }}
+                    </div>
+                    <div class="text-h5 text-weight-bold q-mb-md q-mt-md" v-else>{{ activeCategory.label }}</div>
                 </div>
-                <div class="text-h5 text-weight-bold q-mb-md q-mt-md" v-else>{{ activeCategory.label }}</div>
+                
+                <q-separator spaced />
 
-                <div class="container">
+                <div class="container q-pa-md">
                     <slot></slot>
                 </div>
             </div>
@@ -214,10 +218,10 @@ export default class MainLayout extends Vue {
                     label: "게임 심사",
                     path: "/game",
                 },
-                {
-                    label: "심사 로그",
-                    path: "/log",
-                },
+                // {
+                //     label: "심사 로그",
+                //     path: "/log",
+                // },
             ],
             path: "/judge",
         },
@@ -440,6 +444,8 @@ export default class MainLayout extends Vue {
 .container{
     max-width: 1440px;
     min-width: 300px;
+
+    margin: 0 auto;
 
     & > div{
         width: 100%;
