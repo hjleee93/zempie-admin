@@ -2,7 +2,6 @@
     <div>
         <q-card v-if="!$apollo.queries.userGet.loading">
             <q-card-section>
-
                 <div class="text-h5 q-mb-md">
                     정보
                 </div>

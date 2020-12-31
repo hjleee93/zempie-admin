@@ -21,6 +21,7 @@ export default class extends Vue {
         { label: "이름", name: "admin_name", field: "admin_name", align: "left"},
         { label: "권한", name: "admin_level", field: "admin_level", align: "left"},
         { label: "변경내역", name: "path", field: "path", align: "left"},
+        { label: "변경일자", name: "created_at", field: "created_at", align: "left"},
     ];
 
     subEvent( row : any ){

@@ -32,7 +32,7 @@ export default class extends Vue {
     ];
 
     moveSubPage(row: any){
-        this.$router.push("/community/inquiry/sub/" + row.id);
+        this.$router.push("/support/inquiry/sub/" + row.id);
     }
 
 }

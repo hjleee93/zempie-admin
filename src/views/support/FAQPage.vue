@@ -1,6 +1,6 @@
 <template>
     <div>
-        <CheckTable :rows="rows" rowKey="id" :columns="columns" link="/community/faq/sub/" @selectEvent="selectItem" >
+        <CheckTable :rows="rows" rowKey="id" :columns="columns" link="/support/faq/sub/" @selectEvent="selectItem" >
             <q-btn class="q-mr-sm" color="primary" label="새 글작성" @click="moveCreatePage" />
             <q-btn class="q-mr-sm" color="primary" label="편집" />
             <q-btn class="q-mr-sm" color="primary" label="삭제" />

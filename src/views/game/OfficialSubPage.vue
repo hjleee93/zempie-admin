@@ -232,7 +232,7 @@ export default class extends Vue {
             const data = await this.$apollo.mutate({
             mutation: Query.gameMoveChallenge,
             variables: {
-                    id: Math.round(this.gameGet[0].id),
+                id: Math.round(this.gameGet[0].id),
             },
         })
             this.$router.push("/game/challenge");

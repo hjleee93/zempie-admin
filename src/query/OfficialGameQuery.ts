@@ -16,6 +16,25 @@ const gameListGet = gql`
     }
 `;
 
+const gameListGetOption = gql`
+    query gameGet($order: String, $limit: Int, $offset: Int) {
+        gameGet(where: {official: true}, order: $order, limit: $limit, offset: $offset) {
+            id
+            title
+            user{
+                id
+                name
+            }
+            version
+            enabled
+            created_at
+        }
+
+        gameCount
+    }
+`;
+
+
 const gameGetById =  gql`
 query gameGet($id: Int) {
     gameGet(where: {official: true, id: $id}) {
@@ -70,4 +89,4 @@ const gameMoveChallenge = gql`
     }
 `;
 
-export default {gameListGet, gameGetById, gameDelete, gameHide, gameShow, gameMoveChallenge};
+export default {gameListGet, gameListGetOption, gameGetById, gameDelete, gameHide, gameShow, gameMoveChallenge};

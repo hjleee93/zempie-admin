@@ -186,7 +186,7 @@ export default class extends Vue {
     // ];
 
     // moveInquirySubPage( row: any ){
-    //     this.$router.push("/community/inquiry/sub/" + row.id);
+    //     this.$router.push("/support/inquiry/sub/" + row.id);
     // }
 }
 </script>

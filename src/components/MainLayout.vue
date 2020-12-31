@@ -193,7 +193,7 @@ export default class MainLayout extends Vue {
         },
         {
             icon: "forum",
-            label: "커뮤니티",
+            label: "고객센터",
             sub: [
                 // {
                 //     label: "FAQ",
@@ -208,7 +208,7 @@ export default class MainLayout extends Vue {
                     path: "/notice",
                 },
             ],
-            path: "/community",
+            path: "/support",
         },
         {
             icon: "assignment_turned_in",
@@ -252,23 +252,23 @@ export default class MainLayout extends Vue {
             title: "유저 상세보기",
         },
         {
-            path: "/community/inquiry/sub/",
+            path: "/support/inquiry/sub/",
             title: "1 : 1 문의 상세보기",
         },
         {
-            path: "/community/faq/create",
+            path: "/support/faq/create",
             title: "FAQ 새 글 작성",
         },
         {
-            path: "/community/faq/sub/",
+            path: "/support/faq/sub/",
             title: "FAQ 문의 상세보기",
         },
         {
-            path: "/community/notice/create",
+            path: "/support/notice/create",
             title: "공지사항 새 글 작성",
         },
         {
-            path: "/community/notice/sub/",
+            path: "/support/notice/sub/",
             title: "공지사항 상세보기",
         },
         {
@@ -320,7 +320,7 @@ export default class MainLayout extends Vue {
     }
 
     get filteredCategoryList(){
-        const filterList = [["/", "/user", "/admin"], ["/", "/community", "/judge", "/game"]];
+        const filterList = [["/", "/user", "/admin"], ["/", "/support", "/judge", "/game"]];
 
         const filteredList = [];
         const level = 1;

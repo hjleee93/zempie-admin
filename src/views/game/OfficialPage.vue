@@ -1,6 +1,7 @@
 <template>
     <div>
         <div v-if="!$apollo.queries.gameGet.loading">
+            <GraphqlTable></GraphqlTable>
             <q-table 
             :data="rows" 
             row-key="id" 
@@ -36,13 +37,16 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import GraphqlTable from "src/components/GraphqlTable.vue";
 
 import Query from "../../query/OfficialGameQuery";
 import gql from "graphql-tag";
 
 
 @Component({
-    components: {},
+    components: {
+        GraphqlTable
+    },
     apollo: {
         gameGet: Query.gameListGet
     }

@@ -106,7 +106,7 @@ export default class extends Vue {
     async submit(){
         const result = await Api.responseInquiry(parseInt(this.$route.params.index), this.text);
         if(result){
-            this.$router.push("/community/inquiry");
+            this.$router.push("/support/inquiry");
         }
     }
 }

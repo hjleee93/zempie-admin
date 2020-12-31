@@ -65,6 +65,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import Api from "@/util/Api";
+import Config from "@/util/Config";
 import { Notify } from "quasar";
 
 @Component({
@@ -76,21 +77,10 @@ export default class extends Vue {
     name = "";
 
     level = 1;
-    levelOptions = [
-        { label: "Viewer", value: 1 },
-        { label: "Editor", value: 3 },
-        // { label: "Master", value: 10 },
-    ];
+    levelOptions = Config.levelOptions;
 
     subLevel = [];
-    subLevelOptions = [
-        { label: "대쉬 보드", value: 1 },
-        { label: "관리자", value: 2 },
-        { label: "회원관리", value: 3 },
-        { label: "커뮤니티", value: 4 },
-        { label: "심사", value: 5 },
-        { label: "게임관리", value: 6 },
-    ];
+    subLevelOptions = Config.subLevelOptions;
 
     adminList = [{ account: "admin" }];
 

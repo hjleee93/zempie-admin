@@ -81,7 +81,7 @@ export default class extends Vue {
     async submit() {
         const result = await Api.addNotice(this.title, this.content, Config.noticeCategory.indexOf(this.category));
         if (result) {
-            this.$router.push("/community/notice");
+            this.$router.push("/support/notice");
         }
     }
 }

@@ -190,7 +190,7 @@ export default class Api{
     }
     /* 회원관리 */
 
-    /* 커뮤니티 */
+    /* 고객센터 */
     static async getNoticeList(limit = 50, offset = 0, sort = "id", dir = "asc"){
         try{
             const result = await Gate({
@@ -372,7 +372,7 @@ export default class Api{
             return false;
         }
     }
-    /* 커뮤니티 */
+    /* 고객센터 */
 
 
     /* 게임 심사 */

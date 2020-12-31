@@ -12,17 +12,17 @@ import AdminLog from "@/views/admin/AdminLogPage.vue";
 // 사용자
 import User from "@/views/user/UserPage.vue";
 import UserSub from "@/views/user/UserSubPage.vue";
-//커뮤니티
-import FAQ from "@/views/community/FAQPage.vue";
-import FAQCreate from "@/views/community/FAQCreatePage.vue";
-import FAQSub from "@/views/community/FAQSubPage.vue";
+//고객센터
+import FAQ from "@/views/support/FAQPage.vue";
+import FAQCreate from "@/views/support/FAQCreatePage.vue";
+import FAQSub from "@/views/support/FAQSubPage.vue";
 
-import Inquiry from "@/views/community/InquiryPage.vue";
-import InquirySub from "@/views/community/InquirySubPage.vue";
+import Inquiry from "@/views/support/InquiryPage.vue";
+import InquirySub from "@/views/support/InquirySubPage.vue";
 
-import Notice from "@/views/community/NoticePage.vue";
-import NoticeCreate from "@/views/community/NoticeCreatePage.vue";
-import NoticeSub from "@/views/community/NoticeSubPage.vue";
+import Notice from "@/views/support/NoticePage.vue";
+import NoticeCreate from "@/views/support/NoticeCreatePage.vue";
+import NoticeSub from "@/views/support/NoticeSubPage.vue";
 // 게임관리
 import Challenge from "@/views/game/ChallengePage.vue";
 import ChallengeSub from "@/views/game/ChallengeSubPage.vue";
@@ -120,56 +120,56 @@ const routes: Array<RouteConfig> = [
     },
     /* 회원 관리 */
 
-    /* 커뮤니티 */
+    /* 고객센터 */
     {
-        path: "/community/faq",
+        path: "/support/faq",
         name: "FAQ",
         component: FAQ,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {
-        path: "/community/faq/create",
+        path: "/support/faq/create",
         name: "FAQCreate",
         component: FAQCreate,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {
-        path: "/community/faq/sub/:index",
+        path: "/support/faq/sub/:index",
         name: "FAQSub",
         component: FAQSub,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {
-        path: "/community/inquiry",
+        path: "/support/inquiry",
         name: "Inquiry",
         component: Inquiry,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {
-        path: "/community/inquiry/sub/:index",
-        name: "CommunityInquirySub",
+        path: "/support/inquiry/sub/:index",
+        name: "supportInquirySub",
         component: InquirySub,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {
-        path: "/community/notice",
+        path: "/support/notice",
         name: "Notice",
         component: Notice,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {
-        path: "/community/notice/create",
+        path: "/support/notice/create",
         name: "NoticeCreate",
         component: NoticeCreate,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {
-        path: "/community/notice/sub/:index",
+        path: "/support/notice/sub/:index",
         name: "NoticeSub",
         component: NoticeSub,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
-    /* 커뮤니티 */
+    /* 고객센터 */
 
     /* 게임 관리 */
     {

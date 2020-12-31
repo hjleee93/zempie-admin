@@ -170,16 +170,16 @@ export default class extends Vue {
 
                 if(this.columnName == "logs" && this.rows[index].path != null){
                     this.rows[index].path = this.rows[index].path.split("/")
-                    .map((text: any) => 
-                        text.replace("support", "커뮤니티")
-                            .replace("notice", "공지사항")
-                            .replace("mod", "수정")
-                            .replace("del", "삭제")
-                            .replace("response", "문의 답변")
-                            .replace("admin", "관리자")
-                            .replace("add", "추가")
-                    )
-                    .join(" ");
+                        .map((text: any) => 
+                            text.replace("support", "고객센터")
+                                .replace("notice", "공지사항")
+                                .replace("mod", "수정")
+                                .replace("del", "삭제")
+                                .replace("response", "문의 답변")
+                                .replace("admin", "관리자")
+                                .replace("add", "추가")
+                        )
+                        .join(" ");
                 }
             }
         }
