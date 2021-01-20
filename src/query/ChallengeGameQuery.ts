@@ -16,27 +16,45 @@ const gameListGet = gql`
     }
 `;
 const gameGetById =  gql`
-query gameGet($id: Int) {
-    gameGet(where: {official: false, id: $id}) {
-        id
-        title
-        description
-        pathname
-        user{
+    query gameGet($id: Int) {
+        gameGet(where: {official: false, id: $id}) {
             id
-            name
+            title
+            description
+            pathname
+            user{
+                id
+                name
+            }
+            version
+            hashtags
+            activated
+            enabled
+            pathname
+            url_game
+            url_thumb
+            url_thumb_gif
+            created_at
         }
-        version
-        hashtags
-        activated
-        enabled
-        pathname
-        url_game
-        url_thumb
-        url_thumb_gif
-        created_at
     }
-}
+`;
+
+const gameListGetOptionAxios = ( order: string, limit: number, offset: number) => `
+    query gameGet {
+        gameGet(where: {official: false}, order: "${order}", limit: ${limit}, offset: ${offset}) {
+            id
+            title
+            user{
+                id
+                name
+            }
+            version
+            enabled
+            created_at
+        }
+
+        gameCount(where: {official: false})
+    }
 `;
 
 const gameDelete = gql`
@@ -68,4 +86,4 @@ const gameMoveOfficial = gql`
     }
 `;
 
-export default {gameListGet, gameGetById, gameDelete, gameHide, gameShow, gameMoveOfficial};
+export default {gameListGet, gameGetById, gameListGetOptionAxios, gameDelete, gameHide, gameShow, gameMoveOfficial};

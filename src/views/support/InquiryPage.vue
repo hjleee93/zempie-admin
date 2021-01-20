@@ -23,7 +23,7 @@ import Api from "@/util/Api";
 export default class extends Vue {
     rows: any[] = [];
     columns = [
-        { label: "인덱스", name: "id", field: "id", align: "left", sortable: true},
+        { label: "#", name: "id", field: "id", align: "left", sortable: true},
         { label: "제목", name: "title", field: "title", align: "left", sortable: true, event: true},
         { label: "카테고리", name: "category", field: "category", align: "left", sortable: true},
         { label: "질문자", name: "userName", field: "userName", align: "left"},

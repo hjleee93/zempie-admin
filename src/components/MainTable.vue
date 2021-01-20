@@ -167,6 +167,14 @@ export default class extends Vue {
                 if(this.columnName == "users" && this.rows[index].email == null){
                     this.rows[index].email = "없음";
                 }
+    
+                if(this.columnName == "users" && this.rows[index].last_log_in != null){
+                    this.rows[index].last_log_in = new Date(this.rows[index].last_log_in).toLocaleString();
+                }
+
+                if(this.columnName == "users" && this.rows[index].last_log_in == null){
+                    this.rows[index].last_log_in = "-";
+                }
 
                 if(this.columnName == "logs" && this.rows[index].path != null){
                     this.rows[index].path = this.rows[index].path.split("/")

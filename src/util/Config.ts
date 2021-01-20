@@ -11,6 +11,11 @@ export default {
     noticeCategory : [
         "공지", "점검", "업데이트", "이벤트", "기타"
     ],
+    faqCategory : [
+        "회원 정보",
+        "게임 이용",
+        "게임 등록"
+    ],
     levelOptions : [
         { 
             label: "Viewer", 

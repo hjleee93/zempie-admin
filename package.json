@@ -12,7 +12,7 @@
     "@quasar/extras": "^1.0.0",
     "@types/chart.js": "^2.9.26",
     "apollo-boost": "^0.4.9",
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "chart.js": "^2.9.4",
     "core-js": "^3.6.5",
     "graphql": "^15.4.0",

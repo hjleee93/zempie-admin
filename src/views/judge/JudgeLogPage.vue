@@ -25,7 +25,7 @@
                     아이템 삭제
                 </div>
 
-                <q-input v-model="deletedIdx" type="number" label="삭제할 인덱스" />
+                <q-input v-model="deletedIdx" type="number" label="삭제할 #" />
 
                 <q-btn color="red" label="아이템 삭제" @click="deleteItem" />
             </div>
@@ -37,7 +37,7 @@
                     아이템 수정
                 </div>
 
-                <q-input v-model="editId" type="number" label="아이템 인덱스" />
+                <q-input v-model="editId" type="number" label="아이템 #" />
                 <q-input v-model="editName" type="text" label="아이템 이름" />
                 <q-input v-model="editType" type="number" label="아이템 타입" />
                 <q-input v-model="editPeriod" type="number" label="아이템 기간" />

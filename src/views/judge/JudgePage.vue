@@ -27,7 +27,7 @@ export default class extends Vue {
     // rows: any[] = []
 
     columns = [
-        { label: '인덱스', name:"project_id", field: 'project_id', align: 'left' },
+        { label: '#', name:"project_id", field: 'project_id', align: 'left' },
         // { label: '', name: 'project_id', field: 'project_id', align: 'left' },
         { label: '게임 제목', name: "title", field: 'title', align: 'left', event: true },
         { label: '버전', name: "version", field: 'version', align: 'left' },

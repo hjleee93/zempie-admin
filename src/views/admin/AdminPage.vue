@@ -59,7 +59,7 @@ import { Notify } from "quasar";
 })
 export default class extends Vue {
     columns = [
-        { label: "인덱스", name: "id", field: "id", align: "left", sortable: true },
+        { label: "#", name: "id", field: "id", align: "left", sortable: true },
         // { label: "아이디", name: "account", field: "account", align: "left", sortable: true },
         { label: "이름", name: "name", field: "name", align: "left", sortable: true },
         { label: "권한", name: "level", field: "level", align: "left", sortable: true, event: true },

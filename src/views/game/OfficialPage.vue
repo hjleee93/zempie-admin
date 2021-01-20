@@ -1,8 +1,13 @@
 <template>
     <div>
         <div v-if="!$apollo.queries.gameGet.loading">
-            <GraphqlTable></GraphqlTable>
-            <q-table 
+            <GraphqlTable 
+            :query="Query.gameListGetOptionAxios" 
+            :columns="columns" 
+            rowKey="id" 
+            columnName="game" 
+            @subEvent="subEvent" />
+            <!-- <q-table 
             :data="rows" 
             row-key="id" 
             :columns="columns"
@@ -10,13 +15,6 @@
             :rows-per-page-options="pageOption" 
             >
                 <template v-slot:top-right>
-                    
-                    
-                    <!-- <q-input borderless dense debounce="300" v-model="filter" placeholder="Search" class="q-ml-md">
-                        <template v-slot:append>
-                            <q-icon name="search" />
-                        </template>
-                    </q-input> -->
                 </template>
 
                 <template v-slot:body-cell="props">
@@ -29,7 +27,7 @@
                         </div>
                     </q-td>
                 </template>
-            </q-table>
+            </q-table> -->
         </div>
         
     </div>
@@ -37,7 +35,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import GraphqlTable from "src/components/GraphqlTable.vue";
+import GraphqlTable from "@/components/GraphqlTable.vue";
 
 import Query from "../../query/OfficialGameQuery";
 import gql from "graphql-tag";
@@ -52,6 +50,7 @@ import gql from "graphql-tag";
     }
 })
 export default class extends Vue {
+    Query = Query;
     gameGet: any;
 
     pagination = {
@@ -84,11 +83,11 @@ export default class extends Vue {
     }
 
     columns = [
-        { field: "id", name: "id", label: "인덱스", align: "left" },
-        { field: "title", name: "title", label: "제목", align: "left", event: true },
+        { field: "id", name: "id", label: "#", align: "left", sortable: true, sort: () => null },
+        { field: "title", name: "title", label: "제목", align: "left", sortable: true, sort: () => null, event: true },
         { field: "developer", name: "developer", label: "개발자", align: "left" },
         { field: "version", name: "version", label: "버전", align: "left" },
-        { field: "created_date", name: "created_date", label: "등록일", align: "left" },
+        { field: "created_at", name: "created_at", label: "등록일", align: "left", sortable: true, sort: () => null },
         { field: "state", name: "state", label: "상태", align: "left" },
     ];
 

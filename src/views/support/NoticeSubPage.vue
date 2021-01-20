@@ -31,7 +31,7 @@
 
             <q-card-section>
                 <div class="row justify-end">
-                    <q-btn class="q-pl-md q-pr-md q-mr-md" color="grey" label="취소" @click="cancel" />
+                    <q-btn class="q-pl-md q-pr-md q-mr-md" color="grey" outline label="취소" @click="cancel" />
                     <q-btn class="q-pl-md q-pr-md q-mr-md" color="positive" label="수정" :disable="submitDisble" @click="editNotice" />
                     <q-btn class="q-pl-md q-pr-md" color="red" label="삭제" @click="deleteNotice" />
                 </div>
@@ -68,7 +68,7 @@ import Query from "../../query/NoticeQuery";
 export default class extends Vue {
     noticeGet: any;
     async created(){
-        await this.$apollo.queries.noticeGet.setVariables({id: Math.round((Number(this.$route.params.index)))});
+        await this.$apollo.queries.noticeGet.setVariables({id: Math.round(Number(this.$route.params.index))});
         await this.refresh();
     }
 
@@ -84,47 +84,73 @@ export default class extends Vue {
         return this.title.trim() == "" || this.content.trim() == "";
     }
 
-    test(){
-        console.log(this.title, this.content);
-    }
-
+    deleteProcess = false
     async deleteNotice(){
-        Dialog.create({
-            title: '삭제',
-            message: '정말로 삭제하겠습니까?',
-            cancel: true,
-            persistent: true
-        }).onOk(async () => {
-            const data = await this.$apollo.mutate({
-                mutation: Query.noticeDelete,
-                variables: {
-                    id: Math.round(this.noticeGet[0].id),
-                },
-            })
+        if(!this.deleteProcess){
+            Dialog.create({
+                title: '삭제',
+                message: '정말로 삭제하겠습니까?',
+                cancel: true,
+                persistent: true
+            }).onOk(async () => {
+                const data = await this.$apollo.mutate({
+                    mutation: Query.noticeDelete,
+                    variables: {
+                        id: Math.round(this.noticeGet[0].id),
+                    },
+                })
 
-            this.$router.push("/support/notice");
-        });
+                this.$q.notify({
+                    type: "positive",
+                    message: "성공적으로 삭제되었습니다.",
+                    position: "top"
+                })
+
+                this.$router.push("/support/notice");
+            });
+        }else{
+            this.$q.notify({
+                type: "negative",
+                message: "서버 응답 대기중.",
+                position: "top"
+            })
+        }
     }
 
+    editProcess = false
     async editNotice(){
-        Dialog.create({
-            title: '수정',
-            message: '정말로 수정하겠습니까?',
-            cancel: true,
-            persistent: true
-        }).onOk(async () => {
-            const data = await this.$apollo.mutate({
-                mutation: Query.noticeEdit,
-                variables: {
-                    id: Math.round(this.noticeGet[0].id),
-                    title: this.title,
-                    content: this.content,
-                    category: Config.noticeCategory.indexOf(this.category)
-                },
-            })
+        if(!this.editProcess){
+            Dialog.create({
+                title: '수정',
+                message: '정말로 수정하겠습니까?',
+                cancel: true,
+                persistent: true
+            }).onOk(async () => {
+                const data = await this.$apollo.mutate({
+                    mutation: Query.noticeEdit,
+                    variables: {
+                        id: Math.round(this.noticeGet[0].id),
+                        title: this.title,
+                        content: this.content,
+                        category: Config.noticeCategory.indexOf(this.category)
+                    },
+                })
 
-            await this.refresh();
-        });
+                this.$q.notify({
+                    type: "positive",
+                    message: "성공적으로 수정되었습니다.",
+                    position: "top"
+                })
+
+                await this.refresh();
+            });
+        }else{
+            this.$q.notify({
+                type: "negative",
+                message: "서버 응답 대기중.",
+                position: "top"
+            })
+        }
     }
 
     cancel(){

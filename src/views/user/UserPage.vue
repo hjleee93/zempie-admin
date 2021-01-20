@@ -155,9 +155,10 @@ export default class extends Vue {
     ]
 
     columns = [
-        { label: "인덱스", name: "id", field: "id", align: "left", sortable: true },
+        { label: "#", name: "id", field: "id", align: "left", sortable: true },
         { label: "닉네임", name: "name", field: "name", align: "left", sortable: true, event: true },
         { label: "이메일", name: "email", field: "email", align: "left", sortable: true },
+        { label: "마지막 접속일", name: "last_log_in", field: "last_log_in", align: "left", sortable: true },
         { label: "계정 생성일", name: "created_at", field: "created_at", align: "left", sortable: true },
     ];
 
@@ -178,7 +179,7 @@ export default class extends Vue {
     // tab = "data";
 
     // subcolumns = [
-    //     { label: "인덱스", name: "id", field: "id", align: "left", sortable: true},
+    //     { label: "#", name: "id", field: "id", align: "left", sortable: true},
     //     { label: "제목", name: "title", field: "title", align: "left", sortable: true, event: true},
     //     { label: "카테고리", name: "category", field: "category", align: "left", sortable: true},
     //     { label: "질문일", name: "asked_at", field: "asked_at", align: "left", sortable: true},

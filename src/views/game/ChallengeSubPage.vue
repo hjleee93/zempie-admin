@@ -170,8 +170,8 @@ export default class extends Vue {
 
     async hideGame(){
         Dialog.create({
-            title: '숨김',
-            message: '정말로 숨기겠습니까?',
+            title: '비활성화',
+            message: '정말로 비활성화하겠습니까?',
             cancel: true,
             persistent: true
         }).onOk(async () => {
@@ -182,14 +182,20 @@ export default class extends Vue {
                 },
             })
 
+            this.$q.notify({
+                type: "positive",
+                message: "성공적으로 비활성화되었습니다.",
+                position: "top"
+            })
+
             await this.refresh();
         });
     }
 
     async showGame(){
         Dialog.create({
-            title: '숨김',
-            message: '정말로 숨기겠습니까?',
+            title: '활성화',
+            message: '정말로 활성화하겠습니까?',
             cancel: true,
             persistent: true
         }).onOk(async () => {
@@ -198,6 +204,12 @@ export default class extends Vue {
                 variables: {
                     id: Math.round(this.gameGet[0].id),
                 },
+            })
+
+            this.$q.notify({
+                type: "positive",
+                message: "성공적으로 활성화되었습니다.",
+                position: "top"
             })
 
             await this.refresh();
@@ -218,6 +230,12 @@ export default class extends Vue {
                 },
             })
 
+            this.$q.notify({
+                type: "positive",
+                message: "성공적으로 삭제되었습니다.",
+                position: "top"
+            })
+
             this.$router.push("/game/challenge");
         });
     }
@@ -234,6 +252,12 @@ export default class extends Vue {
                 variables: {
                     id: Math.round(this.gameGet[0].id),
                 },
+            })
+
+            this.$q.notify({
+                type: "positive",
+                message: "성공적으로 이동되었습니다.",
+                position: "top"
             })
 
             this.$router.push("/game/official");

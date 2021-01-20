@@ -1,7 +1,15 @@
 <template>
     <div>
         <div v-if="!$apollo.queries.gameGet.loading">
-            <q-table 
+            <GraphqlTable 
+            rowKey="id" 
+            :query="Query.gameListGetOptionAxios" 
+            :columns="columns" 
+            columnName="game"
+            @subEvent="subEvent">
+
+            </GraphqlTable>
+            <!-- <q-table 
             :data="rows" 
             row-key="id" 
             :columns="columns"
@@ -22,7 +30,7 @@
                         </div>
                     </q-td>
                 </template>
-            </q-table>
+            </q-table> -->
         </div>
         
     </div>
@@ -30,17 +38,21 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import GraphqlTable from "@/components/GraphqlTable.vue";
 
 import Query from "../../query/ChallengeGameQuery";
 
 
 @Component({
-    components: {},
+    components: {
+        GraphqlTable
+    },
     apollo: {
         gameGet: Query.gameListGet
     }
 })
 export default class extends Vue {
+    Query = Query;
     gameGet: any;
 
     pagination = {
@@ -74,11 +86,11 @@ export default class extends Vue {
     }
 
     columns = [
-        { field: "id", name: "id", label: "인덱스", align: "left" },
+        { field: "id", name: "id", label: "#", align: "left" },
         { field: "title", name: "title", label: "제목", align: "left", event: true },
         { field: "developer", name: "developer", label: "개발자", align: "left" },
         { field: "version", name: "version", label: "버전", align: "left" },
-        { field: "created_date", name: "created_date", label: "등록일", align: "left" },
+        { field: "created_at", name: "created_at", label: "등록일", align: "left" },
         { field: "state", name: "state", label: "상태", align: "left" },
     ];
 

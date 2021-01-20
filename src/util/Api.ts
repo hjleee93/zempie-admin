@@ -372,6 +372,46 @@ export default class Api{
             return false;
         }
     }
+
+    static faqProcess = true;
+    static async addFaq(category: number, q:string, a: string, file: File){ 
+        if(!this.faqProcess){
+            this.loading();
+            return false;
+        }
+        this.noticeProcess = false;
+        const formData = new FormData();
+        formData.append('title', category.toString());
+        formData.append('content', a);
+        formData.append('category', q);
+        formData.append('file', file);
+
+        try{
+            await Gate({
+                method: "POST",
+                url: `/api/v1/admin/support/notice`,
+                headers: {
+                    'Content-Type': "application/x-www-form-urlencoded"
+                },
+                data :  formData
+            });
+            Notify.create({
+                type: "positive",
+                message: "FAQ가 성공적으로 작성되었습니다.",
+                position: "top",
+            });
+            this.noticeProcess = true;
+            return true;
+        }catch(error){
+            Notify.create({
+                type: "negative",
+                message: "FAQ를 작성하는 도중에 문제가 발생하였습니다.",
+                position: "top",
+            });
+            this.noticeProcess = true;
+            return false;
+        }
+    }
     /* 고객센터 */
 
 

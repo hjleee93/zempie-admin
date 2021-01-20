@@ -58,7 +58,7 @@
                 <q-separator />
 
                 <q-card-actions align="right">
-                    <q-btn v-close-popup color="primary" label="닫기" />
+                    <q-btn v-close-popup color="grey" outline label="닫기" />
                     <q-btn color="positive" label="변경" @click="changePassword" />
                 </q-card-actions>
             </q-card>
@@ -195,10 +195,10 @@ export default class MainLayout extends Vue {
             icon: "forum",
             label: "고객센터",
             sub: [
-                // {
-                //     label: "FAQ",
-                //     path: "/faq",
-                // },
+                {
+                    label: "FAQ",
+                    path: "/faq",
+                },
                 {
                     label: "1 : 1 문의",
                     path: "/inquiry",
@@ -380,8 +380,6 @@ export default class MainLayout extends Vue {
             this.$router.push(path);
         }
     }
-    
-    
     
     passwordPopup = false;
     name = "";

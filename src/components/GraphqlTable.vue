@@ -4,10 +4,7 @@
     row-key="id" 
     :columns="columns" 
     :pagination.sync="pagination" 
-    :rows-per-page-options="pageOption" 
-    :title="title"
-    :selection="selection || 'none'"
-    :selected.sync="selected"
+    :rows-per-page-options="pageOption"
     >
         <template v-slot:top-right>
             <slot></slot>
@@ -30,12 +27,12 @@
 import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 import Api from "@/util/Api";
 import Config from "@/util/Config";
+import Gate from "@/util/Gate";
+import axios from "axios";
 
 export const TableBus = new Vue();
 
-@Component({
-    components: {},
-})
+@Component({})
 export default class extends Vue {
     pagination = {
         rowsPerPage: 20,
@@ -47,11 +44,10 @@ export default class extends Vue {
 
     rows: any = [];
 
-    selected : any = [];
-
     @Prop() rowKey!: string;
     @Prop() columns!: any;
-    @Prop() query!: any;
+    @Prop() query!: Function;
+    @Prop() columnName!: string;
 
     subEvent( row: any ){
         this.$emit('subEvent', row);
@@ -62,62 +58,67 @@ export default class extends Vue {
         await this.movePage();
     }
 
-    @Watch("selected")
-    onSelectedChanged(){
-        this.$emit('selectEvent', this.selected);
-    }
-
-    async mounted(){
-        console.log(this.query);
-        // await this.movePage();
-    }
-
-    created(){
+    async created(){
         TableBus.$on("reload", async () => {
             await this.movePage();
         }); 
     }
 
     async movePage() {
-        // const limit = this.pagination.rowsPerPage;
-        // const offset = (this.pagination.page - 1) * this.pagination.rowsPerPage;
-        // let order = this.pagination.sortBy || this.rowKey;
-        // if(this.pagination.descending){
-        //     order = "reverse:" + order;
-        // }
+        const limit = this.pagination.rowsPerPage;
+        const offset = (this.pagination.page - 1) * this.pagination.rowsPerPage;
+        let order = this.pagination.sortBy || this.rowKey;
+        
+        if(this.pagination.descending){
+            order = "reverse:" + order;
+        }
+        const result = await axios({
+            method: "POST",
+            url: process.env.VUE_APP_GRAPHQL_LINK,
+            data: {
+                query: this.query(order, limit, offset)
+            }
+        })
+        const count = result.data.data[this.columnName + "Count"];
+        const list = result.data.data[this.columnName + "Get"];
 
+        const rows = new Array(count || 0).fill({id:null});
 
+        if(this.rows.length == 0){
+            this.rows = new Array(count || 0).fill({id:null});
+        }
 
-        // const rows = new Array(result.count || 0).fill({id:null});
+        for(let i = 0; i < this.rows.length; i++){
+            rows[i] = this.rows[i];
+        }
 
-        // if(this.rows.length == 0){
-        //     this.rows = new Array(result.count || 0).fill({id:null});
-        // }
+        this.rows = rows;
+        for(let i = 0; i < list.length; i++){
+            let index = offset + i;
+            this.rows[index] = list[i];
 
-        // for(let i = 0; i < this.rows.length; i++){
-        //     rows[i] = this.rows[i];
-        // }
+            if(rows[index].created_at != null){
+                rows[index].created_at = new Date(rows[index].created_at).toLocaleString();
+            }
 
-        // this.rows = rows;
-        // if(result[this.columnName] == null){
-        //     for(let i = 0; i < result.length; i++){
-        //         let index = offset + i;
-        //         this.rows[index] = result[i];
+            if(this.columnName == "game" && rows[index].user != null){
+                rows[index].developer = rows[index].user.name;
+            }else{
+                rows[index].developer = '없음';
+            }
 
-        //         if(this.rows[index].created_at != null && this.rows[index].created_at != ""){
-        //             this.rows[index].created_at = new Date(this.rows[index].created_at).toLocaleString();
-        //         }
+            if(this.columnName == "game"){
+                if(rows[index].enabled){
+                    rows[index].state = "배포 중";
+                }else{
+                    rows[index].state = "대기 중";
+                }
+            }
 
-        //         if(this.rows[index].project != null && this.rows[index].created_at != ""){
-        //             this.rows[index].title = this.rows[index].project.name;
-        //         }
-        //     }
-        //     this.pageOption = [0];
-        //     this.pagination.rowsPerPage = 0;
-        // }else{
-        //     for(let i = 0; i < result[this.columnName].length; i++){
-        //     }
-        // }
+            if(this.columnName == "faq"){
+                rows[index].category = Config.faqCategory[rows[index].category];
+            }
+        }
     }
 }
 </script>

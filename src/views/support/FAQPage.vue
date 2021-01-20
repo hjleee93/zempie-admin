@@ -1,66 +1,45 @@
 <template>
     <div>
-        <CheckTable :rows="rows" rowKey="id" :columns="columns" link="/support/faq/sub/" @selectEvent="selectItem" >
-            <q-btn class="q-mr-sm" color="primary" label="새 글작성" @click="moveCreatePage" />
-            <q-btn class="q-mr-sm" color="primary" label="편집" />
-            <q-btn class="q-mr-sm" color="primary" label="삭제" />
-        </CheckTable>
-        <!-- <MainTable
+        <GraphqlTable
         rowKey="id" 
+        :query="Query.faqGetTable"
         :columns="columns" 
-        apiLink="studio/versions" 
-        columnName="notices" 
-        @subEvent="moveSubPage"
+        columnName="faq" 
+        @subEvent="subEvent"
         >
-            <q-btn class="q-mr-sm" color="primary" label="새 글작성" @click="moveCreatePage" />
-            <q-btn class="q-mr-sm" color="primary" label="편집" />
-            <q-btn class="q-mr-sm" color="primary" label="삭제" />
-        </MainTable> -->
+            <q-btn class="q-mr-sm" color="primary" label="새 FAQ작성" @click="moveCreatePage" />
+        </GraphqlTable>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import CheckTable from "@/components/CheckTable.vue";
-import MainTable from "@/components/MainTable.vue";
+import GraphqlTable from "@/components/GraphqlTable.vue";
+
+import Query from "@/query/FaqQuery";
 
 @Component({
     components: {
-        CheckTable,
-        MainTable
+        GraphqlTable
     },
 })
 export default class extends Vue {
-    selectedItem = null;
-    rows = [
-        {
-            "번호" : 1,
-            "카테고리" : "게임 문의",
-            "제목" : "제목",
-            "조회수" : 11,
-        },
-        {
-            "번호" : 2,
-            "카테고리" : "계정",
-            "제목" : "제목",
-            "조회수" : 10,
-        }
-    ]
+    Query = Query;
 
     columns = [
-        { name: '번호', label:"번호", field: '번호', align: "left" },
-        { name: '카테고리', label: '카테고리', field: '카테고리', align: "left" },
-        { name: '제목', label: '제목', field: '제목', align: "left" },
-        { name: '조회수', label: '조회수', field: '조회수', align: "left" },
-        { name: 'detail', label: "상세 보기"}
+        { field: "id", name: "id", label: "#", align: "left" },
+        { field: "q", name: "q", label: "질문", align: "left", event: true },
+        { field: "category", name: "category", label: "#", align: "left" },
+        // { field: "a", name: "a", label: "응답", align: "left" },
+        { field: "created_at", name: "created_at", label: "생성일", align: "left" }
     ];
+
+    subEvent( row : any ){
+        this.$router.push(this.$route.path + "/sub/" + row.id);
+    }
 
     moveCreatePage(){
         this.$router.push(this.$route.path + "/create");
-    }
-
-    selectItem(item: any){
-        this.selectedItem = item;
     }
 }
 </script>

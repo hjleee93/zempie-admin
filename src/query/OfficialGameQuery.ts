@@ -34,6 +34,24 @@ const gameListGetOption = gql`
     }
 `;
 
+const gameListGetOptionAxios = ( order: string, limit: number, offset: number) => `
+    query gameGet {
+        gameGet(where: {official: true}, order: "${order}", limit: ${limit}, offset: ${offset}) {
+            id
+            title
+            user{
+                id
+                name
+            }
+            version
+            enabled
+            created_at
+        }
+
+        gameCount(where: {official: true})
+    }
+`;
+
 
 const gameGetById =  gql`
 query gameGet($id: Int) {
@@ -89,4 +107,4 @@ const gameMoveChallenge = gql`
     }
 `;
 
-export default {gameListGet, gameListGetOption, gameGetById, gameDelete, gameHide, gameShow, gameMoveChallenge};
+export default {gameListGet, gameListGetOption, gameListGetOptionAxios, gameGetById, gameDelete, gameHide, gameShow, gameMoveChallenge};
