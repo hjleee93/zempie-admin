@@ -61,7 +61,6 @@ const store: StoreOptions<State> = {
 
                 return true;
             }catch(error){
-                // console.log([error]);
                 return false;
             }
         },
@@ -91,7 +90,7 @@ const store: StoreOptions<State> = {
                     message: '해당 계정의 토큰이 만료되었습니다. 다시 로그인해주시기 바랍니다.',
                     position: "top",
                 });
-                router.push("/login");
+                await router.push("/login");
                 context.commit("logout");
                 return false;
             }

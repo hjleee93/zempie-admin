@@ -1,7 +1,7 @@
 <template>
     <q-card class="bg-white full-width">
         <q-card-section class="bg-blue-grey-8">
-            <div class="row jusify-bewween items-center no-wrap">
+            <div class="row justify-between items-center no-wrap">
                 <div class="col">
                     <div class="text-h6 text-white text-left">{{ title }}</div>
                 </div>
@@ -46,7 +46,7 @@ export default class extends Vue {
 
     createChart() {
         const ctx = this.$refs.canvas as HTMLCanvasElement;
-        const myChart = new Chart(ctx, {
+        return new Chart(ctx, {
             type: "line",
             data: {
                 labels: this.labelList,
@@ -76,7 +76,6 @@ export default class extends Vue {
                 }
             },
         });
-        return myChart;
     }
 }
 </script>

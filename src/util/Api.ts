@@ -372,46 +372,6 @@ export default class Api{
             return false;
         }
     }
-
-    static faqProcess = true;
-    static async addFaq(category: number, q:string, a: string, file: File){ 
-        if(!this.faqProcess){
-            this.loading();
-            return false;
-        }
-        this.noticeProcess = false;
-        const formData = new FormData();
-        formData.append('title', category.toString());
-        formData.append('content', a);
-        formData.append('category', q);
-        formData.append('file', file);
-
-        try{
-            await Gate({
-                method: "POST",
-                url: `/api/v1/admin/support/notice`,
-                headers: {
-                    'Content-Type': "application/x-www-form-urlencoded"
-                },
-                data :  formData
-            });
-            Notify.create({
-                type: "positive",
-                message: "FAQ가 성공적으로 작성되었습니다.",
-                position: "top",
-            });
-            this.noticeProcess = true;
-            return true;
-        }catch(error){
-            Notify.create({
-                type: "negative",
-                message: "FAQ를 작성하는 도중에 문제가 발생하였습니다.",
-                position: "top",
-            });
-            this.noticeProcess = true;
-            return false;
-        }
-    }
     /* 고객센터 */
 
 
@@ -464,6 +424,7 @@ export default class Api{
                 },
                 params
             });
+
             Notify.create({
                 type: "positive",
                 message: "성공적으로 심사가 적용되었습니다.",
@@ -484,22 +445,62 @@ export default class Api{
 
 
     /* 게임 관리 */
+    static affiliateProcess = true;
+    static async addAffiliateGame(
+        pathname : string,
+        title : string,
+        description : string,
+        hashtags : string,
+        url_game : string,
+        url_thumb : string,
+        url_thumb_webp : string,
+        url_thumb_gif : string
+    ) {
 
-    // static async getGameList(){
-    //     try{
-    //         const result = await Gate({
-    //             method: "GET",
-    //             // url: `/api/v1/games`,
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //             }
-    //         });
-    //         return result.data.result;
-    //     }catch(error){
-    //         return false;
-    //     }
-    // }
+        if( !this.affiliateProcess ) {
+            this.loading();
+            return;
+        }
+        this.affiliateProcess = false;
 
+        const params = new URLSearchParams();
+        params.append("pathname", pathname);
+        params.append("title", title);
+        params.append("description", description);
+        params.append("hashtags", hashtags);
+        params.append("url_game", url_game);
+        params.append("url_thumb", url_thumb);
+        params.append("url_thumb_webp", url_thumb_webp);
+        params.append("url_thumb_gif", url_thumb_gif);
+
+        try{
+            const result = await Gate({
+                method: "POST",
+                url: `/api/v1/admin/game/c/p`,
+                headers: {
+                    'Content-Type': "application/x-www-form-urlencoded"
+                },
+                params
+            });
+
+            Notify.create({
+                type: "positive",
+                message: "성공적으로 제휴 게임이 추가되었습니다.",
+                position: "top",
+            });
+            this.affiliateProcess = true;
+            return true;
+        }catch(error){
+            console.log([error]);
+            Notify.create({
+                type: "positive",
+                message: error.response.data.error,
+                position: "top",
+            });
+            this.affiliateProcess = true;
+            return false;
+        }
+    }
     /* 게임 관리 */
 
     

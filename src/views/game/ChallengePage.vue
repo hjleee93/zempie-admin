@@ -6,33 +6,12 @@
             :query="Query.gameListGetOptionAxios" 
             :columns="columns" 
             columnName="game"
-            @subEvent="subEvent">
+            @subEvent="subEvent"
+            :exportMode="true"
+            filename="도전 게임">
 
             </GraphqlTable>
-            <!-- <q-table 
-            :data="rows" 
-            row-key="id" 
-            :columns="columns"
-            :pagination.sync="pagination" 
-            :rows-per-page-options="pageOption" 
-            >
-                <template v-slot:top-right>
-                    
-                </template>
-
-                <template v-slot:body-cell="props">
-                    <q-td :props="props">
-                        <div v-if="props.col.event">
-                            <a href="#" @click="(event)=>{event.preventDefault();subEvent(props.row)}">{{rows[props.rowIndex][props.col.field]}}</a>
-                        </div>
-                        <div v-else>
-                            {{rows[props.rowIndex][props.col.field]}}
-                        </div>
-                    </q-td>
-                </template>
-            </q-table> -->
         </div>
-        
     </div>
 </template>
 
@@ -54,36 +33,6 @@ import Query from "../../query/ChallengeGameQuery";
 export default class extends Vue {
     Query = Query;
     gameGet: any;
-
-    pagination = {
-        rowsPerPage: 20,
-        sortBy: null,
-        descending: true,
-        page: 1,
-    };
-    pageOption = [5, 10, 15, 20, 30]
-
-    get rows(){
-        if(this.$apollo.queries.gameGet.loading){
-            return [];
-        }else{
-            return this.gameGet.map((x : any) => {
-                if(x.user != null){
-                    x.developer = x.user.name || "이름 없음";
-                }else{
-                    x.developer = "이름 없음";
-                }
-                
-                x.created_date = new Date(x.created_at).toLocaleString();
-                const state = x.enabled;
-                x.state = "배포 중";
-                if(!state){
-                    x.state = "대기 중";
-                }
-                return x;
-            });
-        }
-    }
 
     columns = [
         { field: "id", name: "id", label: "#", align: "left" },

@@ -51,8 +51,8 @@ export default class extends Vue {
                 message: '로그인 성공',
                 position: "top",
             });
-            this.$store.dispatch("getAdminData");
-            this.$router.push("/");
+            await this.$store.dispatch("getAdminData");
+            await this.$router.push("/");
         }else{
             Notify.create({
                 type: "negative",

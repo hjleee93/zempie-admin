@@ -100,14 +100,16 @@
                 <q-separator />
 
                 <q-tab-panel name="game">
-                    <div class="text-h5 q-mb-md">
+                    <!-- <div class="text-h5 q-mb-md">
                         게임 목록
-                    </div>
+                        
+                    </div> -->
 
                     <q-table
                         :data="user.devGames"
                         :columns="gamesColumns"
                         row-key="id"
+                        title="게임 목록"
                     >
                         <template v-slot:body-cell="props">
                             <q-td :props="props">
@@ -182,6 +184,7 @@ import Config from "@/util/Config";
 
 import Query from "@/query/UserQuery";
 
+
 @Component({
     components: {
         LineChart,
@@ -255,7 +258,7 @@ export default class extends Vue {
     }
 
     get channelLink(){
-        return process.env.VUE_APP_ZEMPIE_LINK + 'channel/' + this.user.channel_id
+        return process.env.VUE_APP_ZEMPIE_LINK + '/channel/' + this.user.channel_id
     }
 }
 </script>

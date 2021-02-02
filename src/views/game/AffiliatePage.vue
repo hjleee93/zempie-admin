@@ -1,30 +1,28 @@
 <template>
     <GraphqlTable
-    :query="Query.gameListGetOptionAxios"
-    :columns="columns"
-    rowKey="id"
-    columnName="game"
-    @subEvent="subEvent"
-    :exportMode="true"
-    filename="정식 게임">
-            
+        :query="Query.gameListGetOptionAxios"
+        :columns="columns"
+        rowKey="id"
+        columnName="game"
+        @subEvent="subEvent"
+        :export-mode="true"
+        filename="제휴 게임">
+        <q-btn label="제휴게임 추가하기" color="primary" @click="moveCreatePage" class="q-ml-md" />
     </GraphqlTable>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import GraphqlTable from "@/components/GraphqlTable.vue";
+import {Vue, Component, Prop} from "vue-property-decorator"
+import GraphqlTable from '@/components/GraphqlTable.vue';
 
-import Query from "../../query/OfficialGameQuery";
+import Query from "../../query/AffiliateQuery";
 
 @Component({
-    components: {
-        GraphqlTable
-    },
-    apollo: {
+    components : {
+        GraphqlTable: GraphqlTable
     }
 })
-export default class extends Vue {
+export default class AffiliatePage extends Vue {
     Query = Query;
 
     columns = [
@@ -36,8 +34,16 @@ export default class extends Vue {
         { field: "state", name: "state", label: "상태", align: "left" },
     ];
 
+    moveCreatePage() {
+        this.$router.push( this.$route.path + "/create" );
+    }
+
     subEvent( rows: any ){
-        this.$router.push("/game/official/sub/" + rows.id);
+        this.$router.push("/game/affiliate/sub/" + rows.id);
     }
 }
 </script>
+
+<style scoped>
+
+</style>

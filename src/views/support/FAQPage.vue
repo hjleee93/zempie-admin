@@ -1,4 +1,4 @@
-<template>
+w<template>
     <div>
         <GraphqlTable
         rowKey="id" 

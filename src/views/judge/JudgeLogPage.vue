@@ -1,7 +1,5 @@
 <template>
     <div>
-        <!-- <Table :rows="rows" /> -->
-
         <div v-if="!$apollo.queries.itemGet.loading">
             <div class="q-mt-md q-mb-md">
                 <div class="text-h6">
@@ -72,45 +70,17 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import Table from "@/components/Table.vue";
-
-import gql from "graphql-tag";
-import { QueryOptions } from "apollo-boost";
 import Query from "../../query/ItemQuery";
 
 
 @Component({
     components: {
-        Table,
     },
     apollo: {
         itemGet: Query.itemGet
     }
 })
 export default class extends Vue {
-    rows = [
-        {
-            번호: 1,
-            아이디: "Admin Master",
-            "게임 제목": "Example",
-            버전: "0.0.1",
-            상태: "심사 완료",
-            신청일: "2020.10.24 04:32:11",
-            심사일: "2020.10.24 04:32:13",
-            "반려 사유": "-",
-        },
-        {
-            번호: 2,
-            아이디: "Admin Alpha",
-            "게임 제목": "Example",
-            버전: "0.0.1",
-            상태: "반려됨",
-            신청일: "2020.10.24 04:32:11",
-            심사일: "2020.10.24 04:32:12",
-            "반려 사유": "선정성",
-        },
-    ];
-
     columns = [
         { name: "번호", label: "번호", field: "번호", align: "left" },
         { name: "아이디", label: "아이디", field: "아이디", align: "left" },

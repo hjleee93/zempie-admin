@@ -11,12 +11,6 @@
     >
         <template v-slot:top-right>
             <slot></slot>
-            
-            <!-- <q-input borderless dense debounce="300" v-model="filter" placeholder="Search" class="q-ml-md">
-                <template v-slot:append>
-                    <q-icon name="search" />
-                </template>
-            </q-input> -->
         </template>
 
         <template v-slot:body-cell="props">
@@ -55,7 +49,7 @@ export default class extends Vue {
 
     rows: any = [];
 
-    selected : any = [];
+    selected: any = [];
 
     @Prop() rowKey!: string;
     @Prop() columns!: any[];
@@ -101,7 +95,7 @@ export default class extends Vue {
         params.append("sort", sort);
         params.append("dir", dir);
 
-        for(let key in this.apiParam){
+        for(const key in this.apiParam){
             params.append(key, this.apiParam[key]);
         }
 
@@ -119,7 +113,7 @@ export default class extends Vue {
         this.rows = rows;
         if(result[this.columnName] == null){
             for(let i = 0; i < result.length; i++){
-                let index = offset + i;
+                const index = offset + i;
                 this.rows[index] = result[i];
 
                 if(this.rows[index].created_at != null && this.rows[index].created_at != ""){
@@ -128,13 +122,13 @@ export default class extends Vue {
 
                 if(this.rows[index].project != null && this.rows[index].created_at != ""){
                     this.rows[index].title = this.rows[index].project.name;
-                }
+                }1
             }
             this.pageOption = [0];
             this.pagination.rowsPerPage = 0;
         }else{
             for(let i = 0; i < result[this.columnName].length; i++){
-                let index = offset + i;
+                const index = offset + i;
                 this.rows[index] = result[this.columnName][i];
 
                 if(this.rows[index].created_at != null && this.rows[index].created_at != ""){

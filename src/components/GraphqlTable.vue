@@ -7,6 +7,15 @@
     :rows-per-page-options="pageOption"
     >
         <template v-slot:top-right>
+            <div v-if="searchOptions != null" class="flex">
+                <q-select v-model="searchCategory" :options="searchOptions" placeholder="Category" class="q-mr-md" />
+                <q-input v-model="search" type="text" placeholder="Search" class="q-mr-md" />
+            </div>
+
+            <div v-if="exportMode != null && rows.length > 0">
+                <q-btn color="primary" icon="get_app" label="엑셀 파일로 추출" @click="exportData" />
+            </div>
+            
             <slot></slot>
         </template>
 
@@ -30,6 +39,8 @@ import Config from "@/util/Config";
 import Gate from "@/util/Gate";
 import axios from "axios";
 
+import exportExcel from '@/util/ExportExcel';
+
 export const TableBus = new Vue();
 
 @Component({})
@@ -48,6 +59,9 @@ export default class extends Vue {
     @Prop() columns!: any;
     @Prop() query!: Function;
     @Prop() columnName!: string;
+    @Prop() exportMode!: boolean;
+    @Prop() filename!: string;
+    @Prop() searchOptions!: string[]; // prop
 
     subEvent( row: any ){
         this.$emit('subEvent', row);
@@ -72,6 +86,13 @@ export default class extends Vue {
         if(this.pagination.descending){
             order = "reverse:" + order;
         }
+
+        const { count, list } = await this.getData( order, limit, offset );
+
+        this.setRows( count, list, offset );
+    }
+
+    async getData( order : string, limit : number, offset : number ) {
         const result = await axios({
             method: "POST",
             url: process.env.VUE_APP_GRAPHQL_LINK,
@@ -82,6 +103,13 @@ export default class extends Vue {
         const count = result.data.data[this.columnName + "Count"];
         const list = result.data.data[this.columnName + "Get"];
 
+        return {
+            count,
+            list
+        }
+    }
+
+    setRows( count : number, list : any, offset : number ) {
         const rows = new Array(count || 0).fill({id:null});
 
         if(this.rows.length == 0){
@@ -93,32 +121,68 @@ export default class extends Vue {
         }
 
         this.rows = rows;
+        
+        this.replaceData( list, offset );
+    }
+
+    replaceData( list : any, offset : number ) {
         for(let i = 0; i < list.length; i++){
             let index = offset + i;
             this.rows[index] = list[i];
 
-            if(rows[index].created_at != null){
-                rows[index].created_at = new Date(rows[index].created_at).toLocaleString();
+            if(this.rows[index].created_at != null){
+                this.rows[index].created_at = new Date(this.rows[index].created_at).toLocaleString();
             }
 
-            if(this.columnName == "game" && rows[index].user != null){
-                rows[index].developer = rows[index].user.name;
+            if(this.columnName == "game" && this.rows[index].user != null){
+                this.rows[index].developer = this.rows[index].user.name;
             }else{
-                rows[index].developer = '없음';
+                this.rows[index].developer = '없음';
             }
 
             if(this.columnName == "game"){
-                if(rows[index].enabled){
-                    rows[index].state = "배포 중";
+                if(this.rows[index].enabled){
+                    this.rows[index].state = "배포 중";
                 }else{
-                    rows[index].state = "대기 중";
+                    this.rows[index].state = "대기 중";
                 }
             }
 
             if(this.columnName == "faq"){
-                rows[index].category = Config.faqCategory[rows[index].category];
+                this.rows[index].category = Config.faqCategory[this.rows[index].category];
             }
         }
     }
+
+    async exportData() {
+        let order = this.pagination.sortBy || this.rowKey;
+        if(this.pagination.descending){
+            order = "reverse:" + order;
+        }
+        const { count, list } = await this.getData( order, this.rows.length, 0 );
+        this.replaceData( list, 0 );
+
+        const columns = this.columns.map((column : any ) => {
+            return column.label;
+        });
+
+        const keys = this.columns.map((column : any ) => {
+            return column.field;
+        });
+
+        
+        const data = this.rows.map( (row : any) => {
+            const arr = [];
+            for( let i = 0; i < keys.length; i++ ) {
+                arr.push( row[keys[i]] );
+            }
+            return arr;
+        } );
+        exportExcel( columns, data, this.filename || 'table' );
+    }
+
+    
+    // searchCategory = '';
+    // search = '';
 }
 </script>

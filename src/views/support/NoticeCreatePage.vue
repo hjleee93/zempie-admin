@@ -31,7 +31,7 @@
         <q-card-section>
             <div class="row justify-end">
                 <q-btn class="q-pl-md q-pr-md q-mr-md" color="grey" outline label="취소" @click="cancel" />
-                <q-btn class="q-pl-md q-pr-md" color="positive" label="등록" @click="submit" :disable="submitDisble" />
+                <q-btn class="q-pl-md q-pr-md" color="positive" label="등록" @click="submit" :disable="submitDisable" />
             </div>
         </q-card-section>
     </q-card>
@@ -50,7 +50,7 @@ export default class extends Vue {
     content = "";
     category = "공지";
 
-    submitDisble = true;
+    submitDisable = true;
 
     get options(){
         return Config.noticeCategory;
@@ -71,17 +71,13 @@ export default class extends Vue {
     }
 
     onChange(){
-        if(this.title.trim() == "" || this.content.trim() == ""){
-            this.submitDisble = true;
-        }else{
-            this.submitDisble = false;
-        }
+        this.submitDisable = this.title.trim() == "" || this.content.trim() == "";
     } 
 
     async submit() {
         const result = await Api.addNotice(this.title, this.content, Config.noticeCategory.indexOf(this.category));
         if (result) {
-            this.$router.push("/support/notice");
+            await this.$router.push("/support/notice");
         }
     }
 }

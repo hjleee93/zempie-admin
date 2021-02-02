@@ -30,6 +30,7 @@
                     <div class="text-h6">
                         상태
                     </div>
+
                     <div>
                         {{ game.enabled ? '배포 중' : '대기 중' }}
                     </div>
@@ -39,13 +40,12 @@
                     <div class="text-h6">
                         태그
                     </div>
-                    
+
                     <div v-if="game.hashtags.trim().length > 0">
-                        <q-badge class="q-mr-sm" color="orange" text-color="black" :label="tag" v-for="tag in gameTags" :key="tag" />
+                        <q-badge class="q-mr-sm" color="orange" :label="tag" v-for="tag in gameTags" :key="tag" />
                     </div>
-                    <div v-else>
-                        없음
-                    </div>
+
+                    <div v-else>없음</div>
                 </div>
 
                 <div class="q-mb-md" v-if="game.user != null">
@@ -111,9 +111,8 @@
                         <q-btn class="q-mr-md" color="red" label="비활성화" @click="hideGame" v-if="game.enabled" />
                         <q-btn class="q-mr-md" color="positive" label="활성화" @click="showGame" v-else />
                     </div>
-                    
+
                     <q-btn class="q-mr-md" color="red" label="삭제" @click="deleteGame" />
-                    <q-btn class="q-mr-md" color="grey" label="도전게임으로 이동" @click="moveGame" />
                 </div>
             </q-card-section>
         </q-card>
@@ -132,7 +131,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import { Dialog } from "quasar";
 
-import Query from "../../query/OfficialGameQuery";
+import Query from "../../query/AffiliateQuery";
 
 @Component({
     components: {},
@@ -174,7 +173,7 @@ export default class extends Vue {
             cancel: true,
             persistent: true
         }).onOk(async () => {
-            const data = await this.$apollo.mutate({
+            await this.$apollo.mutate({
                 mutation: Query.gameHide,
                 variables: {
                     id: Math.round(this.gameGet[0].id),
@@ -198,7 +197,7 @@ export default class extends Vue {
             cancel: true,
             persistent: true
         }).onOk(async () => {
-            const data = await this.$apollo.mutate({
+            await this.$apollo.mutate({
                 mutation: Query.gameShow,
                 variables: {
                     id: Math.round(this.gameGet[0].id),
@@ -222,7 +221,7 @@ export default class extends Vue {
             cancel: true,
             persistent: true
         }).onOk(async () => {
-            const data = await this.$apollo.mutate({
+            await this.$apollo.mutate({
                 mutation: Query.gameDelete,
                 variables: {
                     id: Math.round(this.gameGet[0].id),
@@ -236,30 +235,6 @@ export default class extends Vue {
             })
 
             await this.refresh();
-        });
-    }
-
-    async moveGame(){
-        Dialog.create({
-            title: '도전게임으로 이동',
-            message: '정말로 이동하겠습니까?',
-            cancel: true,
-            persistent: true
-        }).onOk(async () => {
-            const data = await this.$apollo.mutate({
-                mutation: Query.gameMoveChallenge,
-                variables: {
-                    id: Math.round(this.gameGet[0].id),
-                },
-            })
-
-            this.$q.notify({
-                type: "positive",
-                message: "성공적으로 이동되었습니다.",
-                position: "top"
-            })
-
-            this.$router.push("/game/challenge");
         });
     }
 

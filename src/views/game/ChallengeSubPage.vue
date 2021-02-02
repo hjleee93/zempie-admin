@@ -48,7 +48,7 @@
                     </div>
                 </div>
 
-                <div class="q-mb-md">
+                <div class="q-mb-md" v-if="game.user != null">
                     <div class="text-h6">
                         개발자
                     </div>
@@ -132,8 +132,6 @@
 import { Component, Vue } from "vue-property-decorator";
 import { Dialog } from "quasar";
 
-import gql from "graphql-tag";
-import { QueryOptions } from "apollo-boost";
 import Query from "../../query/ChallengeGameQuery";
 
 @Component({
@@ -150,6 +148,7 @@ export default class extends Vue {
     async created(){
         await this.$apollo.queries.gameGet.setVariables({id: Math.round((Number(this.$route.params.index)))});
         await this.$apollo.queries.gameGet.refetch();
+        console.log(this.game);
     }
 
     get game(){
@@ -157,7 +156,7 @@ export default class extends Vue {
     }
 
     get gameLink(){
-        return process.env.VUE_APP_ZEMPIE_LINK + 'play/' + this.game.pathname;
+        return process.env.VUE_APP_ZEMPIE_LINK + '/play/' + this.game.pathname;
     }
 
     get gameTags(){
@@ -165,7 +164,7 @@ export default class extends Vue {
     }
 
     get iframeLink(){
-        return process.env.VUE_APP_LAUNCHER_LINK + encodeURIComponent(this.game.url_game)
+        return process.env.VUE_APP_LAUNCHER_LINK + '?z_test_url=' + encodeURIComponent(this.game.url_game)
     }
 
     async hideGame(){
@@ -175,7 +174,7 @@ export default class extends Vue {
             cancel: true,
             persistent: true
         }).onOk(async () => {
-            const data = await this.$apollo.mutate({
+            await this.$apollo.mutate({
                 mutation: Query.gameHide,
                 variables: {
                     id: Math.round(this.gameGet[0].id),
@@ -199,7 +198,7 @@ export default class extends Vue {
             cancel: true,
             persistent: true
         }).onOk(async () => {
-            const data = await this.$apollo.mutate({
+            await this.$apollo.mutate({
                 mutation: Query.gameShow,
                 variables: {
                     id: Math.round(this.gameGet[0].id),
@@ -223,7 +222,7 @@ export default class extends Vue {
             cancel: true,
             persistent: true
         }).onOk(async () => {
-            const data = await this.$apollo.mutate({
+            await this.$apollo.mutate({
                 mutation: Query.gameDelete,
                 variables: {
                     id: Math.round(this.gameGet[0].id),
@@ -236,7 +235,7 @@ export default class extends Vue {
                 position: "top"
             })
 
-            this.$router.push("/game/challenge");
+            await this.$router.push("/game/challenge");
         });
     }
 
@@ -247,7 +246,7 @@ export default class extends Vue {
             cancel: true,
             persistent: true
         }).onOk(async () => {
-            const data = await await this.$apollo.mutate({
+            await this.$apollo.mutate({
                 mutation: Query.gameMoveOfficial,
                 variables: {
                     id: Math.round(this.gameGet[0].id),
@@ -260,7 +259,7 @@ export default class extends Vue {
                 position: "top"
             })
 
-            this.$router.push("/game/official");
+            await this.$router.push("/game/official");
         });
     }
 

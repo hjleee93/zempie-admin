@@ -2,7 +2,7 @@ import gql from "graphql-tag";
 
 const gameListGet = gql`
     query gameGet {
-        gameGet(where: {official: false, userId : { not : null }}) {
+        gameGet(where: { url_game : { not : null }, userId : null }) {
             id
             title
             user{
@@ -17,7 +17,7 @@ const gameListGet = gql`
 `;
 const gameGetById =  gql`
     query gameGet($id: Int) {
-        gameGet(where: {official: false, userId : { not : null }, id: $id}) {
+        gameGet(where: { url_game : { not : null }, userId : null , id: $id}) {
             id
             title
             description
@@ -41,7 +41,7 @@ const gameGetById =  gql`
 
 const gameListGetOptionAxios = ( order: string, limit: number, offset: number) => `
     query gameGet {
-        gameGet(where: {official: false, userId : { not : null }}, order: "${order}", limit: ${limit}, offset: ${offset}) {
+        gameGet(where: { url_game : { not : null }, userId : null }, order: "${order}", limit: ${limit}, offset: ${offset}) {
             id
             title
             user{
@@ -53,7 +53,7 @@ const gameListGetOptionAxios = ( order: string, limit: number, offset: number) =
             created_at
         }
 
-        gameCount(where: {official: false, userId : { not : null }})
+        gameCount(where: { url_game : { not : null }, userId : null })
     }
 `;
 
@@ -80,7 +80,7 @@ const gameShow = gql`
 
 const gameMoveOfficial = gql`
     mutation gameEdit($id: Int) {
-        gameEdit(game: {id: $id, official: true, userId : { not : null }}){
+        gameEdit(game: {id: $id, official: true}){
             id
         }
     }

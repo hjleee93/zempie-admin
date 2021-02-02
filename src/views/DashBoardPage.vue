@@ -6,7 +6,7 @@
                     <div class="col-12 col-md-12 col-lg-6 q-pa-sm">
                         <q-card class="full-width">
                             <q-card-section>
-                                <div class="row jusify-bewween items-center no-wrap">
+                                <div class="row justify-between items-center no-wrap">
                                     <div class="col">
                                         <div class="text-h6 text-center">오늘 접속자 수</div>
                                     </div>
@@ -15,7 +15,7 @@
 
                             <q-card-section>
                                 <div class="text-h4 text-center q-pt-md q-pb-md">
-                                    3
+                                    -,---
                                 </div>
                             </q-card-section>
                         </q-card>
@@ -24,7 +24,7 @@
                     <div class="col-12 col-md-12 col-lg-6 q-pa-sm">
                         <q-card class="full-width">
                             <q-card-section>
-                                <div class="row jusify-bewween items-center no-wrap">
+                                <div class="row justify-between items-center no-wrap">
                                     <div class="col">
                                         <div class="text-h6 text-center">총 접속자 수</div>
                                     </div>
@@ -33,7 +33,7 @@
 
                             <q-card-section>
                                 <div class="text-h4 text-center q-pt-md q-pb-md">
-                                    3,342
+                                    -,---
                                 </div>
                             </q-card-section>
                         </q-card>
@@ -58,59 +58,57 @@
             </div>
             
 
-            <div class="col-12 col-md-6">
-                <div class="row">
-                        <div class="col-12 col-md-12 col-lg-6 q-pa-sm">
-                        <q-card class="full-width">
-                            <q-card-section>
-                                <div class="row jusify-bewween items-center no-wrap">
-                                    <div class="col">
-                                        <div class="text-h6 text-center">오늘 플레이 수</div>
-                                    </div>
+            <div class="col-12 col-md-6 row">
+                <div class="col-12 col-md-12 col-lg-6 q-pa-sm">
+                    <q-card class="full-width">
+                        <q-card-section>
+                            <div class="row justify-between items-center no-wrap">
+                                <div class="col">
+                                    <div class="text-h6 text-center">오늘 플레이 수</div>
                                 </div>
-                            </q-card-section>
+                            </div>
+                        </q-card-section>
 
-                            <q-card-section>
-                                <div class="text-h4 text-center q-pt-md q-pb-md">
-                                    38,871
+                        <q-card-section>
+                            <div class="text-h4 text-center q-pt-md q-pb-md">
+                                -,---
+                            </div>
+                        </q-card-section>
+                    </q-card>
+                </div>
+
+                <div class="col-12 col-md-12 col-lg-6 q-pa-sm">
+                    <q-card class="full-width">
+                        <q-card-section>
+                            <div class="row justify-between items-center no-wrap">
+                                <div class="col">
+                                    <div class="text-h6 text-center">총 플레이 수</div>
                                 </div>
-                            </q-card-section>
-                        </q-card>
-                    </div>
+                            </div>
+                        </q-card-section>
 
-                    <div class="col-12 col-md-12 col-lg-6 q-pa-sm">
-                        <q-card class="full-width">
-                            <q-card-section>
-                                <div class="row jusify-bewween items-center no-wrap">
-                                    <div class="col">
-                                        <div class="text-h6 text-center">총 플레이 수</div>
-                                    </div>
-                                </div>
-                            </q-card-section>
+                        <q-card-section>
+                            <div class="text-h4 text-center q-pt-md q-pb-md">
+                                -,---
+                            </div>
+                        </q-card-section>
+                    </q-card>
+                </div>
 
-                            <q-card-section>
-                                <div class="text-h4 text-center q-pt-md q-pb-md">
-                                    1,735,168
-                                </div>
-                            </q-card-section>
-                        </q-card>
-                    </div>
-
-                    <div class="col-12 q-pa-sm">
-                        <line-chart title="플레이 수" :data="playData" label="플레이 수" :labelList="playLabel">
-                            <q-btn-toggle
-                                v-model="playSelected"
-                                toggle-color="primary"
-                                color="white"
-                                text-color="black"
-                                :options="[
-                                    { label: '일간', value: 'day' },
-                                    { label: '주간', value: 'week' },
-                                    { label: '월간', value: 'month' },
-                                ]"
-                            />
-                        </line-chart>
-                    </div>
+                <div class="col-12 q-pa-sm">
+                    <line-chart title="플레이 수" :data="playData" label="플레이 수" :labelList="playLabel">
+                        <q-btn-toggle
+                            v-model="playSelected"
+                            toggle-color="primary"
+                            color="white"
+                            text-color="black"
+                            :options="[
+                                { label: '일간', value: 'day' },
+                                { label: '주간', value: 'week' },
+                                { label: '월간', value: 'month' },
+                            ]"
+                        />
+                    </line-chart>
                 </div>
             </div>
         </div>
@@ -127,9 +125,9 @@ import LineChart from "@/components/LineChart.vue";
     },
 })
 export default class extends Vue {
-    accessorData = [24, 14, 14, 25, 29, 27, 95];
+    accessorData = [0, 0, 0, 0, 0, 0, 0];
     accessLabel = ["7일전", "6일전", "5일전", "4일전", "3일전", "2일전", "1일전"];
-    playData = [11, 22, 82, 29, 54, 52, 24];
+    playData = [0, 0, 0, 0, 0, 0, 0];
     playLabel = ["7일전", "6일전", "5일전", "4일전", "3일전", "2일전", "1일전"];
 
     accessorSelected = "day";

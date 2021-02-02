@@ -12,6 +12,7 @@ import AdminLog from "@/views/admin/AdminLogPage.vue";
 // 사용자
 import User from "@/views/user/UserPage.vue";
 import UserSub from "@/views/user/UserSubPage.vue";
+import NotifyPage from "@/views/user/NotifyPage.vue";
 //고객센터
 import FAQ from "@/views/support/FAQPage.vue";
 import FAQCreate from "@/views/support/FAQCreatePage.vue";
@@ -28,17 +29,26 @@ import Challenge from "@/views/game/ChallengePage.vue";
 import ChallengeSub from "@/views/game/ChallengeSubPage.vue";
 import Official from "@/views/game/OfficialPage.vue";
 import OfficialSub from "@/views/game/OfficialSubPage.vue";
+import Affiliate from "@/views/game/AffiliatePage.vue";
+import AffiliateSub from "@/views/game/AffiliateSubPage.vue";
+import AffiliateCreate from "@/views/game/AffiliateCreatePage.vue";
 // 심사
 import Judge from "@/views/judge/JudgePage.vue";
 import JudgeSub from "@/views/judge/JudgeSubPage.vue";
 import JudgeLog from "@/views/judge/JudgeLogPage.vue";
-
+// 신고
+import ReportGame from "@/views/report/ReportGamePage.vue";
+import ReportUser from "@/views/report/ReportUserPage.vue";
+// 제재
+import SanctionGame from "@/views/sanction/SanctionGamePage.vue";
+import SanctionUser from "@/views/sanction/SanctionUserPage.vue";
+import SanctionLog from "@/views/sanction/SanctionLogPage.vue";
 
 
 import {Notify} from "quasar";
 import store from '@/store';
 
-function loginCheck(next: NavigationGuardNext<Vue>){
+function loginCheck(next: NavigationGuardNext){
     if (!store.getters.isLogin) {
         Notify.create({
             type: "negative",
@@ -54,7 +64,6 @@ function loginCheck(next: NavigationGuardNext<Vue>){
 //     // if (levels.includes(store.state.subLevel)) {
 //     //     return next();
 //     // }
-
 //     Notify.create({
 //         type: "negative",
 //         message: '해당 페이지를 이용할 권한이 없습니다.',
@@ -116,6 +125,12 @@ const routes: Array<RouteConfig> = [
         path: "/user/list/sub/:index",
         name: "UserSub",
         component: UserSub,
+        beforeEnter: (_to, _from, next) => {loginCheck(next)}
+    },
+    {
+        path: "/user/notify",
+        name: "Notify",
+        component: NotifyPage,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     /* 회원 관리 */
@@ -196,6 +211,24 @@ const routes: Array<RouteConfig> = [
         component: OfficialSub,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
+    {
+        path: "/game/affiliate",
+        name: "Affiliate",
+        component: Affiliate,
+        beforeEnter: (_to, _from, next) => {loginCheck(next)}
+    },
+    {
+        path: "/game/affiliate/sub/:index",
+        name: "AffiliateSub",
+        component: AffiliateSub,
+        beforeEnter: (_to, _from, next) => {loginCheck(next)}
+    },
+    {
+        path: "/game/affiliate/create",
+        name: "AffiliateCreate",
+        component: AffiliateCreate,
+        beforeEnter: (_to, _from, next) => {loginCheck(next)}
+    },
     /* 게임 관리 */
 
     /* 게임 심사 */
@@ -218,6 +251,44 @@ const routes: Array<RouteConfig> = [
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     /* 게임 심사 */
+
+    /* 신고 */
+    {
+        path: "/report/game",
+        name: "ReportGame",
+        component: ReportGame,
+        beforeEnter: (_to, _from, next) => {loginCheck(next)}
+    },
+    {
+        path: "/report/user",
+        name: "ReportUser",
+        component: ReportUser,
+        beforeEnter: (_to, _from, next) => {loginCheck(next)}
+    },
+    /* 신고 */
+
+
+    /* 제재 */
+    {
+        path: "/sanction/game",
+        name: "SanctionGame",
+        component: SanctionGame,
+        beforeEnter: (_to, _from, next) => {loginCheck(next)}
+    },
+    {
+        path: "/sanction/user",
+        name: "SanctionUser",
+        component: SanctionUser,
+        beforeEnter: (_to, _from, next) => {loginCheck(next)}
+    },
+    {
+        path: "/sanction/log",
+        name: "SanctionLog",
+        component: SanctionLog,
+        beforeEnter: (_to, _from, next) => {loginCheck(next)}
+    },
+    /* 제재 */
+
 ];
 
 const router = new VueRouter({
