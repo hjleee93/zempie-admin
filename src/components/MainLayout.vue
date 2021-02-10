@@ -202,10 +202,10 @@ export default class MainLayout extends Vue {
                     label: "유저 리스트",
                     path: "/list",
                 },
-                {
-                    label: "알림센터",
-                    path: "/notify"
-                }
+                // {
+                //     label: "알림센터",
+                //     path: "/notify"
+                // }
             ],
             path: "/user",
         },

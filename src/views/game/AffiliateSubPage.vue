@@ -73,7 +73,7 @@
                             />
                         </div>
                     </div>
-                    <div v-if="game.url_thumb_gif != null">
+                    <div v-if="game.url_thumb_gif != null && game.url_thumb_gif !== ''">
                         <div class="text-h6">
                             움직이는 썸네일
                         </div>
@@ -151,6 +151,9 @@ export default class extends Vue {
     }
 
     get game(){
+        if(this.gameGet.length == 0) {
+            this.$router.go(-1);
+        }
         return this.gameGet[0];
     }
 
@@ -234,7 +237,7 @@ export default class extends Vue {
                 position: "top"
             })
 
-            await this.refresh();
+            await this.$router.push( "/game/affiliate" );
         });
     }
 

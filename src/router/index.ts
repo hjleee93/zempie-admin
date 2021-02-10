@@ -12,7 +12,7 @@ import AdminLog from "@/views/admin/AdminLogPage.vue";
 // 사용자
 import User from "@/views/user/UserPage.vue";
 import UserSub from "@/views/user/UserSubPage.vue";
-import NotifyPage from "@/views/user/NotifyPage.vue";
+import NotifyPage from "@/views/user/MailPage.vue";
 //고객센터
 import FAQ from "@/views/support/FAQPage.vue";
 import FAQCreate from "@/views/support/FAQCreatePage.vue";
@@ -127,12 +127,12 @@ const routes: Array<RouteConfig> = [
         component: UserSub,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
-    {
-        path: "/user/notify",
-        name: "Notify",
-        component: NotifyPage,
-        beforeEnter: (_to, _from, next) => {loginCheck(next)}
-    },
+    // {
+    //     path: "/user/notify",
+    //     name: "Notify",
+    //     component: NotifyPage,
+    //     beforeEnter: (_to, _from, next) => {loginCheck(next)}
+    // },
     /* 회원 관리 */
 
     /* 고객센터 */

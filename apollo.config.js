@@ -3,8 +3,8 @@ module.exports = {
         service: {
             name: "my-app",
             // URL to the GraphQL API
-            // ${process.env.VUE_APP_API_LINK}
-            url: `http://192.168.0.10:8299/graphql`,
+            // ${process.env.VUE_APP_GRAPHQL_LINK}
+            url: process.env.VUE_APP_GRAPHQL_LINK,
             // url: `http://15.165.238.216:8299/graphql`,
         },
         // Files processed by the extension

@@ -1,13 +1,13 @@
 <template>
     <q-table 
-    :data="rows" 
-    row-key="id" 
-    :columns="columns" 
-    :pagination.sync="pagination" 
-    :rows-per-page-options="pageOption" 
-    :title="title"
-    :selection="selection || 'none'"
-    :selected.sync="selected"
+        :data="rows"
+        row-key="id"
+        :columns="columns"
+        :pagination.sync="pagination"
+        :rows-per-page-options="pageOption"
+        :title="title"
+        :selection="selection || 'none'"
+        :selected.sync="selected"
     >
         <template v-slot:top-right>
             <slot></slot>
@@ -180,6 +180,9 @@ export default class extends Vue {
                                 .replace("response", "문의 답변")
                                 .replace("admin", "관리자")
                                 .replace("add", "추가")
+                                .replace("game", "게임")
+                                .replace("c", "추가")
+                                .replace("p", "제휴게임")
                         )
                         .join(" ");
                 }

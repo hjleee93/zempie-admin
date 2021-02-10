@@ -57,7 +57,7 @@
                     </router-link>
                 </div>
 
-                <div class="q-mb-md">
+                <div class="row q-mb-md">
                     <div class="q-mr-md">
                         <div class="text-h6">
                             썸네일
@@ -73,7 +73,7 @@
                             />
                         </div>
                     </div>
-                    <div v-if="game.url_thumb_gif != null">
+                    <div v-if="game.url_thumb_gif != null && game.url_thumb_gif != ''">
                         <div class="text-h6">
                             움직이는 썸네일
                         </div>
@@ -86,6 +86,35 @@
                                 spinner-size="82px"
                                 width="100%"
                             />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="q-mb-md">
+                    <div class="text-h6">
+                        플레이 수
+                    </div>
+                    <div>
+                        {{ game.count_over }}
+                    </div>
+                </div>
+
+                <div class="q-mb-md">
+                    <div class="text-h6">
+                        하트 수
+                    </div>
+                    <div>
+                        {{ game.count_heart }}
+                    </div>
+                </div>
+
+                <div v-if="game.emotions !== null" class="q-mb-md">
+                    <div class="text-h6">
+                        감정표현
+                    </div>
+                    <div>
+                        <div v-for="(emotion, idx) in emotions" :key="idx">
+                            {{ emotion.label }} : {{ game.emotions[emotion.key] }}
                         </div>
                     </div>
                 </div>
@@ -133,6 +162,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { Dialog } from "quasar";
 
 import Query from "../../query/ChallengeGameQuery";
+import Config from "@/util/Config";
 
 @Component({
     components: {},
@@ -144,6 +174,8 @@ import Query from "../../query/ChallengeGameQuery";
     }
 })
 export default class extends Vue {
+    emotions = Config.emotions;
+
     gameGet: any;
     async created(){
         await this.$apollo.queries.gameGet.setVariables({id: Math.round((Number(this.$route.params.index)))});
@@ -152,6 +184,9 @@ export default class extends Vue {
     }
 
     get game(){
+        if(this.gameGet.length == 0) {
+            this.$router.go(-1);
+        }
         return this.gameGet[0];
     }
 

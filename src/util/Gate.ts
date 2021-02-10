@@ -32,7 +32,7 @@ instance.interceptors.response.use(
         }
         
         const errorConfig = error.config;
-        if (error.response.data.error == "Unauthorized") {
+        if (error.response.data.error.message == "Unauthorized") {
             const result = await store.dispatch("refreshToken");
             if(result){
                 return await instance(errorConfig);

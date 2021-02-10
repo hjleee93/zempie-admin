@@ -2,7 +2,7 @@ import gql from "graphql-tag";
 
 const gameListGet = gql`
     query gameGet {
-        gameGet(where: { url_game : { not : null }, userId : null }) {
+        gameGet(where: { category: 2 }) {
             id
             title
             user{
@@ -17,7 +17,7 @@ const gameListGet = gql`
 `;
 const gameGetById =  gql`
     query gameGet($id: Int) {
-        gameGet(where: { url_game : { not : null }, userId : null , id: $id}) {
+        gameGet(where: { category: 2 , id: $id}) {
             id
             title
             description
@@ -41,7 +41,7 @@ const gameGetById =  gql`
 
 const gameListGetOptionAxios = ( order: string, limit: number, offset: number) => `
     query gameGet {
-        gameGet(where: { url_game : { not : null }, userId : null }, order: "${order}", limit: ${limit}, offset: ${offset}) {
+        gameGet(where: { category: 2 }, order: "${order}", limit: ${limit}, offset: ${offset}) {
             id
             title
             user{
@@ -53,7 +53,7 @@ const gameListGetOptionAxios = ( order: string, limit: number, offset: number) =
             created_at
         }
 
-        gameCount(where: { url_game : { not : null }, userId : null })
+        gameCount(where: { category: 2 })
     }
 `;
 

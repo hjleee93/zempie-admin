@@ -30,5 +30,12 @@ export default {
         { label: "고객센터", value: 4 },
         { label: "심사", value: 5 },
         { label: "게임관리", value: 6 },
+    ],
+    emotions : [
+        { label: '재밌어요', key: 'e1' },
+        { label: '대단해요', key: 'e2' },
+        { label: '화나요', key: 'e3' },
+        { label: '어려워요', key: 'e4' },
+        { label: '업데이트 원해요', key: 'e5' },
     ]
 };

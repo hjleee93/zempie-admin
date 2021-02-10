@@ -2,7 +2,7 @@ import gql from "graphql-tag";
 
 const gameListGet = gql`
     query gameGet {
-        gameGet(where: {official: false, userId : { not : null }}) {
+        gameGet(where: {category: 0, userId : { not : null }}) {
             id
             title
             user{
@@ -10,6 +10,8 @@ const gameListGet = gql`
                 name
             }
             version
+            count_over
+            count_heart
             enabled
             created_at
         }
@@ -17,7 +19,7 @@ const gameListGet = gql`
 `;
 const gameGetById =  gql`
     query gameGet($id: Int) {
-        gameGet(where: {official: false, userId : { not : null }, id: $id}) {
+        gameGet(where: {category: 0, userId : { not : null }, id: $id}) {
             id
             title
             description
@@ -34,6 +36,15 @@ const gameGetById =  gql`
             url_game
             url_thumb
             url_thumb_gif
+            count_over
+            count_heart
+            emotions {
+                e1
+                e2
+                e3
+                e4
+                e5
+            }
             created_at
         }
     }
@@ -41,7 +52,7 @@ const gameGetById =  gql`
 
 const gameListGetOptionAxios = ( order: string, limit: number, offset: number) => `
     query gameGet {
-        gameGet(where: {official: false, userId : { not : null }}, order: "${order}", limit: ${limit}, offset: ${offset}) {
+        gameGet(where: {category: 0, userId : { not : null }}, order: "${order}", limit: ${limit}, offset: ${offset}) {
             id
             title
             user{
@@ -50,10 +61,12 @@ const gameListGetOptionAxios = ( order: string, limit: number, offset: number) =
             }
             version
             enabled
+            count_over
+            count_heart
             created_at
         }
 
-        gameCount(where: {official: false, userId : { not : null }})
+        gameCount(where: {category: 0, userId : { not : null }})
     }
 `;
 

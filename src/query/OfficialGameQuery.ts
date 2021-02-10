@@ -2,7 +2,7 @@ import gql from "graphql-tag";
 
 const gameListGet = gql`
     query gameGet {
-        gameGet(where: {official: true}) {
+        gameGet(where: {category: 1}) {
             id
             title
             user{
@@ -11,6 +11,8 @@ const gameListGet = gql`
             }
             version
             enabled
+            count_over
+            count_heart
             created_at
         }
     }
@@ -18,7 +20,7 @@ const gameListGet = gql`
 
 const gameListGetOption = gql`
     query gameGet($order: String, $limit: Int, $offset: Int) {
-        gameGet(where: {official: true}, order: $order, limit: $limit, offset: $offset) {
+        gameGet(where: {category: 1}, order: $order, limit: $limit, offset: $offset) {
             id
             title
             user{
@@ -27,6 +29,8 @@ const gameListGetOption = gql`
             }
             version
             enabled
+            count_over
+            count_heart
             created_at
         }
 
@@ -36,7 +40,7 @@ const gameListGetOption = gql`
 
 const gameListGetOptionAxios = ( order: string, limit: number, offset: number) => `
     query gameGet {
-        gameGet(where: {official: true}, order: "${order}", limit: ${limit}, offset: ${offset}) {
+        gameGet(where: {category: 1}, order: "${order}", limit: ${limit}, offset: ${offset}) {
             id
             title
             user{
@@ -45,17 +49,19 @@ const gameListGetOptionAxios = ( order: string, limit: number, offset: number) =
             }
             version
             enabled
+            count_over
+            count_heart
             created_at
         }
 
-        gameCount(where: {official: true})
+        gameCount(where: {category: 1})
     }
 `;
 
 
 const gameGetById =  gql`
 query gameGet($id: Int) {
-    gameGet(where: {official: true, id: $id}) {
+    gameGet(where: {category: 1, id: $id}) {
         id
         title
         description
@@ -72,6 +78,8 @@ query gameGet($id: Int) {
         url_game
         url_thumb
         url_thumb_gif
+        count_over
+        count_heart
         created_at
     }
 }

@@ -6,21 +6,25 @@
                     {{ data.title }}
                 </div>
             </div>
+
             <div class="row q-mb-md">
                 <div class="col text-weight-bold">
                     카테고리 - {{ data.category }}
                 </div>
             </div>
+
             <div class="row q-mb-md">
                 <div class="col text-weight-bold">
                     질문자 - {{ data.userName }}
                 </div>
             </div>
+
             <div class="row q-mb-md">
                 <div class="col text-weight-bold">
                     질문일 - {{ data.date }}
                 </div>
             </div>
+
             <div class="row q-mb-md">
                 <div class="col text-weight-bold">
                     <q-input
@@ -31,11 +35,21 @@
                     />
                 </div>
             </div>
+
+            <div class="row q-mb-md" v-if="data.url_img !== null && data.url_img !== ''">
+                <q-btn color="primary" label="이미지보기" @click="openImagePopup" />
+
+                <q-dialog v-model="imagePopup">
+                    <img :src="data.url_img" style="max-width: 90%; max-height: 90%;" alt="문의 이미지" />
+                </q-dialog>
+            </div>
+
             <div class="row q-mb-md" v-if="data.response != null">
                 <div class="col text-weight-bold">
                     답변인 - {{ data.admin.name }}
                 </div>
             </div>
+
             <div class="row q-mb-md" v-if="data.response != null">
                 <div class="col text-weight-bold">
                     답변일 - {{ data.responseDate }}
@@ -74,6 +88,7 @@ import Config from '@/util/Config';
 export default class extends Vue {
     data: any = {}
     text = ""
+    imagePopup = false;
 
     get submitCheck(){
         return this.text.trim() != "";
@@ -106,8 +121,12 @@ export default class extends Vue {
     async submit(){
         const result = await Api.responseInquiry(parseInt(this.$route.params.index), this.text);
         if(result){
-            this.$router.push("/support/inquiry");
+            await this.$router.push("/support/inquiry");
         }
+    }
+
+    openImagePopup() {
+        this.imagePopup = true;
     }
 }
 </script>

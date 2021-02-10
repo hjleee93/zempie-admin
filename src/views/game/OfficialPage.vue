@@ -31,6 +31,8 @@ export default class extends Vue {
         { field: "id", name: "id", label: "#", align: "left", sortable: true, sort: () => null },
         { field: "title", name: "title", label: "제목", align: "left", sortable: true, sort: () => null, event: true },
         { field: "developer", name: "developer", label: "개발자", align: "left" },
+        { field: "count_over", name: "count_over", label: "플레이 수", align: "left", sortable: true, sort: () => null },
+        { field: "count_heart", name: "count_heart", label: "하트 수", align: "left", sortable: true, sort: () => null },
         { field: "version", name: "version", label: "버전", align: "left" },
         { field: "created_at", name: "created_at", label: "등록일", align: "left", sortable: true, sort: () => null },
         { field: "state", name: "state", label: "상태", align: "left" },

@@ -140,7 +140,7 @@ export default class AffilcateCreatePage extends Vue {
     }
 
     async createGame() {
-        await Api.addAffiliateGame(
+        const result = await Api.addAffiliateGame(
             this.pathname,
             this.title,
             this.description,
@@ -150,6 +150,10 @@ export default class AffilcateCreatePage extends Vue {
             this.thumb2,
             this.thumb3
         );
+
+        if( result ) {
+            this.$router.push('/game/affiliate');
+        }
     }
 
     get submitCheck() {
