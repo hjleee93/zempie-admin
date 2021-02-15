@@ -296,6 +296,21 @@ export default class MainLayout extends Vue {
         //     ],
         //     path: "/sanction"
         // }
+        {
+            icon: "spellcheck",
+            label: "단어 관리",
+            sub: [
+                {
+                    label: '금지어',
+                    path: '/forbidden'
+                },
+                {
+                    label: '비속어',
+                    path: '/bad'
+                },
+            ],
+            path: "/word"
+        }
     ];
 
     titleList = [
@@ -346,6 +361,10 @@ export default class MainLayout extends Vue {
         {
             path: "/judge/game/sub/",
             title: "심사 상세보기",
+        },
+        {
+            path: "/word/badWord",
+            title: "단어",
         },
     ];
 

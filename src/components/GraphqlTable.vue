@@ -5,6 +5,8 @@
     :columns="columns" 
     :pagination.sync="pagination" 
     :rows-per-page-options="pageOption"
+    :selection="selection || 'none'"
+    :selected.sync="selected"
     >
         <template v-slot:top-right>
             <div v-if="searchOptions != null" class="flex">
@@ -12,7 +14,7 @@
                 <q-input v-model="search" type="text" placeholder="Search" class="q-mr-md" />
             </div>
 
-            <div v-if="exportMode != null && rows.length > 0">
+            <div v-if="exportMode != null && rows.length > 0" class="q-mr-md">
                 <q-btn color="primary" icon="get_app" label="엑셀 파일로 추출" @click="exportData" />
             </div>
             
@@ -21,7 +23,15 @@
 
         <template v-slot:body-cell="props">
             <q-td :props="props">
-                <div v-if="props.col.event">
+                <div v-if="props.col.field === 'url_thumb'">
+                    <q-img
+                        :src="rows[props.rowIndex][props.col.field]"
+                        spinner-color="white"
+                        style="height: 100px; width: 100px"
+                        :ratio="1"
+                    />
+                </div>
+                <div v-else-if="props.col.event">
                     <a href="#" @click="(event)=>{event.preventDefault();subEvent(props.row)}">{{rows[props.rowIndex][props.col.field]}}</a>
                 </div>
                 <div v-else>
@@ -55,6 +65,8 @@ export default class extends Vue {
 
     rows: any = [];
 
+    selected: any = [];
+
     @Prop() rowKey!: string;
     @Prop() columns!: any;
     @Prop() query!: Function;
@@ -62,6 +74,7 @@ export default class extends Vue {
     @Prop() exportMode!: boolean;
     @Prop() filename!: string;
     @Prop() searchOptions!: string[]; // prop
+    @Prop() selection!: string;
 
     subEvent( row: any ){
         this.$emit('subEvent', row);
@@ -70,6 +83,11 @@ export default class extends Vue {
     @Watch("pagination")
     async paginationChanged(){
         await this.movePage();
+    }
+
+    @Watch("selected")
+    onSelectedChanged(){
+        this.$emit('selectEvent', this.selected);
     }
 
     async created(){
@@ -88,7 +106,6 @@ export default class extends Vue {
         }
 
         const { count, list } = await this.getData( order, limit, offset );
-
         this.setRows( count, list, offset );
     }
 
@@ -116,7 +133,7 @@ export default class extends Vue {
             this.rows = new Array(count || 0).fill({id:null});
         }
 
-        for(let i = 0; i < this.rows.length; i++){
+        for(let i = 0; i < rows.length; i++){
             rows[i] = this.rows[i];
         }
 
@@ -134,13 +151,13 @@ export default class extends Vue {
                 this.rows[index].created_at = new Date(this.rows[index].created_at).toLocaleString();
             }
 
-            if(this.columnName == "game" && this.rows[index].user != null){
-                this.rows[index].developer = this.rows[index].user.name;
-            }else{
-                this.rows[index].developer = '없음';
-            }
+            if(this.columnName == "game" ){
+                if( this.rows[index].user != null ) {
+                    this.rows[index].developer = this.rows[index].user.name;
+                } else {
+                    this.rows[index].developer = '없음';
+                }
 
-            if(this.columnName == "game"){
                 if(this.rows[index].enabled){
                     this.rows[index].state = "배포 중";
                 }else{
@@ -150,6 +167,14 @@ export default class extends Vue {
 
             if(this.columnName == "faq"){
                 this.rows[index].category = Config.faqCategory[this.rows[index].category];
+            }
+
+            if( this.columnName == 'badWords' || this.columnName == 'forbiddenWords' ) {
+                if( this.rows[index].activated ){
+                    this.rows[index].state = "활성화";
+                } else {
+                    this.rows[index].state = "비활성화";
+                }
             }
         }
     }

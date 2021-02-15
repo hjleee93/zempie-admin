@@ -61,6 +61,7 @@ const gameListGetOptionAxios = ( order: string, limit: number, offset: number) =
             }
             version
             enabled
+            url_thumb
             count_over
             count_heart
             created_at

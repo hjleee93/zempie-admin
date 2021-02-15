@@ -49,6 +49,7 @@ const gameListGetOptionAxios = ( order: string, limit: number, offset: number) =
             }
             version
             enabled
+            url_thumb
             count_over
             count_heart
             created_at
@@ -80,6 +81,13 @@ query gameGet($id: Int) {
         url_thumb_gif
         count_over
         count_heart
+        emotions {
+            e1
+            e2
+            e3
+            e4
+            e5
+        }
         created_at
     }
 }

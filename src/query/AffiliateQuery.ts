@@ -50,6 +50,7 @@ const gameListGetOptionAxios = ( order: string, limit: number, offset: number) =
             }
             version
             enabled
+            url_thumb
             created_at
         }
 

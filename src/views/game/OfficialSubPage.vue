@@ -90,6 +90,35 @@
                     </div>
                 </div>
 
+                <div class="q-mb-md">
+                    <div class="text-h6">
+                        플레이 수
+                    </div>
+                    <div>
+                        {{ game.count_over }}
+                    </div>
+                </div>
+
+                <div class="q-mb-md">
+                    <div class="text-h6">
+                        하트 수
+                    </div>
+                    <div>
+                        {{ game.count_heart }}
+                    </div>
+                </div>
+
+                <div v-if="game.emotions !== null" class="q-mb-md">
+                    <div class="text-h6">
+                        감정표현
+                    </div>
+                    <div>
+                        <div v-for="(emotion, idx) in emotions" :key="idx">
+                            {{ emotion.label }} : {{ game.emotions[emotion.key] }}
+                        </div>
+                    </div>
+                </div>
+
                 <div>
                     <div class="text-h6">
                         게임 플레이
@@ -133,6 +162,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { Dialog } from "quasar";
 
 import Query from "../../query/OfficialGameQuery";
+import Config from "@/util/Config";
 
 @Component({
     components: {},
@@ -144,6 +174,7 @@ import Query from "../../query/OfficialGameQuery";
     }
 })
 export default class extends Vue {
+    emotions = Config.emotions;
     gameGet: any;
     async created(){
         await this.$apollo.queries.gameGet.setVariables({id: Math.round((Number(this.$route.params.index)))});
@@ -155,6 +186,7 @@ export default class extends Vue {
         if(this.gameGet.length == 0) {
             this.$router.go(-1);
         }
+        console.log(this.gameGet[0]);
         return this.gameGet[0];
     }
 

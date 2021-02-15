@@ -36,6 +36,7 @@ export default class extends Vue {
 
     columns = [
         { field: "id", name: "id", label: "#", align: "left" },
+        { field: "url_thumb", name: "url_thumb", label: "썸네일", align: "left" },
         { field: "title", name: "title", label: "제목", align: "left", event: true },
         { field: "developer", name: "developer", label: "개발자", align: "left" },
         { field: "count_over", name: "count_over", label: "플레이 수", align: "left", sortable: true, sort: () => null },

@@ -43,10 +43,14 @@ import ReportUser from "@/views/report/ReportUserPage.vue";
 import SanctionGame from "@/views/sanction/SanctionGamePage.vue";
 import SanctionUser from "@/views/sanction/SanctionUserPage.vue";
 import SanctionLog from "@/views/sanction/SanctionLogPage.vue";
+// 단어
+import BadWord from "@/views/word/BadWord.vue";
+import ForbiddenWord from "@/views/word/ForbiddenWord.vue";
 
 
 import {Notify} from "quasar";
 import store from '@/store';
+
 
 function loginCheck(next: NavigationGuardNext){
     if (!store.getters.isLogin) {
@@ -289,6 +293,20 @@ const routes: Array<RouteConfig> = [
     },
     /* 제재 */
 
+    /* 단어 */
+    {
+        path: "/word/bad",
+        name: "BadWord",
+        component: BadWord,
+        beforeEnter: (_to, _from, next) => {loginCheck(next)}
+    },
+    {
+        path: "/word/forbidden",
+        name: "ForbiddenWord",
+        component: ForbiddenWord,
+        beforeEnter: (_to, _from, next) => {loginCheck(next)}
+    },
+    /* 단어 */
 ];
 
 const router = new VueRouter({

@@ -5,53 +5,47 @@
         rowKey="id"
         columnName="game"
         @subEvent="subEvent">
+        <PopupForm
+            btn-color="primary"
+            btn-label="엑셀 파일로 제휴게임 추가하기"
+        >
+            <q-file filled bottom-slots v-model="file" label="File" counter max-files="1" :disable="waiting">
+                <template v-slot:append>
+                    <q-icon v-if="file !== null" name="close" @click.stop="file = null" class="cursor-pointer" />
+                </template>
+
+                <template v-slot:after>
+                    <q-btn :disable="file == null || waiting" class="q-pa-sm" color="primary" @click="upload" >
+                        <div v-if="!waiting">
+                            업로드
+                        </div>
+                        <q-spinner
+                            color="white"
+                            size="1em"
+                            v-else
+                        />
+                    </q-btn>
+                </template>
+            </q-file>
+        </PopupForm>
         <q-btn label="제휴게임 추가하기" color="primary" @click="moveCreatePage" class="q-ml-md" />
-        <q-btn label="엑셀 파일로 제휴게임 추가하기" color="primary" @click="openCreatePopup" class="q-ml-md" />
-
-        <q-dialog v-model="popup" persistent>
-            <q-card class="my-card" style="width: 1200px;">
-                <q-card-section>
-                    <q-file filled bottom-slots v-model="file" label="File" counter max-files="1" :disable="waiting">
-                        <template v-slot:append>
-                            <q-icon v-if="file !== null" name="close" @click.stop="file = null" class="cursor-pointer" />
-                        </template>
-
-                        <template v-slot:after>
-                            <q-btn :disable="file == null || waiting" class="q-pa-sm" color="primary" @click="upload" >
-                                <div v-if="!waiting">
-                                    업로드
-                                </div>
-                                <q-spinner
-                                    color="white"
-                                    size="1em"
-                                    v-else
-                                />
-                            </q-btn>
-                        </template>
-                    </q-file>
-                </q-card-section>
-
-                <q-separator />
-
-                <q-card-actions align="right">
-                    <q-btn v-close-popup color="red" label="닫기" />
-                </q-card-actions>
-            </q-card>
-        </q-dialog>
     </GraphqlTable>
 </template>
 
 <script lang="ts">
 import {Vue, Component, Prop} from "vue-property-decorator"
-import GraphqlTable, {TableBus} from '@/components/GraphqlTable.vue';
+import GraphqlTable, { TableBus } from '@/components/GraphqlTable.vue';
+import PopupForm, { PopupBus } from "@/components/PopupForm.vue";
 import Query from "../../query/AffiliateQuery";
+// @ts-ignore
 import readXlsxFile from 'read-excel-file';
 import Api from "@/util/Api";
 
 
 @Component({
     components : {
-        GraphqlTable: GraphqlTable
+        GraphqlTable: GraphqlTable,
+        PopupForm
     }
 })
 export default class AffiliatePage extends Vue {
@@ -59,6 +53,7 @@ export default class AffiliatePage extends Vue {
 
     columns = [
         { field: "id", name: "id", label: "#", align: "left", sortable: true, sort: () => null },
+        { field: "url_thumb", name: "url_thumb", label: "썸네일", align: "left" },
         { field: "title", name: "title", label: "제목", align: "left", sortable: true, sort: () => null, event: true },
         { field: "created_at", name: "created_at", label: "등록일", align: "left", sortable: true, sort: () => null },
         { field: "state", name: "state", label: "상태", align: "left" },
@@ -73,12 +68,8 @@ export default class AffiliatePage extends Vue {
     }
 
 
-    popup = false;
     file : File | null = null
     waiting = false;
-    openCreatePopup() {
-        this.popup = true;
-    }
 
     async upload() {
         if( this.file == null ) {
@@ -130,7 +121,7 @@ export default class AffiliatePage extends Vue {
 
 
         TableBus.$emit('reload');
-        this.popup = false;
+        PopupBus.$emit('close');
         this.waiting = false;
     }
 }

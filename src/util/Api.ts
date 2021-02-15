@@ -444,6 +444,152 @@ export default class Api{
     /* 게임 심사 */
 
 
+    /* 비속어 */
+    static async addBadWord( word : string ) {
+        const params = new URLSearchParams();
+        params.append('word', word);
+        try{
+            await Gate({
+                method: "POST",
+                url: `/api/v1/admin/filter/bad-word/c`,
+                headers: {
+                    'Content-Type': "application/x-www-form-urlencoded"
+                },
+                params
+            });
+            Notify.create({
+                type: "positive",
+                message: "비속어가 성공적으로 추가되었습니다.",
+                position: "top",
+            });
+            return true;
+        }catch(error){
+            Notify.create({
+                type: "negative",
+                message: "비속어를 추가하는 도중에 문제가 발생하였습니다.",
+                position: "top",
+            });
+            return false;
+        }
+    }
+
+    static async deleteBadWord( id : number ) {
+        const params = new URLSearchParams();
+        params.append('id', id.toString());
+        try{
+            await Gate({
+                method: "POST",
+                url: `/api/v1/admin/filter/bad-word/d`,
+                headers: {
+                    'Content-Type': "application/x-www-form-urlencoded"
+                },
+                params
+            });
+            return true;
+        }catch(error){
+            return false;
+        }
+    }
+
+    static async updateBadWord( id : number, activated : boolean ) {
+        const params = new URLSearchParams();
+        params.append('id', id.toString());
+        params.append('activated', activated.toString());
+        try{
+            await Gate({
+                method: "POST",
+                url: `/api/v1/admin/filter/bad-word/u`,
+                headers: {
+                    'Content-Type': "application/x-www-form-urlencoded"
+                },
+                params
+            });
+            return true;
+        }catch(error){
+            Notify.create({
+                type: "negative",
+                message: "비속어를 수정하는 도중에 문제가 발생하였습니다.",
+                position: "top",
+            });
+            return false;
+        }
+    }
+    /* 비속어 */
+
+    /* 금지어 */
+    static async addForbiddenWord( word : string ) {
+        const params = new URLSearchParams();
+        params.append('word', word);
+        try{
+            await Gate({
+                method: "POST",
+                url: `/api/v1/admin/filter/forbidden-word/c`,
+                headers: {
+                    'Content-Type': "application/x-www-form-urlencoded"
+                },
+                params
+            });
+            Notify.create({
+                type: "positive",
+                message: "금지어가 성공적으로 추가되었습니다.",
+                position: "top",
+            });
+            return true;
+        }catch(error){
+            Notify.create({
+                type: "negative",
+                message: "금지어를 추가하는 도중에 문제가 발생하였습니다.",
+                position: "top",
+            });
+            return false;
+        }
+    }
+
+    static async deleteForbiddenWord( id : number ) {
+        const params = new URLSearchParams();
+        params.append('id', id.toString());
+        try{
+            await Gate({
+                method: "POST",
+                url: `/api/v1/admin/filter/forbidden-word/d`,
+                headers: {
+                    'Content-Type': "application/x-www-form-urlencoded"
+                },
+                params
+            });
+            return true;
+        }catch(error){
+            return false;
+        }
+    }
+
+    static async updateForbiddenWord( id : number, activated : boolean ) {
+        const params = new URLSearchParams();
+        params.append('id', id.toString());
+        params.append('activated', activated.toString());
+        try{
+            await Gate({
+                method: "POST",
+                url: `/api/v1/admin/filter/forbidden-word/u`,
+                headers: {
+                    'Content-Type': "application/x-www-form-urlencoded"
+                },
+                params
+            });
+            return true;
+        }catch(error){
+            Notify.create({
+                type: "negative",
+                message: "금지어를 수정하는 도중에 문제가 발생하였습니다.",
+                position: "top",
+            });
+            return false;
+        }
+    }
+    /* 금지어 */
+
+
+
     /* 게임 관리 */
     static affiliateProcess = true;
     static async addAffiliateGame(
