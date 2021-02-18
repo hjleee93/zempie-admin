@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="$store.state.level >= 3">
+        <div v-if="$store.state.level >= 3" class="q-ml-md">
             <q-btn :color="btnColor" :label="btnLabel" @click="openPopup" />
         </div>
 

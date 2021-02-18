@@ -93,7 +93,11 @@ export default class extends Vue {
     async created(){
         TableBus.$on("reload", async () => {
             await this.movePage();
-        }); 
+        });
+
+        TableBus.$on("selectClear", async () => {
+            this.selected = [];
+        });
     }
 
     async movePage() {

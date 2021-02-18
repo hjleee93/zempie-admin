@@ -8,7 +8,6 @@
             @subEvent="subEvent"
             selection="multiple"
             @selectEvent="selectEvent"
-            :export-mode="true"
         >
             <PopupForm
                 btn-label="금지어 추가하기"
@@ -17,6 +16,12 @@
                 <q-input v-model="word" label="Word" class="q-mb-md" />
                 <q-btn label="단어 추가" color="positive" @click="addWord" :disable="!wordCheck" />
             </PopupForm>
+            <PopupForm
+                btn-label="엑셀 파일로 추가하기"
+                btn-color="primary"
+            >
+                <ExcelUploader :schema="schema" @upload="upload" />
+            </PopupForm>
             <q-btn label="일괄 삭제" color="red"  class="q-ml-md" @click="deleteWords" />
         </GraphqlTable>
     </div>
@@ -24,16 +29,17 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-
 import GraphqlTable, {TableBus} from "@/components/GraphqlTable.vue";
 import PopupForm, { PopupBus } from '@/components/PopupForm.vue';
+import ExcelUploader from "@/components/ExcelUploader.vue";
 import Query from '@/query/WordQuery';
 import {Dialog} from "quasar";
 
 @Component({
     components: {
         GraphqlTable,
-        PopupForm
+        PopupForm,
+        ExcelUploader
     },
     apollo: {
     }
@@ -116,6 +122,37 @@ export default class extends Vue {
 
         this.word = '';
         TableBus.$emit('reload');
+        PopupBus.$emit('close');
+    }
+
+    schema = {
+        '단어' : {
+            prop: "word",
+            type: String
+        }
+    }
+
+    async upload( data : any ) {
+        const { rows } = data;
+
+        for ( let i = 0; i < rows.length; i++ ) {
+            await this.$apollo.mutate({
+                mutation: Query.forbiddenWordsCreate,
+                variables: {
+                    word: rows[i].word,
+                },
+            })
+        }
+
+        this.$q.notify({
+            type: "positive",
+            message: "성공적으로 추가되었습니다.",
+            position: "top"
+        })
+
+
+        TableBus.$emit('reload');
+        TableBus.$emit('selectClear');
         PopupBus.$emit('close');
     }
 
