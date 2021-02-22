@@ -40,9 +40,9 @@ import JudgeLog from "@/views/judge/JudgeLogPage.vue";
 import ReportGame from "@/views/report/ReportGamePage.vue";
 import ReportUser from "@/views/report/ReportUserPage.vue";
 // 제재
-import SanctionGame from "@/views/sanction/SanctionGamePage.vue";
-import SanctionUser from "@/views/sanction/SanctionUserPage.vue";
-import SanctionLog from "@/views/sanction/SanctionLogPage.vue";
+import PunishGame from "@/views/punish/PunishGamePage.vue";
+import PunishUser from "@/views/punish/PunishUserPage.vue";
+import PunishLog from "@/views/punish/PunishLogPage.vue";
 // 단어
 import BadWord from "@/views/word/BadWord.vue";
 import ForbiddenWord from "@/views/word/ForbiddenWord.vue";
@@ -274,21 +274,21 @@ const routes: Array<RouteConfig> = [
 
     /* 제재 */
     {
-        path: "/sanction/game",
-        name: "SanctionGame",
-        component: SanctionGame,
+        path: "/punish/game",
+        name: "PunishGame",
+        component: PunishGame,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {
-        path: "/sanction/user",
-        name: "SanctionUser",
-        component: SanctionUser,
+        path: "/punish/user",
+        name: "PunishUser",
+        component: PunishUser,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     {
-        path: "/sanction/log",
-        name: "SanctionLog",
-        component: SanctionLog,
+        path: "/punish/log",
+        name: "PunishLog",
+        component: PunishLog,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     /* 제재 */

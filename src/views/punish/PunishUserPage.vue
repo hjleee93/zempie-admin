@@ -11,7 +11,7 @@
                         <div class="col-12 col-sm-4 q-pr-md">
                             <q-select v-model="type" :options="types" />
                         </div>
-                        
+
                         <div class="col-12 col-sm-4 q-pr-md">
                             <q-select v-model="type" :options="types" />
                         </div>

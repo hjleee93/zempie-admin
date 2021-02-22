@@ -86,7 +86,7 @@
                     </div>
 
                     <div class="col-12 col-md-10">
-                        <q-input v-model="sanctionReason" type="text" placeholder="Sanction Reason" >
+                        <q-input v-model="punishReason" type="text" placeholder="Punish Reason" >
                             <q-tooltip>
                         </q-input>
                     </div>
@@ -109,9 +109,9 @@
         <q-card-section>
             <div class="row q-gutter-md justify-end">
                 <q-btn class="q-pl-md q-pr-md" color="grey" outline label="취소" @click="cancel" />
-                <!-- <q-btn class="q-pl-md q-pr-md" :disable="!isSanction" color="red" @click="sanction" >
+                <!-- <q-btn class="q-pl-md q-pr-md" :disable="!isPunish" color="red" @click="punish" >
                     제재
-                    <q-tooltip v-if="!isSanction">
+                    <q-tooltip v-if="!isPunish">
                         제재 사유가 있어야만 제재 처리를 진행할 수 있습니다.
                     </q-tooltip>
                 </q-btn> -->
@@ -121,7 +121,7 @@
                         반려 사유가 있어야만 반려 처리를 진행할 수 있습니다.
                     </q-tooltip>
                 </q-btn>
-                <q-btn class="q-pl-md q-pr-md" :disable="isReject || isSanction" color="positive" label="승인" @click="submit" />
+                <q-btn class="q-pl-md q-pr-md" :disable="isReject || isPunish" color="positive" label="승인" @click="submit" />
             </div>
         </q-card-section>
 
@@ -164,15 +164,15 @@ export default class extends Vue {
     judgeOption = false;
 
     rejectReason = "";
-    sanctionReason = "";
+    punishReason = "";
 
 
     get isReject() {
         return this.selectedOption.length > 0 || this.rejectReason.length > 0;
     }
 
-    get isSanction() {
-        return this.sanctionReason.length > 0;
+    get isPunish() {
+        return this.punishReason.length > 0;
     }
 
     async created(){
@@ -199,11 +199,11 @@ export default class extends Vue {
     }
 
 
-    async sanction() {
-        if(this.isSanction){
+    async punish() {
+        if(this.isPunish){
             // 제재 처리
 
-            // const result = await Api.JudgeProject("fail", this.index, this.sanctionReason);
+            // const result = await Api.JudgeProject("fail", this.index, this.punishReason);
             // if(result){
             //     this.$router.push("/judge/game");
             // }

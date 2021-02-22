@@ -117,7 +117,7 @@ const gameShow = gql`
 
 const gameMoveChallenge = gql`
     mutation gameEdit($id: Int) {
-        gameEdit(game: {id: $id, official: false}){
+        gameEdit(game: {id: $id, category: 0}){
             id
         }
     }

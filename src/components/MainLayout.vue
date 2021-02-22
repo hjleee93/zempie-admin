@@ -294,7 +294,7 @@ export default class MainLayout extends Vue {
                     path: '/log'
                 }
             ],
-            path: "/sanction"
+            path: "/punish"
         },
         {
             icon: "spellcheck",

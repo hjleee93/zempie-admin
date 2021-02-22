@@ -100,16 +100,15 @@
                 <q-separator />
 
                 <q-tab-panel name="game">
-                    <!-- <div class="text-h5 q-mb-md">
+                    <div class="text-h5 q-mb-md">
                         게임 목록
-                        
-                    </div> -->
+
+                    </div>
 
                     <q-table
                         :data="user.devGames"
                         :columns="gamesColumns"
                         row-key="id"
-                        title="게임 목록"
                     >
                         <template v-slot:body-cell="props">
                             <q-td :props="props">
@@ -154,22 +153,7 @@
                         제재
                     </div>
 
-                    <q-table
-                        :data="[]"
-                        :columns="columns"
-                        row-key="id"
-                    >
-                        <template v-slot:body-cell="props">
-                            <q-td :props="props">
-                                <div v-if="props.col.event">
-                                    <a href="#" @click="(event)=>{event.preventDefault();subEvent2(props.row)}">{{userInquiryGet[props.rowIndex][props.col.field]}}</a>
-                                </div>
-                                <div v-else>
-                                    {{userInquiryGet[props.rowIndex][props.col.field]}}
-                                </div>
-                            </q-td>
-                        </template>
-                    </q-table>
+                    <UserPunish :user-data="user" />
                 </q-tab-panel>
             </q-tab-panels>
         </q-card>
@@ -180,8 +164,8 @@
 import { Component, Vue } from "vue-property-decorator";
 import LineChart from "@/components/LineChart.vue";
 import MainTable from "@/components/MainTable.vue";
+import UserPunish from "@/components/pageSub/userPunish.vue";
 import Config from "@/util/Config";
-
 import Query from "@/query/UserQuery";
 
 
@@ -189,6 +173,7 @@ import Query from "@/query/UserQuery";
     components: {
         LineChart,
         MainTable,
+        UserPunish,
     },
     apollo: {
         userGet: {
@@ -260,5 +245,10 @@ export default class extends Vue {
     get channelLink(){
         return process.env.VUE_APP_ZEMPIE_LINK + '/channel/' + this.user.channel_id
     }
+
+    punishColumns = [
+        { field: 'id', name: 'id', label: "#", align: 'left' },
+        { field: 'category', name: 'category', label: "제재 종류", align: 'left' },
+    ];
 }
 </script>

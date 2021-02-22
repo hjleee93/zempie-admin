@@ -5,7 +5,6 @@
         :columns="columns"
         :pagination.sync="pagination"
         :rows-per-page-options="pageOption"
-        :title="title"
         :selection="selection || 'none'"
         :selected.sync="selected"
     >
@@ -16,10 +15,32 @@
         <template v-slot:body-cell="props">
             <q-td :props="props">
                 <div v-if="props.col.event">
-                    <a href="#" @click="(event)=>{event.preventDefault();subEvent(props.row)}">{{rows[props.rowIndex][props.col.field]}}</a>
+                    <div v-if="props.col.eventButton" >
+                        <q-btn
+                            v-if="!!rows[props.rowIndex][props.col.field]"
+                            :color="props.col.eventButtonColor || 'primary'"
+                            @click="(event)=>{event.preventDefault();subEvent(props.row)}"
+                        >
+                            {{rows[props.rowIndex][props.col.field]}}
+                        </q-btn>
+                    </div>
+                    <a
+                        v-else
+                        href="#"
+                        @click="(event)=>{event.preventDefault();subEvent(props.row)}"
+                    >
+                        {{rows[props.rowIndex][props.col.field]}}
+                    </a>
                 </div>
                 <div v-else>
-                    {{rows[props.rowIndex][props.col.field]}}
+                    <div v-if="props.col.badge">
+                        <q-badge :color="props.col.badgeColor(rows[props.rowIndex][props.col.field]) || 'primary'">
+                            {{rows[props.rowIndex][props.col.field]}}
+                        </q-badge>
+                    </div>
+                    <div v-else>
+                        {{rows[props.rowIndex][props.col.field]}}
+                    </div>
                 </div>
             </q-td>
         </template>
@@ -55,7 +76,6 @@ export default class extends Vue {
     @Prop() columns!: any[];
     @Prop() apiLink!: string;
     @Prop() columnName!: string;
-    @Prop() title!: string;
     @Prop() apiParam!: any;
     @Prop() selection!: string;
 
@@ -120,12 +140,24 @@ export default class extends Vue {
                     this.rows[index].created_at = new Date(this.rows[index].created_at).toLocaleString();
                 }
 
+                if(this.rows[index].end_at != null && this.rows[index].end_at != ""){
+                    this.rows[index].end_at = new Date(this.rows[index].end_at).toLocaleString();
+                }
+
+                if(this.rows[index].is_denied){
+                    this.rows[index].is_denied = '제재 중'
+                    this.rows[index].release_punish = "제재 취소";
+                } else {
+                    this.rows[index].is_denied = '제재 풀림';
+                    this.rows[index].release_punish = null;
+                }
+
                 if(this.rows[index].project != null && this.rows[index].created_at != ""){
                     this.rows[index].title = this.rows[index].project.name;
-                }1
+                }
             }
-            this.pageOption = [0];
-            this.pagination.rowsPerPage = 0;
+            // this.pageOption = [0];
+            // this.pagination.rowsPerPage = 0;
         }else{
             for(let i = 0; i < result[this.columnName].length; i++){
                 const index = offset + i;

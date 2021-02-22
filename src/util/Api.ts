@@ -589,6 +589,55 @@ export default class Api{
     /* 금지어 */
 
 
+    /* 유저 제재 */
+
+    static async punishUser( id : number, category : string, reason : string, date : number ) {
+        try{
+            await Gate({
+                method: "POST",
+                url: `/api/v1/admin/punish/user`,
+                data : {
+                    user_id : id,
+                    category,
+                    reason,
+                    date
+                }
+            });
+            return true;
+        }catch(error){
+            Notify.create({
+                type: "negative",
+                message: "제재하는 도중에 문제가 발생하였습니다.",
+                position: "top",
+            });
+            return false;
+        }
+    }
+
+    static async releasePunishUser( id : number ) {
+        try{
+            await Gate({
+                method: "POST",
+                url: `/api/v1/admin/punish/user/release`,
+                data : {
+                    id
+                }
+            });
+            return true;
+        }catch(error){
+            Notify.create({
+                type: "negative",
+                message: "제재를 취소하는 도중에 문제가 발생하였습니다.",
+                position: "top",
+            });
+            return false;
+        }
+    }
+
+    /* 유저 제재 */
+
+
+
 
     /* 게임 관리 */
     static affiliateProcess = true;
