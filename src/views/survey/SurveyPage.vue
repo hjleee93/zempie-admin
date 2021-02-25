@@ -32,7 +32,7 @@ export default class extends Vue {
         { label: "#", name: "id", field: "id", align: "left", sortable: true, sort: ()=>false },
         { label: "설문조사 아이디", name: "form_id", field: "form_id", align: "left"},
         // { label: "설문조사 주소", name: "form_url", field: "form_url", align: "left"},
-        // { label: "활성화 여부", name: "activated", field: "activated", align: "left", event : true},
+        { label: "활성화 여부", name: "activated", field: "activated", align: "left", event : true},
         { label: "시작일", name: "start_at", field: "start_at", align: "left"},
         { label: "종료일", name: "end_at", field: "end_at", align: "left"},
     ];
@@ -44,7 +44,7 @@ export default class extends Vue {
     }
 
     selectedSurvey : any;
-    selectEvent( surveys ) {
+    selectEvent( surveys : any ) {
         this.selectedSurvey = surveys[0] || null;
     }
 
@@ -59,9 +59,21 @@ export default class extends Vue {
         }
     }
 
-    subEvent( row : any) {
+    async subEvent( row : any) {
         console.log(row);
-        this.$router.push("/survey/developer/sub/" + row.id);
+        // this.$router.push("/survey/developer/sub/" + row.id);
+        let activated = row.activated == '활성화';
+
+
+        const result = await Api.updateSurveyActivated( row.id, !activated );
+        if( result ) {
+            this.$q.notify({
+                type : 'positive',
+                message : `성공적으로 설문조사가 ${ activated ? '비' : '' }활성화되었습니다.`,
+                position : 'top',
+            });
+            TableBus.$emit('reload');
+        }
     }
 }
 </script>

@@ -840,6 +840,35 @@ export default class Api{
         }
     }
 
+    static async updateSurveyActivated( id : number, activated : boolean ) {
+        const data = {
+            id,
+            activated : activated.toString(),
+        };
+
+        try{
+            await Gate({
+                method: "POST",
+                url: `/api/v1/admin/studio/survey/u`,
+                data
+            });
+
+            // Notify.create({
+            //     type: "positive",
+            //     message: "성공적으로 설문조사가 수정되었습니다.",
+            //     position: "top",
+            // });
+            return true;
+        }catch(error){
+            Notify.create({
+                type: "negative",
+                message: '설문조사를 수정하는 도중에 문제가 발생하였습니다.',
+                position: "top",
+            });
+            return false;
+        }
+    }
+
     /* 설문조사 관리 */
 
     
