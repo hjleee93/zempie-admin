@@ -65,9 +65,9 @@ export default class  extends Vue {
 
     category = {label : '게임 업로드 제한', option : 'game'};
     categoryList = [
-        {label : '게임 업로드 제한', option : 'game'},
-        {label : '댓글 작성 제한', option : 'game'},
-        {label : '랭킹 기록 제한', option : 'game'},
+        {label : '게임 업로드 제한', option : 'game upload'},
+        {label : '댓글 작성 제한', option : 'reply'},
+        {label : '랭킹 기록 제한', option : 'ranking'},
     ]
 
 

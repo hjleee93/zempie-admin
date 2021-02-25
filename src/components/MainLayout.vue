@@ -310,6 +310,21 @@ export default class MainLayout extends Vue {
                 },
             ],
             path: "/word"
+        },
+        {
+            icon: "poll",
+            label: "설문조사 관리",
+            sub: [
+                {
+                    label: '개발자 설문조사',
+                    path: '/developer'
+                },
+            //     {
+            //         label: '비속어',
+            //         path: '/bad'
+            //     },
+            ],
+            path: "/survey"
         }
     ];
 
@@ -363,8 +378,12 @@ export default class MainLayout extends Vue {
             title: "심사 상세보기",
         },
         {
-            path: "/word/badWord",
-            title: "단어",
+            path: "/survey/developer/create/",
+            title: "설문조사 생성",
+        },
+        {
+            path: "/survey/developer/update/",
+            title: "설문조사 수정",
         },
     ];
 

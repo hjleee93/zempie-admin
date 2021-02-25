@@ -62,11 +62,6 @@
 
                 <div class="col-12 col-md-10">
                     <q-input type="text" v-model="thumb1" placeholder="Thumb1" />
-<!--                    <q-file bottom-slots v-model="file1" label="Thumb" counter>-->
-<!--                        <template v-slot:append>-->
-<!--                            <q-icon name="close" @click.stop="file1 = null" class="cursor-pointer" />-->
-<!--                        </template>-->
-<!--                    </q-file>-->
                 </div>
             </div>
 
@@ -76,12 +71,7 @@
                 </div>
 
                 <div class="col-12 col-md-10">
-                    <q-input type="text" v-model="thumb2" placeholder="Thumb2" />
-<!--                    <q-file bottom-slots v-model="file1" label="Thumb" counter>-->
-<!--                        <template v-slot:append>-->
-<!--                            <q-icon name="close" @click.stop="file1 = null" class="cursor-pointer" />-->
-<!--                        </template>-->
-<!--                    </q-file>-->
+                    <q-input type="text" v-model="thumb2" placeholder="Thumb1" />
                 </div>
             </div>
 
@@ -92,11 +82,6 @@
 
                 <div class="col-12 col-md-10">
                     <q-input type="text" v-model="thumb3" placeholder="Thumb3" />
-<!--                    <q-file bottom-slots v-model="file2" label="Thumb_gif" counter>-->
-<!--                        <template v-slot:append>-->
-<!--                            <q-icon name="close" @click.stop="file2 = null" class="cursor-pointer" />-->
-<!--                        </template>-->
-<!--                    </q-file>-->
                 </div>
             </div>
         </q-card-section>

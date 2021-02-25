@@ -37,5 +37,10 @@ export default {
         { label: '화나요', key: 'e3' },
         { label: '어려워요', key: 'e4' },
         { label: '업데이트 원해요', key: 'e5' },
+    ],
+    projectState : [
+        '제재 없음',
+        '정지',
+        '영구정지',
     ]
 };

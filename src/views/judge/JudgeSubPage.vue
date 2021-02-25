@@ -187,8 +187,6 @@ export default class extends Vue {
             this.$router.go(-1);
         }
         
-        console.log( result );
-        
         this.iframeLink = process.env.VUE_APP_LAUNCHER_LINK + '?z_test_url=' + encodeURIComponent(result.version.url)
         this.title = result.project.name;
         this.description = result.project.description;

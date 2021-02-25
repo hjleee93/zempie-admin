@@ -6,6 +6,15 @@
                     <div class="text-weight-bold">
                         제재
                     </div>
+                    <div>
+<!--                        <MainTable-->
+<!--                            rowKey="id"-->
+<!--                            :columns="columns"-->
+<!--                            apiLink="punish/user/list"-->
+<!--                            :apiParam="{user_id:63}"-->
+<!--                        />-->
+<!--                            @subEvent="releasePunish"-->
+                    </div>
 
                     <div class="row">
                         <div class="col-12 col-sm-4 q-pr-md">
@@ -44,8 +53,13 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import MainTable from "@/components/MainTable.vue";
 
-@Component
+@Component({
+    components: {
+        MainTable,
+    }
+})
 export default class  extends Vue {
     type = '저작권 위반';
     day = 7;
@@ -56,6 +70,16 @@ export default class  extends Vue {
         '등',
         '등'
     ];
+
+    columns = [
+        { field: 'id', name: 'id', label: "#", align: 'left' },
+        { field: 'category', name: 'category', label: "제재 종류", align: 'left' },
+        { field: 'reason', name: 'reason', label: "제재 사유", align: 'left' },
+        { field: 'created_at', name: 'created_at', label: "제재 시작일", align: 'left' },
+        { field: 'end_at', name: 'end_at', label: "제재 종료일", align: 'left' },
+        { field: 'is_denied', name: 'is_denied', label: "제재 상태", align: 'left', badge: true, badgeColor: (text:string) => {return text == "제재 중" ? 'red' : 'positive'} },
+        { field: 'release_punish', name: 'release_punish', label: "제재 취소", align: 'left', event: true, eventButton: true, eventButtonColor: "positive" },
+    ]
 }
 </script>
 

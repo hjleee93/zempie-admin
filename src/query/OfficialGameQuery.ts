@@ -1,42 +1,5 @@
 import gql from "graphql-tag";
 
-const gameListGet = gql`
-    query gameGet {
-        gameGet(where: {category: 1}) {
-            id
-            title
-            user{
-                id
-                name
-            }
-            version
-            enabled
-            count_over
-            count_heart
-            created_at
-        }
-    }
-`;
-
-const gameListGetOption = gql`
-    query gameGet($order: String, $limit: Int, $offset: Int) {
-        gameGet(where: {category: 1}, order: $order, limit: $limit, offset: $offset) {
-            id
-            title
-            user{
-                id
-                name
-            }
-            version
-            enabled
-            count_over
-            count_heart
-            created_at
-        }
-
-        gameCount
-    }
-`;
 
 const gameListGetOptionAxios = ( order: string, limit: number, offset: number) => `
     query gameGet {
@@ -93,12 +56,50 @@ query gameGet($id: Int) {
 }
 `;
 
-
-const gameDelete = gql`
-    mutation gameDelete($id: Int!){
-        gameDelete(id: $id)
+const projectGet =  gql`
+query projectGet($game_id: Int) {
+    projectGet(where: {game_id: $game_id}) {
+        name
+        state
+        picture
+        picture2
+        picture_webp
+        description
+        hashtags
+        created_at
+        
+        projectVersions {
+            version
+            state
+            url
+            size
+            reason
+        }
+        
+        game {
+            id
+            category
+            pathname
+            count_over
+            count_heart
+            url_game
+            enabled
+            emotions {
+                e1
+                e2
+                e3
+                e4
+                e5
+            }
+            user{
+                id
+                name
+            }
+        }
     }
+}
 `;
+
 
 const gameHide = gql`
     mutation gameEdit($id: Int) {
@@ -123,4 +124,4 @@ const gameMoveChallenge = gql`
     }
 `;
 
-export default {gameListGet, gameListGetOption, gameListGetOptionAxios, gameGetById, gameDelete, gameHide, gameShow, gameMoveChallenge};
+export default {gameListGetOptionAxios, projectGet, gameGetById, gameHide, gameShow, gameMoveChallenge};

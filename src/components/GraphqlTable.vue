@@ -161,12 +161,7 @@ export default class extends Vue {
                 } else {
                     this.rows[index].developer = '없음';
                 }
-
-                if(this.rows[index].enabled){
-                    this.rows[index].state = "배포 중";
-                }else{
-                    this.rows[index].state = "대기 중";
-                }
+                this.rows[index].state = this.rows[index].enabled ? "공개 중" : "비공개";
             }
 
             if(this.columnName == "faq"){

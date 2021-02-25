@@ -25,7 +25,6 @@ export default class extends Vue {
     ];
 
     subEvent( row : any ){
-        console.log(row);
     }
 }
 </script>

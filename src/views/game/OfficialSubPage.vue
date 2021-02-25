@@ -1,59 +1,50 @@
 <template>
     <div>
-        <q-card v-if="!$apollo.queries.gameGet.loading">
+        <q-card v-if="!$apollo.queries.projectGet.loading">
             <q-card-section>
                 <div class="text-h5 q-mb-md">
-                    {{ game.title }} - {{ game.version }}
+                    {{ project.name }}
                 </div>
 
                 <div class="q-mb-md">
-                    <div class="text-h6">
-                        생성일
-                    </div>
+<!--                    <div class="text-h6">-->
+<!--                        생성일-->
+<!--                    </div>-->
 
                     <div>
-                        {{ new Date(game.created_at).toLocaleString() }}
+                        {{ new Date(project.created_at).toLocaleString() }}
                     </div>
                 </div>
 
                 <div class="q-mb-md">
-                    <div class="text-h6">
-                        자세한 설명
-                    </div>
+<!--                    <div class="text-h6">-->
+<!--                        자세한 설명-->
+<!--                    </div>-->
 
                     <div>
-                        {{ game.description || "없음" }}
+                        {{ project.description || "없음" }}
                     </div>
                 </div>
 
                 <div class="q-mb-md">
-                    <div class="text-h6">
-                        상태
-                    </div>
-                    <div>
-                        {{ game.enabled ? '배포 중' : '대기 중' }}
-                    </div>
-                </div>
-
-                <div class="q-mb-md">
-                    <div class="text-h6">
-                        태그
-                    </div>
+<!--                    <div class="text-h6">-->
+<!--                        태그-->
+<!--                    </div>-->
                     
-                    <div v-if="game.hashtags.trim().length > 0">
-                        <q-badge class="q-mr-sm" color="orange" text-color="black" :label="tag" v-for="tag in gameTags" :key="tag" />
+                    <div v-if="project.hashtags.trim().length > 0">
+                        <q-badge class="q-mr-sm" color="orange" text-color="black" :label="tag" v-for="tag in hashTags" :key="tag" />
                     </div>
                     <div v-else>
-                        없음
+                        설명 없음
                     </div>
                 </div>
 
-                <div class="q-mb-md" v-if="game.user != null">
-                    <div class="text-h6">
-                        개발자
-                    </div>
-                    <router-link :to="'/user/list/sub/' + game.user.id">
-                        {{ game.user.name }}
+                <div class="q-mb-md" v-if="project.game.user != null">
+<!--                    <div class="text-h6">-->
+<!--                        개발자-->
+<!--                    </div>-->
+                    <router-link :to="'/user/list/sub/' + project.game.user.id">
+                        {{ project.game.user.name }}
                     </router-link>
                 </div>
 
@@ -65,7 +56,7 @@
 
                         <div class="row justify-center items-center" :style="`width: 250px; height: 250px; `">
                             <q-img
-                                :src="game.url_thumb"
+                                :src="project.picture"
                                 :ratio="1"
                                 spinner-color="primary"
                                 spinner-size="82px"
@@ -73,14 +64,14 @@
                             />
                         </div>
                     </div>
-                    <div v-if="game.url_thumb_gif != null && game.url_thumb_gif != ''">
+                    <div v-if="project.picture2 != null && project.picture2 != ''">
                         <div class="text-h6">
                             움직이는 썸네일
                         </div>
 
                         <div class="row justify-center items-center" style="width: 250px; height: 250px;">
                             <q-img
-                                :src="game.url_thumb_gif"
+                                :src="project.picture2"
                                 :ratio="1"
                                 spinner-color="primary"
                                 spinner-size="82px"
@@ -91,39 +82,61 @@
                 </div>
 
                 <div class="q-mb-md">
-                    <div class="text-h6">
-                        플레이 수
-                    </div>
+<!--                    <div class="text-h6">-->
+<!--                        플레이 수-->
+<!--                    </div>-->
                     <div>
-                        {{ game.count_over }}
+                        {{ project.game.count_over }}회 플레이
                     </div>
                 </div>
 
                 <div class="q-mb-md">
-                    <div class="text-h6">
-                        하트 수
-                    </div>
+<!--                    <div class="text-h6">-->
+<!--                        하트 수-->
+<!--                    </div>-->
                     <div>
-                        {{ game.count_heart }}
+                        🧡{{ project.game.count_heart }}
                     </div>
                 </div>
 
-                <div v-if="game.emotions !== null" class="q-mb-md">
+                <div v-if="project.game.emotions !== null" class="q-mb-md">
                     <div class="text-h6">
                         감정표현
                     </div>
                     <div>
                         <div v-for="(emotion, idx) in emotions" :key="idx">
-                            {{ emotion.label }} : {{ game.emotions[emotion.key] }}
+                            {{ emotion.label }} : {{ project.game.emotions[emotion.key] }}
                         </div>
                     </div>
+                </div>
+
+                <div class="q-mb-md">
+                    <div class="text-h6">
+                        프로젝트 제재 상태
+                    </div>
+                    <div>
+                        {{ Config.projectState[project.state] }}
+                    </div>
+                </div>
+
+                <div class="q-mb-md">
+                    <div class="text-h6">
+                        게임 공개 여부
+                    </div>
+                    <div>
+                        {{ project.game.enabled ? '공개 중' : '비공개' }}
+                    </div>
+                </div>
+
+                <div class="q-mb-md">
+                    <q-table :data="project.projectVersions" :columns="projectVersionColumns" />
                 </div>
 
                 <div>
                     <div class="text-h6">
                         게임 플레이
                     </div>
-                    <div v-if="game.url_game != null">
+                    <div v-if="project.game.url_game != null">
                         <iframe ref="game" :src="iframeLink" frameborder="0" width="100%" height="1000px"></iframe>
                     </div>
                     <div v-else>
@@ -136,13 +149,14 @@
 
             <q-card-section>
                 <div class="row justify-end">
-                    <div v-if="game.url_game != null">
-                        <q-btn class="q-mr-md" color="red" label="비활성화" @click="hideGame" v-if="game.enabled" />
-                        <q-btn class="q-mr-md" color="positive" label="활성화" @click="showGame" v-else />
+                    <div v-if="project.game.url_game != null">
+                        <q-btn class="q-mr-md" color="red" label="비활성화하기" @click="hideGame" v-if="project.game.enabled" />
+                        <q-btn class="q-mr-md" color="positive" label="활성화하기" @click="showGame" v-else />
                     </div>
-                    
-                    <q-btn class="q-mr-md" color="red" label="삭제" @click="deleteGame" />
-                    <q-btn class="q-mr-md" color="grey" label="도전게임으로 이동" @click="moveGame" />
+
+                    <q-btn class="q-mr-md" color="red" label="버전 제재" @click="punishGame(false)" />
+                    <q-btn class="q-mr-md" color="red" label="프로젝트 제재" @click="punishGame(true)" />
+                    <q-btn color="grey" label="도전게임으로 이동" @click="moveGame" />
                 </div>
             </q-card-section>
         </q-card>
@@ -163,43 +177,45 @@ import { Dialog } from "quasar";
 
 import Query from "../../query/OfficialGameQuery";
 import Config from "@/util/Config";
+import Api from "@/util/Api";
 
 @Component({
     components: {},
     apollo: {
-        gameGet: {
-            query: Query.gameGetById,
+        projectGet: {
+            query: Query.projectGet,
             variables: {}
-        }
+        },
     }
 })
 export default class extends Vue {
     emotions = Config.emotions;
-    gameGet: any;
+    Config = Config;
+
+    projectVersionColumns = [
+        { field: "version", name: "version", label: "버전", align: "left" },
+        { field: "state", name: "state", label: "상태", align: "left" },
+    ];
+
+    projectGet: any;
     async created(){
-        await this.$apollo.queries.gameGet.setVariables({id: Math.round((Number(this.$route.params.index)))});
-        await this.$apollo.queries.gameGet.refetch();
-        console.log(this.game);
+        await this.$apollo.queries.projectGet.setVariables({game_id: Math.round((Number(this.$route.params.index)))});
+        await this.$apollo.queries.projectGet.refetch();
     }
 
-    get game(){
-        if(this.gameGet.length == 0) {
+    get project() {
+        if(this.projectGet.length == 0) {
             this.$router.go(-1);
         }
-        console.log(this.gameGet[0]);
-        return this.gameGet[0];
+        return this.projectGet[0];
     }
 
-    get gameLink(){
-        return process.env.VUE_APP_ZEMPIE_LINK + '/play/' + this.game.pathname;
-    }
-
-    get gameTags(){
-        return this.game.hashtags.split(',').map((item: any) => item.trim())
+    get hashTags(){
+        return this.project.hashtags.split(',').map((item: any) => item.trim())
     }
 
     get iframeLink(){
-        return process.env.VUE_APP_LAUNCHER_LINK + '?z_test_url=' + encodeURIComponent(this.game.url_game)
+        return process.env.VUE_APP_LAUNCHER_LINK + '?z_test_url=' + encodeURIComponent(this.project.game.url_game)
     }
 
     async hideGame(){
@@ -209,10 +225,10 @@ export default class extends Vue {
             cancel: true,
             persistent: true
         }).onOk(async () => {
-            const data = await this.$apollo.mutate({
+            await this.$apollo.mutate({
                 mutation: Query.gameHide,
                 variables: {
-                    id: Math.round(this.gameGet[0].id),
+                    id: this.project.game.id,
                 },
             })
 
@@ -226,17 +242,17 @@ export default class extends Vue {
         });
     }
 
-    async showGame(){
+    async showGame() {
         Dialog.create({
             title: '활성화',
             message: '정말로 활성화하겠습니까?',
             cancel: true,
             persistent: true
         }).onOk(async () => {
-            const data = await this.$apollo.mutate({
+            await this.$apollo.mutate({
                 mutation: Query.gameShow,
                 variables: {
-                    id: Math.round(this.gameGet[0].id),
+                    id: this.project.game.id,
                 },
             })
 
@@ -250,28 +266,22 @@ export default class extends Vue {
         });
     }
 
-    async deleteGame(){
+    async punishGame( permanent : boolean ) {
         Dialog.create({
-            title: '삭제',
-            message: '정말로 삭제하겠습니까?',
+            title: `게임 ${this.project.title} ${ permanent ? '프로젝트' : '버전' } 제재`,
+            message: '정말로 제재하겠습니까?',
             cancel: true,
             persistent: true
         }).onOk(async () => {
-            const data = await this.$apollo.mutate({
-                mutation: Query.gameDelete,
-                variables: {
-                    id: Math.round(this.gameGet[0].id),
-                },
-            })
+            let game_id = this.project.game.id;
+            let title = `게임 ${ permanent ? '프로젝트' : '버전' } 정지 안내`;
+            let content = `이용약관 위반 활동이 감지되어 게임 ${this.project.title} ${ permanent ? '프로젝트가' : `버전 ${this.project.game.version}이` } 정지 처리되었습니다.`;
 
-            this.$q.notify({
-                type: "positive",
-                message: "성공적으로 삭제되었습니다.",
-                position: "top"
-            })
-
-            await this.refresh();
-        });
+            let result = await Api.punishGame( game_id, permanent, title, content );
+            if( result ) {
+                await this.$router.push("/game/official");
+            }
+        })
     }
 
     async moveGame(){
@@ -281,10 +291,10 @@ export default class extends Vue {
             cancel: true,
             persistent: true
         }).onOk(async () => {
-            const data = await this.$apollo.mutate({
+            await this.$apollo.mutate({
                 mutation: Query.gameMoveChallenge,
                 variables: {
-                    id: Math.round(this.gameGet[0].id),
+                    id: this.project.game.id,
                 },
             })
 
@@ -294,12 +304,12 @@ export default class extends Vue {
                 position: "top"
             })
 
-            this.$router.push("/game/challenge");
+            await this.$router.push("/game/challenge");
         });
     }
 
     async refresh(){
-        await this.$apollo.queries.gameGet.refetch();
+        await this.$apollo.queries.projectGet.refetch();
     }
 }
 </script>

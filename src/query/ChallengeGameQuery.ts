@@ -1,54 +1,5 @@
 import gql from "graphql-tag";
 
-const gameListGet = gql`
-    query gameGet {
-        gameGet(where: {category: 0, userId : { not : null }}) {
-            id
-            title
-            user{
-                id
-                name
-            }
-            version
-            count_over
-            count_heart
-            enabled
-            created_at
-        }
-    }
-`;
-const gameGetById =  gql`
-    query gameGet($id: Int) {
-        gameGet(where: {category: 0, userId : { not : null }, id: $id}) {
-            id
-            title
-            description
-            pathname
-            user{
-                id
-                name
-            }
-            version
-            hashtags
-            activated
-            enabled
-            pathname
-            url_game
-            url_thumb
-            url_thumb_gif
-            count_over
-            count_heart
-            emotions {
-                e1
-                e2
-                e3
-                e4
-                e5
-            }
-            created_at
-        }
-    }
-`;
 
 const gameListGetOptionAxios = ( order: string, limit: number, offset: number) => `
     query gameGet {
@@ -70,11 +21,48 @@ const gameListGetOptionAxios = ( order: string, limit: number, offset: number) =
         gameCount(where: {category: 0, userId : { not : null }})
     }
 `;
-
-const gameDelete = gql`
-    mutation gameDelete($id: Int!){
-        gameDelete(id: $id)
+const projectGet =  gql`
+query projectGet($game_id: Int) {
+    projectGet(where: {game_id: $game_id}) {
+        name
+        state
+        picture
+        picture2
+        picture_webp
+        description
+        hashtags
+        created_at
+        
+        projectVersions {
+            version
+            state
+            url
+            size
+            reason
+        }
+        
+        game {
+            id
+            category
+            pathname
+            count_over
+            count_heart
+            url_game
+            enabled
+            emotions {
+                e1
+                e2
+                e3
+                e4
+                e5
+            }
+            user{
+                id
+                name
+            }
+        }
     }
+}
 `;
 
 const gameHide = gql`
@@ -94,10 +82,10 @@ const gameShow = gql`
 
 const gameMoveOfficial = gql`
     mutation gameEdit($id: Int) {
-        gameEdit(game: {id: $id, category: 1, userId : { not : null }}){
+        gameEdit(game: {id: $id, category: 1}){
             id
         }
     }
 `;
 
-export default {gameListGet, gameGetById, gameListGetOptionAxios, gameDelete, gameHide, gameShow, gameMoveOfficial};
+export default {gameListGetOptionAxios, projectGet, gameHide, gameShow, gameMoveOfficial};

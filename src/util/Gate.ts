@@ -24,18 +24,18 @@ instance.interceptors.response.use(
         if(process.env.NODE_ENV == "local"){
             console.log([error]);
             
-            Notify.create({
-                type: "negative",
-                message: error,
-                position: "top",
-            });
+            // Notify.create({
+            //     type: "negative",
+            //     message: error,
+            //     position: "top",
+            // });
         }
         
         const errorConfig = error.config;
         if (error.response.data.error.message == "Unauthorized") {
             const result = await store.dispatch("refreshToken");
             if(result){
-                return await instance(errorConfig);
+                return instance(errorConfig);
             }
         }else{
             // Notify.create({

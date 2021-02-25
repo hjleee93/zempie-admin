@@ -36,6 +36,7 @@ export default class extends Vue {
     popupOpened = false;
 
     openPopup(){
+        this.$emit( 'open' );
         this.popupOpened = true;
     }
 

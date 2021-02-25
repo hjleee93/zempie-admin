@@ -132,6 +132,9 @@ export default class extends Vue {
 
         this.rows = rows;
         if(result[this.columnName] == null){
+            if( this.rows.length > result.length ) {
+                this.rows.splice(0,this.rows.length - result.length);
+            }
             for(let i = 0; i < result.length; i++){
                 const index = offset + i;
                 this.rows[index] = result[i];
@@ -159,6 +162,9 @@ export default class extends Vue {
             // this.pageOption = [0];
             // this.pagination.rowsPerPage = 0;
         }else{
+            if( this.rows.length > result[this.columnName].length ) {
+                this.rows.splice(0,this.rows.length - result[this.columnName].length);
+            }
             for(let i = 0; i < result[this.columnName].length; i++){
                 const index = offset + i;
                 this.rows[index] = result[this.columnName][i];
@@ -217,6 +223,12 @@ export default class extends Vue {
                                 .replace("p", "제휴게임")
                         )
                         .join(" ");
+                }
+
+                if(this.columnName == "surveys"){
+                    this.rows[index].activated = this.rows[index].activated ? '활성화' : '비활성화';
+                    this.rows[index].start_at = new Date(this.rows[index].start_at).toLocaleString();
+                    this.rows[index].end_at = new Date(this.rows[index].end_at).toLocaleString();
                 }
             }
         }

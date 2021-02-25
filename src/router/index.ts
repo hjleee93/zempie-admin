@@ -1,5 +1,7 @@
 import Vue from "vue";
 import VueRouter, { NavigationGuardNext, RouteConfig } from "vue-router";
+import {Notify} from "quasar";
+import store from '@/store';
 
 // 기본 페이지
 import Login from "@/views/LoginPage.vue";
@@ -46,10 +48,10 @@ import PunishLog from "@/views/punish/PunishLogPage.vue";
 // 단어
 import BadWord from "@/views/word/BadWord.vue";
 import ForbiddenWord from "@/views/word/ForbiddenWord.vue";
-
-
-import {Notify} from "quasar";
-import store from '@/store';
+// 단어
+import Survey from "@/views/survey/SurveyPage.vue";
+import SurveyCreate from "@/views/survey/SurveyCreatePage.vue";
+import SurveyUpdate from "@/views/survey/SurveyUpdatePage.vue";
 
 
 function loginCheck(next: NavigationGuardNext){
@@ -307,6 +309,28 @@ const routes: Array<RouteConfig> = [
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     /* 단어 */
+
+
+    /* 설문조사 */
+    {
+        path: "/survey/developer",
+        name: "Survey",
+        component: Survey,
+        beforeEnter: (_to, _from, next) => {loginCheck(next)}
+    },
+    {
+        path: "/survey/developer/create",
+        name: "SurveyCreate",
+        component: SurveyCreate,
+        beforeEnter: (_to, _from, next) => {loginCheck(next)}
+    },
+    {
+        path: "/survey/developer/update",
+        name: "SurveyUpdate",
+        component: SurveyUpdate,
+        beforeEnter: (_to, _from, next) => {loginCheck(next)}
+    },
+    /* 설문조사 */
 ];
 
 const router = new VueRouter({

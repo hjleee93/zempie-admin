@@ -84,14 +84,13 @@ const store: StoreOptions<State> = {
                 setCookie("access_token", result.data.result.access_token);
                 return true;
             }catch(error){
-                // console.log([error]);
                 Notify.create({
                     type: "negative",
                     message: '해당 계정의 토큰이 만료되었습니다. 다시 로그인해주시기 바랍니다.',
                     position: "top",
                 });
-                await router.push("/login");
                 context.commit("logout");
+                router.push("/login");
                 return false;
             }
         },
@@ -112,7 +111,6 @@ const store: StoreOptions<State> = {
                 context.state.subLevel = result.data.result.sub_level;
                 // context.state.id = result.data.data.id;
             }catch(error){
-                // console.log([error]);
             }
         }
     },

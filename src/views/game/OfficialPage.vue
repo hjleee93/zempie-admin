@@ -36,7 +36,7 @@ export default class extends Vue {
         { field: "count_heart", name: "count_heart", label: "하트 수", align: "left", sortable: true, sort: () => null },
         { field: "version", name: "version", label: "버전", align: "left" },
         { field: "created_at", name: "created_at", label: "등록일", align: "left", sortable: true, sort: () => null },
-        { field: "state", name: "state", label: "상태", align: "left" },
+        { field: "state", name: "state", label: "공개 상태", align: "left" },
     ];
 
     subEvent( rows: any ){

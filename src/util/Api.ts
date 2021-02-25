@@ -633,8 +633,34 @@ export default class Api{
             return false;
         }
     }
-
     /* 유저 제재 */
+
+
+
+    /* 게임 제재 */
+    static async punishGame( game_id : number, permanent : boolean, title : string, content : string ) {
+        try{
+            await Gate({
+                method: "POST",
+                url: `/api/v1/admin/punish/game`,
+                data : {
+                    game_id,
+                    permanent,
+                    title,
+                    content
+                }
+            });
+            return true;
+        }catch(error){
+            Notify.create({
+                type: "negative",
+                message: "제재하는 도중에 문제가 발생하였습니다.",
+                position: "top",
+            });
+            return false;
+        }
+    }
+    /* 게임 제재 */
 
 
 
@@ -686,17 +712,135 @@ export default class Api{
             this.affiliateProcess = true;
             return true;
         }catch(error){
-            console.log([error]);
             Notify.create({
-                type: "positive",
-                message: error.response.data.error,
+                type: "negative",
+                message: "제휴게임을 생성하는 도중에 문제가 발생하였습니다.",
                 position: "top",
             });
             this.affiliateProcess = true;
             return false;
         }
     }
+
+    static affiliateUpdateProcess = true;
+    static async updateAffiliateGame(
+        game_id : number,
+        pathname : string,
+        title : string,
+        description : string,
+        hashtags : string,
+        url_game : string,
+        url_thumb : string,
+        url_thumb_webp : string,
+        url_thumb_gif : string
+    ) {
+        if( !this.affiliateUpdateProcess ) {
+            this.loading();
+            return;
+        }
+        this.affiliateUpdateProcess = false;
+
+        const data = {
+            game_id,
+            pathname,
+            title,
+            description,
+            hashtags,
+            url_game,
+            url_thumb,
+            url_thumb_webp : url_thumb_webp || '',
+            url_thumb_gif : url_thumb_gif || '',
+        };
+
+        try{
+            const result = await Gate({
+                method: "POST",
+                url: `/api/v1/admin/game/u/p`,
+                data
+            });
+            console.log(result);
+
+            Notify.create({
+                type: "positive",
+                message: "성공적으로 제휴 게임이 수정되었습니다.",
+                position: "top",
+            });
+            this.affiliateUpdateProcess = true;
+            return true;
+        }catch(error){
+            Notify.create({
+                type: "negative",
+                message: '제휴게임을 수정하는 도중에 문제가 발생하였습니다.',
+                position: "top",
+            });
+            this.affiliateUpdateProcess = true;
+            return false;
+        }
+    }
     /* 게임 관리 */
+
+    /* 설문조사 관리 */
+
+    static async addSurvey( form_id : string, form_url : string, start_at : number, end_at : number ) {
+        const data = {
+            form_id,
+            form_url,
+            start_at,
+            end_at
+        };
+
+        try{
+            await Gate({
+                method: "POST",
+                url: `/api/v1/admin/studio/survey/c`,
+                data
+            });
+
+            Notify.create({
+                type: "positive",
+                message: "성공적으로 설문조사가 추가되었습니다.",
+                position: "top",
+            });
+            return true;
+        }catch(error){
+            Notify.create({
+                type: "negative",
+                message: '설문조사를 추가하는 도중에 문제가 발생하였습니다.',
+                position: "top",
+            });
+            return false;
+        }
+    }
+
+    static async deleteSurvey( id : number ) {
+        const data = {
+            id
+        };
+
+        try{
+            await Gate({
+                method: "POST",
+                url: `/api/v1/admin/studio/survey/d`,
+                data
+            });
+
+            Notify.create({
+                type: "positive",
+                message: "성공적으로 설문조사가 삭제되었습니다.",
+                position: "top",
+            });
+            return true;
+        }catch(error){
+            Notify.create({
+                type: "negative",
+                message: '설문조사를 삭제하는 도중에 문제가 발생하였습니다.',
+                position: "top",
+            });
+            return false;
+        }
+    }
+
+    /* 설문조사 관리 */
 
     
     static loading(){

@@ -39,7 +39,7 @@ export default class AffiliatePage extends Vue {
         { field: "url_thumb", name: "url_thumb", label: "썸네일", align: "left" },
         { field: "title", name: "title", label: "제목", align: "left", sortable: true, sort: () => null, event: true },
         { field: "created_at", name: "created_at", label: "등록일", align: "left", sortable: true, sort: () => null },
-        { field: "state", name: "state", label: "상태", align: "left" },
+        { field: "state", name: "state", label: "공개 상태", align: "left" },
     ];
 
     moveCreatePage() {
@@ -88,7 +88,7 @@ export default class AffiliatePage extends Vue {
                 data.rows[i].url,
                 data.rows[i].thumb1,
                 '',
-                ''
+                '',
             );
         }
 

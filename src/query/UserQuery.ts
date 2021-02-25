@@ -51,20 +51,6 @@ query userInquiryGet($user_id: Int) {
 }
 `;
 
-// const gameDelete = gql`
-//     mutation gameDelete($id: Int!){
-//         gameDelete(id: $id)
-//     }
-// `;
-
-// const gameMoveOfficial = gql`
-//     mutation gameEdit($id: Int) {
-//         gameEdit(game: {id: $id, official: true}){
-//             id
-//         }
-//     }
-// `;
-
 export default {
     userGet,
     userGetById,
