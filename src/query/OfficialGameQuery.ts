@@ -69,6 +69,7 @@ query projectGet($game_id: Int) {
         created_at
         
         projectVersions {
+            id
             version
             state
             url

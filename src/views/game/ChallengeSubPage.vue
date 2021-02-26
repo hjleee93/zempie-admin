@@ -135,7 +135,29 @@
                 </div>
 
                 <div class="q-mb-md">
-                    <q-table :data="project.projectVersions" :columns="projectVersionColumns" />
+                    <q-table
+                        :data="projectVersions"
+                        :columns="projectVersionColumns"
+                    >
+                        <template v-slot:body-cell="props">
+                            <q-td :props="props">
+                                <div v-if="props.col.event">
+                                    <q-btn
+                                        v-if="!!props.row[props.col.field]"
+                                        color="red"
+                                        @click="punishVersion(props.row)"
+                                    >
+                                        제재하기
+                                    </q-btn>
+                                </div>
+                                <div v-else>
+                                    <div>
+                                        {{props.row[props.col.field]}}
+                                    </div>
+                                </div>
+                            </q-td>
+                        </template>
+                    </q-table>
                 </div>
 
                 <div>
@@ -160,7 +182,6 @@
                         <q-btn class="q-mr-md" color="positive" label="활성화하기" @click="showGame" v-else />
                     </div>
 
-                    <q-btn class="q-mr-md" color="red" label="버전 제재" @click="punishGame(false)" />
                     <q-btn class="q-mr-md" color="red" label="프로젝트 제재" @click="punishGame(true)" />
                     <q-btn color="grey" label="정식게임으로 이동" @click="moveGame" />
                 </div>
@@ -198,12 +219,6 @@ export default class extends Vue {
     emotions = Config.emotions;
     Config = Config;
 
-    projectVersionColumns = [
-        { field: "version", name: "version", label: "버전", align: "left" },
-        { field: "state", name: "state", label: "상태", align: "left" },
-        { field: "reason", name: "reason", label: "반려 사유", align: "left" },
-    ];
-
     projectGet: any;
     async created(){
         await this.$apollo.queries.projectGet.setVariables({game_id: Math.round((Number(this.$route.params.index)))});
@@ -215,6 +230,20 @@ export default class extends Vue {
             this.$router.go(-1);
         }
         return this.projectGet[0];
+    }
+
+    projectVersionColumns = [
+        { field: "version", name: "version", label: "버전", align: "left" },
+        { field: "state", name: "state", label: "상태", align: "left" },
+        { field: "reason", name: "reason", label: "반려 사유", align: "left" },
+        { field: "punish", name: "punish", label: "제재", align: "left", event: true },
+    ];
+
+    get projectVersions() {
+        return this.project.projectVersions.map((version : any) => {
+            version.punish = version.state == 'passed' || version.state == 'deploy';
+            return version;
+        });
     }
 
     get hashTags(){
@@ -273,23 +302,42 @@ export default class extends Vue {
         });
     }
 
+    punishVersion( row : any ) {
+        Dialog.create({
+            title: `게임 프로젝트 버전 제재`,
+            message: '정말로 해당 버전을 제재하겠습니까?',
+            cancel: true,
+            persistent: true
+        }).onOk(async () => {
+            let game_id = Math.round((Number(this.$route.params.index)));
+            let title = `게임 프로젝트 버전 정지 안내`;
+            let content = `이용약관 위반 활동이 감지되어 게임 ${this.project.name} 버전 ${row.version}이 정지 처리되었습니다.`;
+
+            let result = await Api.punishGame( game_id, false, title, content, row.id );
+            if( result ) {
+                // await this.$router.push("/game/challenge");
+                await this.refresh();
+            }
+        })
+    }
+
     async punishGame( permanent : boolean ) {
         Dialog.create({
-            title: `게임 ${this.project.title} ${ permanent ? '프로젝트' : '버전' } 제재`,
+            title: `게임 프로젝트 제재`,
             message: '정말로 제재하겠습니까?',
             cancel: true,
             persistent: true
         }).onOk(async () => {
             let game_id = Math.round((Number(this.$route.params.index)));
-            let title = `게임 ${ permanent ? '프로젝트' : '버전' } 정지 안내`;
-            let content = `이용약관 위반 활동이 감지되어 게임 ${this.project.title} ${ permanent ? '프로젝트가' : `버전 ${this.project.game.version}이` } 정지 처리되었습니다.`;
+            let title = `게임 프로젝트 정지 안내`;
+            let content = `이용약관 위반 활동이 감지되어 게임 ${this.project.name} 프로젝트가 정지 처리되었습니다.`;
 
             let result = await Api.punishGame( game_id, permanent, title, content );
             if( result ) {
-                await this.$router.push("/game/challenge");
+                // await this.$router.push("/game/challenge");
+                await this.refresh();
             }
         })
-
     }
 
     async moveGame(){

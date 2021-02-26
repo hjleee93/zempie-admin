@@ -27,11 +27,11 @@
 
             <div class="q-mb-md row justify-start items-center">
                 <div class="col-12 col-md-2 text-weight-bold">
-                    접속주소 *
+                    접속주소 (pathname) *
                 </div>
 
                 <div class="col-12 col-md-10">
-                    <q-input type="text" v-model="pathname" placeholder="Pathname"  hint="영문과 숫자로 된 고유한 게임 아이디를 만듭니다. 만들어진 아이디는 게임 접속 주소등으로 사용됩니다." />
+                    <q-input type="text" v-model="pathname" placeholder="Pathname"  hint="젬파이에서 게임에 접속하기 위해서 사용되는 텍스트입니다." />
                 </div>
             </div>
 

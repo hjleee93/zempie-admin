@@ -408,12 +408,13 @@ export default class Api{
         }
     }
 
-    static async JudgeProject(state: string, index: number, reason: string){
+    static async JudgeProject(state: string, index: number, reason: string, user_id : number){
         const params = new URLSearchParams();
         params.append("state", state);
         params.append("id", index.toString());
         if(state === "fail"){
             params.append("reason", reason);
+            params.append("user_id", user_id.toString());
         }
         try{
             const result = await Gate({
@@ -638,7 +639,7 @@ export default class Api{
 
 
     /* 게임 제재 */
-    static async punishGame( game_id : number, permanent : boolean, title : string, content : string ) {
+    static async punishGame( game_id : number, permanent : boolean, title : string, content : string, project_version_id : number = 0 ) {
         try{
             await Gate({
                 method: "POST",
@@ -647,8 +648,14 @@ export default class Api{
                     game_id,
                     permanent,
                     title,
-                    content
+                    content,
+                    project_version_id
                 }
+            });
+            Notify.create({
+                type: "positive",
+                message: "성공적으로 제재되었습니다.",
+                position: "top",
             });
             return true;
         }catch(error){

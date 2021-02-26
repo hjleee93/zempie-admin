@@ -147,7 +147,7 @@ export default class extends Vue {
     titleOption = false;
     description = "게임 설명입니다.";
     autoDeploy = false;
-    userId = "";
+    userId = 0;
 
     imgLink = "";
     imgLink2 : null | string = null;
@@ -210,7 +210,7 @@ export default class extends Vue {
 
     async reject(){
         if(this.isReject){
-            const result = await Api.JudgeProject("fail", this.index, this.rejectReason);
+            const result = await Api.JudgeProject("fail", this.index, this.rejectReason, this.userId);
             if(result){
                 this.$router.push("/judge/game");
             }
@@ -219,7 +219,7 @@ export default class extends Vue {
 
     async submit(){
         if(!this.isReject){
-            const result = await Api.JudgeProject("passed", this.index, "");
+            const result = await Api.JudgeProject("passed", this.index, "", 0);
             if(result){
                 this.$router.push("/judge/game");
             }

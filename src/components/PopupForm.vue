@@ -13,6 +13,12 @@
                 <q-separator />
 
                 <q-card-actions align="right">
+                    <q-btn
+                        color="positive"
+                        :label="positiveBtnLabel"
+                        v-if="positiveBtnLabel != '' && positiveBtnLabel != null && positiveBtnLabel != undefined"
+                        @click="onClickPositiveBtn"
+                    />
                     <q-btn v-close-popup color="red" label="닫기" />
                 </q-card-actions>
             </q-card>
@@ -33,6 +39,9 @@ export default class extends Vue {
     @Prop()
     btnColor!: string;
 
+    @Prop()
+    positiveBtnLabel!: string;
+
     popupOpened = false;
 
     openPopup(){
@@ -44,6 +53,10 @@ export default class extends Vue {
         PopupBus.$on("close", () => {
             this.popupOpened = false;
         });
+    }
+
+    onClickPositiveBtn() {
+        this.$emit( 'submit' );
     }
 }
 </script>
