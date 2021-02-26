@@ -31,6 +31,13 @@
                         :ratio="1"
                     />
                 </div>
+                <div v-else-if="props.col.field === 'url_img'">
+                    <q-btn color="primary" label="이미지보기" @click="openImagePopup" v-if="rows[props.rowIndex][props.col.field] != null && rows[props.rowIndex][props.col.field] != ''" />
+
+                    <q-dialog v-model="imagePopup">
+                        <img :src="rows[props.rowIndex][props.col.field]" style="max-width: 90%; max-height: 90%;" alt="문의 이미지" />
+                    </q-dialog>
+                </div>
                 <div v-else-if="props.col.event">
                     <a href="#" @click="(event)=>{event.preventDefault();subEvent(props.row)}">{{rows[props.rowIndex][props.col.field]}}</a>
                 </div>
@@ -175,6 +182,11 @@ export default class extends Vue {
                     this.rows[index].state = "비활성화";
                 }
             }
+
+            if(this.columnName == "userReport" ){
+                this.rows[index].user_name = this.rows[index].user.name;
+                this.rows[index].game_title = this.rows[index].game.title;
+            }
         }
     }
 
@@ -205,6 +217,11 @@ export default class extends Vue {
         exportExcel( columns, data, this.filename || 'table' );
     }
 
+
+    imagePopup = false;
+    openImagePopup() {
+        this.imagePopup = true;
+    }
     
     // searchCategory = '';
     // search = '';

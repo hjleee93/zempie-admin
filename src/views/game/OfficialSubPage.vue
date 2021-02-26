@@ -169,7 +169,7 @@
 
             <q-separator />
 
-            <q-card-section>
+            <q-card-section v-if="Config.projectState[project.state] !== '영구정지'">
                 <div class="row justify-end">
                     <div v-if="project.game.url_game != null">
                         <q-btn class="q-mr-md" color="red" label="비활성화하기" @click="hideGame" v-if="project.game.enabled" />
