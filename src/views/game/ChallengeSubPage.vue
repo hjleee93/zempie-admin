@@ -143,11 +143,18 @@
                             <q-td :props="props">
                                 <div v-if="props.col.event">
                                     <q-btn
-                                        v-if="!!props.row[props.col.field]"
+                                        v-if="props.row[props.col.field] && props.row[props.col.field] === 'punish'"
                                         color="red"
                                         @click="punishVersion(props.row)"
                                     >
                                         제재하기
+                                    </q-btn>
+                                    <q-btn
+                                        v-if="props.row[props.col.field] && props.row[props.col.field] === 'release'"
+                                        color="positive"
+                                        @click="releaseVersion(props.row)"
+                                    >
+                                        제재 취소
                                     </q-btn>
                                 </div>
                                 <div v-else>
@@ -175,15 +182,18 @@
 
             <q-separator />
 
-            <q-card-section v-if="Config.projectState[project.state] !== '영구정지'">
-                <div class="row justify-end">
+            <q-card-section>
+                <div class="row justify-end" v-if="Config.projectState[project.state] !== '영구정지'">
                     <div v-if="project.game.url_game != null" class="float-left">
                         <q-btn class="q-mr-md" color="red" label="비활성화하기" @click="hideGame" v-if="project.game.enabled" />
                         <q-btn class="q-mr-md" color="positive" label="활성화하기" @click="showGame" v-else />
                     </div>
 
-                    <q-btn class="q-mr-md" color="red" label="프로젝트 제재" @click="punishGame(true)" />
+                    <q-btn class="q-mr-md" color="red" label="프로젝트 제재" @click="punishGame" />
                     <q-btn color="grey" label="정식게임으로 이동" @click="moveGame" />
+                </div>
+                <div class="row justify-end" v-else>
+                    <q-btn class="q-mr-md" color="positive" label="프로젝트 제재 취소" @click="releaseGame" />
                 </div>
             </q-card-section>
         </q-card>
@@ -241,7 +251,12 @@ export default class extends Vue {
 
     get projectVersions() {
         return this.project.projectVersions.map((version : any) => {
-            version.punish = version.state == 'passed' || version.state == 'deploy';
+            if( version.state == 'passed' || version.state == 'deploy' ){
+                version.punish = 'punish';
+            } else if( version.state == 'ban' ) {
+                version.punish = 'release';
+            }
+
             return version;
         });
     }
@@ -321,7 +336,7 @@ export default class extends Vue {
         })
     }
 
-    async punishGame( permanent : boolean ) {
+    async punishGame() {
         Dialog.create({
             title: `게임 프로젝트 제재`,
             message: '정말로 제재하겠습니까?',
@@ -332,9 +347,37 @@ export default class extends Vue {
             let title = `게임 프로젝트 정지 안내`;
             let content = `이용약관 위반 활동이 감지되어 게임 ${this.project.name} 프로젝트가 정지 처리되었습니다.`;
 
-            let result = await Api.punishGame( game_id, permanent, title, content );
+            let result = await Api.punishGame( game_id, true, title, content );
             if( result ) {
-                // await this.$router.push("/game/challenge");
+                await this.refresh();
+            }
+        })
+    }
+
+    releaseVersion( row : any ) {
+        Dialog.create({
+            title: `게임 프로젝트 버전 제재 취소`,
+            message: '정말로 해당 버전을 제재 취소하겠습니까?',
+            cancel: true,
+            persistent: true
+        }).onOk(async () => {
+            let result = await Api.releasePunishGame( row.id, false );
+            if( result ) {
+                await this.refresh();
+            }
+        })
+    }
+
+    releaseGame() {
+        Dialog.create({
+            title: `게임 프로젝트 제재 취소`,
+            message: '정말로 제재하겠습니까?',
+            cancel: true,
+            persistent: true
+        }).onOk(async () => {
+            console.log(this.project.id);
+            let result = await Api.releasePunishGame( this.project.id, true );
+            if( result ) {
                 await this.refresh();
             }
         })

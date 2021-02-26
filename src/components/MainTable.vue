@@ -132,9 +132,6 @@ export default class extends Vue {
 
         this.rows = rows;
         if(result[this.columnName] == null){
-            if( this.rows.length > result.length ) {
-                this.rows.splice(0,this.rows.length - result.length);
-            }
             for(let i = 0; i < result.length; i++){
                 const index = offset + i;
                 this.rows[index] = result[i];
@@ -162,9 +159,6 @@ export default class extends Vue {
             // this.pageOption = [0];
             // this.pagination.rowsPerPage = 0;
         }else{
-            if( this.rows.length > result[this.columnName].length ) {
-                this.rows.splice(0,this.rows.length - result[this.columnName].length);
-            }
             for(let i = 0; i < result[this.columnName].length; i++){
                 const index = offset + i;
                 this.rows[index] = result[this.columnName][i];

@@ -24,6 +24,7 @@ const gameListGetOptionAxios = ( order: string, limit: number, offset: number) =
 const projectGet =  gql`
 query projectGet($game_id: Int) {
     projectGet(where: {game_id: $game_id}) {
+    id
         name
         state
         picture

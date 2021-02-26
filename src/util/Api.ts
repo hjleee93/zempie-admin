@@ -667,6 +667,39 @@ export default class Api{
             return false;
         }
     }
+
+    static async releasePunishGame( id : number, project : boolean ) {
+        let data : any;
+        if( project ) {
+            data = {
+                project_id : id
+            };
+        } else {
+            data = {
+                project_version_id : id
+            };
+        }
+        try{
+            await Gate({
+                method: "POST",
+                url: `/api/v1/admin/punish/game/release`,
+                data
+            });
+            Notify.create({
+                type: "positive",
+                message: "성공적으로 제재가 취소되었습니다.",
+                position: "top",
+            });
+            return true;
+        }catch(error){
+            Notify.create({
+                type: "negative",
+                message: "제재를 취소하는 도중에 문제가 발생하였습니다.",
+                position: "top",
+            });
+            return false;
+        }
+    }
     /* 게임 제재 */
 
 
