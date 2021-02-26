@@ -150,6 +150,13 @@
                                     >
                                         제재 취소
                                     </q-btn>
+                                    <q-btn
+                                        v-if="props.row[props.col.field] && props.row[props.col.field] === 'release'"
+                                        color="positive"
+                                        @click="releaseVersion(props.row)"
+                                    >
+                                        제재 취소
+                                    </q-btn>
                                 </div>
                                 <div v-else>
                                     <div>
@@ -351,7 +358,7 @@ export default class extends Vue {
     releaseVersion( row : any ) {
         Dialog.create({
             title: `게임 프로젝트 버전 제재 취소`,
-            message: '정말로 해당 버전을 제재 취소하겠습니까?',
+            message: '정말로 해당 버전을 제재 취소하시겠습니까?',
             cancel: true,
             persistent: true
         }).onOk(async () => {
@@ -365,7 +372,7 @@ export default class extends Vue {
     releaseGame() {
         Dialog.create({
             title: `게임 프로젝트 제재 취소`,
-            message: '정말로 제재하겠습니까?',
+            message: '정말로 제재 취소하시겠습니까?',
             cancel: true,
             persistent: true
         }).onOk(async () => {

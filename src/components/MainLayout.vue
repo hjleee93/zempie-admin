@@ -270,32 +270,32 @@ export default class MainLayout extends Vue {
                     label: '게임 신고 현황',
                     path: '/game'
                 },
-                {
-                    label: '유저 신고 현황',
-                    path: '/user'
-                }
+                // {
+                //     label: '유저 신고 현황',
+                //     path: '/user'
+                // }
             ],
             path: "/report"
         },
-        {
-            icon: "block",
-            label: "제재",
-            sub: [
-                {
-                    label: '게임 제재',
-                    path: '/game'
-                },
-                {
-                    label: '유저 제재',
-                    path: '/user'
-                },
-                {
-                    label: '제재 로그',
-                    path: '/log'
-                }
-            ],
-            path: "/punish"
-        },
+        // {
+        //     icon: "block",
+        //     label: "제재",
+        //     sub: [
+        //         {
+        //             label: '게임 제재',
+        //             path: '/game'
+        //         },
+        //         {
+        //             label: '유저 제재',
+        //             path: '/user'
+        //         },
+        //         {
+        //             label: '제재 로그',
+        //             path: '/log'
+        //         }
+        //     ],
+        //     path: "/punish"
+        // },
         {
             icon: "spellcheck",
             label: "단어 관리",

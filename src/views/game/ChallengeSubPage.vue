@@ -357,7 +357,7 @@ export default class extends Vue {
     releaseVersion( row : any ) {
         Dialog.create({
             title: `게임 프로젝트 버전 제재 취소`,
-            message: '정말로 해당 버전을 제재 취소하겠습니까?',
+            message: '정말로 해당 버전을 제재 취소하시겠습니까?',
             cancel: true,
             persistent: true
         }).onOk(async () => {
@@ -371,7 +371,7 @@ export default class extends Vue {
     releaseGame() {
         Dialog.create({
             title: `게임 프로젝트 제재 취소`,
-            message: '정말로 제재하겠습니까?',
+            message: '정말로 제재 취소하시겠습니까?',
             cancel: true,
             persistent: true
         }).onOk(async () => {
