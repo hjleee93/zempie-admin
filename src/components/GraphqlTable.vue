@@ -184,7 +184,6 @@ export default class extends Vue {
             }
 
             if(this.columnName == "userReport" ){
-                this.rows[index].user_name = this.rows[index].user.name;
                 this.rows[index].game_title = this.rows[index].game.title;
             }
         }

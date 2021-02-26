@@ -26,8 +26,7 @@ export default class  extends Vue {
     Query = Query;
     columns = [
         { field: "id", name: "id", label: "#", align: "left", sortable: true, sort: () => null },
-        { field: "user_name", name: "user_name", label: "신고자", align: "left" },
-        { field: "game_title", name: "game_title", label: "신고된 게임", align: "left" },
+        { field: "game_title", name: "game_title", label: "신고된 게임", align: "left", event : true },
         { field: "reason", name: "reason", label: "신고 사유", align: "left" },
         { field: "is_done", name: "is_done", label: "해결 상태", align: "left" },
         { field: "url_img", name: "url_img", label: "첨부 이미지", align: "left" },
@@ -37,6 +36,12 @@ export default class  extends Vue {
 
     subEvent(row : any) {
         console.log(row);
+
+        if( row.category == 1 ) {
+            this.$router.push( '/game/official/sub/' + row.target_id );
+        } else {
+            this.$router.push( '/game/challenge/sub/' + row.target_id );
+        }
     }
 }
 </script>

@@ -5,11 +5,9 @@ const gameReportGetOptionAxios = ( order: string, limit: number, offset: number)
     query userReportGet {
         userReportGet ( where : { target_type : 1 }, order: "${order}", limit: ${limit}, offset: ${offset} ) {
             id
-            user {
-                name
-            }
             game {
                 title
+                category
             }
             target_id
             user_id
