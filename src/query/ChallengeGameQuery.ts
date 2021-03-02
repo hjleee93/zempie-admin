@@ -67,27 +67,5 @@ query projectGet($game_id: Int) {
 }
 `;
 
-const gameHide = gql`
-    mutation gameEdit($id: Int) {
-        gameEdit(game: {id: $id, enabled: false, activated: false}){
-            id
-        }
-    }
-`;
-const gameShow = gql`
-    mutation gameEdit($id: Int) {
-        gameEdit(game: {id: $id, enabled: true, activated: true}){
-            id
-        }
-    }
-`;
 
-const gameMoveOfficial = gql`
-    mutation gameEdit($id: Int) {
-        gameEdit(game: {id: $id, category: 1}){
-            id
-        }
-    }
-`;
-
-export default {gameListGetOptionAxios, projectGet, gameHide, gameShow, gameMoveOfficial};
+export default {gameListGetOptionAxios, projectGet};

@@ -294,12 +294,6 @@ export default class Api{
                 message: "금지어를 추가하는 도중에 문제가 발생하였습니다.",
                 position: "top",
             });
-        } else {
-            Notify.create({
-                type: "positive",
-                message: "금지어가 성공적으로 추가되었습니다.",
-                position: "top",
-            });
         }
         return !result.isError;
     }
@@ -405,13 +399,34 @@ export default class Api{
 
 
     /* 게임 관리 */
-    static async updateGame( game_id : number, official : boolean, category : number, enabled : boolean, activated : boolean ) {
+    static async updateCategoryGame(
+        game_id : number,
+        category : number,
+    ) {
         const data = {
             game_id,
-            official,
-            category,
-            enabled,
-            activated
+            official : (category == 1).toString(),
+            category : category.toString(),
+        };
+        const result = await this.request( 'POST', "/admin/game/u", data );
+        if( result.isError ) {
+            Notify.create({
+                type: "negative",
+                message: '게임을 수정하는 도중에 문제가 발생하였습니다.',
+                position: "top",
+            });
+        }
+        return !result.isError;
+    }
+
+    static async updateActivatedGame(
+        game_id : number,
+        activated : boolean
+    ) {
+        const data = {
+            game_id,
+            enabled : activated.toString(),
+            activated : activated.toString()
         };
         const result = await this.request( 'POST', "/admin/game/u", data );
         if( result.isError ) {
@@ -492,6 +507,24 @@ export default class Api{
                 message: "성공적으로 제휴 게임이 수정되었습니다.",
                 position: "top",
             });
+        }
+        return !result.isError;
+    }
+
+    static async deleteAffiliateGame( game_id : number ) {
+        const result = await this.request( 'POST', '/admin/game/d/p', { game_id } );
+        if( result.isError ) {
+            Notify.create({
+                type: "negative",
+                message: '제휴게임을 삭제하는 도중에 문제가 발생하였습니다.',
+                position: "top",
+            });
+        } else {
+            Notify.create({
+                type: "positive",
+                message: "성공적으로 삭제되었습니다.",
+                position: "top"
+            })
         }
         return !result.isError;
     }

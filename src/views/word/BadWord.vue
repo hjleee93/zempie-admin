@@ -62,48 +62,16 @@ export default class extends Vue {
     }
 
     async subEvent( row: any ) {
-        // if( row.activated ) {
-            // await this.$apollo.mutate({
-            //     mutation: Query.badWordsHide,
-            //     variables: {
-            //         id: row.id,
-            //     },
-            // })
+        const result = await Api.updateBadWord( row.id, !row.activated );
+        if( result ) {
+            this.$q.notify({
+                type: "positive",
+                message: `성공적으로 ${row.activated ? '비' : ''}활성화되었습니다.`,
+                position: "top"
+            })
 
-            const result = await Api.updateBadWord( row.id, !row.activated );
-            if( result ) {
-                this.$q.notify({
-                    type: "positive",
-                    message: `성공적으로 ${row.activated ? '비' : ''}활성화되었습니다.`,
-                    position: "top"
-                })
-
-                TableBus.$emit('reload');
-            }
-        // }else{
-        //     await this.$apollo.mutate({
-        //         mutation: Query.badWordsShow,
-        //         variables: {
-        //             id: row.id,
-        //         },
-        //     })
-        //
-        //     this.$q.notify({
-        //         type: "positive",
-        //         message: "성공적으로 활성화되었습니다.",
-        //         position: "top"
-        //     })
-        //     const result = await Api.updateBadWord( row.id, !row.activated );
-        //     if( result ) {
-        //         this.$q.notify({
-        //             type: "positive",
-        //             message: "성공적으로 비활성화되었습니다.",
-        //             position: "top"
-        //         })
-        //
-        //         TableBus.$emit('reload');
-        //     }
-        // }
+            TableBus.$emit('reload');
+        }
     }
 
     get wordCheck() {
@@ -111,28 +79,6 @@ export default class extends Vue {
     }
 
     async addWord() {
-        // if( this.word.trim().length == 0 ) {
-        //     this.$q.notify({
-        //         type: "negative",
-        //         message: "단어를 입력해주세요.",
-        //         position: "top"
-        //     });
-        //     return;
-        // }
-        //
-        // await this.$apollo.mutate({
-        //     mutation: Query.badWordsCreate,
-        //     variables: {
-        //         word: this.word,
-        //     },
-        // })
-        //
-        // this.$q.notify({
-        //     type: "positive",
-        //     message: "성공적으로 추가되었습니다.",
-        //     position: "top"
-        // })
-
         const result = await Api.addBadWord( this.word );
         if( result ) {
             this.word = '';
@@ -181,13 +127,6 @@ export default class extends Vue {
                 persistent: true
             }).onOk(async () => {
                 for( let i = 0; i < this.selected.length; i++ ) {
-                    // await this.$apollo.mutate({
-                    //     mutation: Query.badWordsDelete,
-                    //     variables: {
-                    //         id: this.selected[i].id,
-                    //     },
-                    // })
-
                     await Api.deleteBadWord( this.selected[i].id );
                 }
                 this.$q.notify({

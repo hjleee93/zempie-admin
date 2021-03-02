@@ -14,21 +14,4 @@ query noticeGet($id: Int) {
 }
 `;
 
-const noticeDelete = gql`
-    mutation noticeDelete($id: Int!){
-        noticeDelete(id: $id)
-    }
-`;
-
-const noticeEdit = gql`
-    mutation noticeEdit($id: Int, $title: String, $content: String, $category: Int) {
-        noticeEdit(notice: {id: $id, title: $title, content: $content, category: $category}){
-            id
-            title
-            content
-            category
-        }
-    }
-`;
-
-export default { noticeGetById, noticeDelete, noticeEdit };
+export default { noticeGetById };

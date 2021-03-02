@@ -276,20 +276,16 @@ export default class extends Vue {
             cancel: true,
             persistent: true
         }).onOk(async () => {
-            await this.$apollo.mutate({
-                mutation: Query.gameHide,
-                variables: {
-                    id: this.project.game.id,
-                },
-            })
+            const result = await Api.updateActivatedGame( this.project.game.id,false );
+            if( result ) {
+                this.$q.notify({
+                    type: "positive",
+                    message: "성공적으로 비활성화되었습니다.",
+                    position: "top"
+                })
 
-            this.$q.notify({
-                type: "positive",
-                message: "성공적으로 비활성화되었습니다.",
-                position: "top"
-            })
-
-            await this.refresh();
+                await this.refresh();
+            }
         });
     }
 
@@ -300,20 +296,16 @@ export default class extends Vue {
             cancel: true,
             persistent: true
         }).onOk(async () => {
-            await this.$apollo.mutate({
-                mutation: Query.gameShow,
-                variables: {
-                    id: this.project.game.id,
-                },
-            })
+            const result = await Api.updateActivatedGame( this.project.game.id, true );
+            if( result ) {
+                this.$q.notify({
+                    type: "positive",
+                    message: "성공적으로 활성화되었습니다.",
+                    position: "top"
+                })
 
-            this.$q.notify({
-                type: "positive",
-                message: "성공적으로 활성화되었습니다.",
-                position: "top"
-            })
-
-            await this.refresh();
+                await this.refresh();
+            }
         });
     }
 
@@ -390,20 +382,17 @@ export default class extends Vue {
             cancel: true,
             persistent: true
         }).onOk(async () => {
-            await this.$apollo.mutate({
-                mutation: Query.gameMoveOfficial,
-                variables: {
-                    id: this.project.game.id,
-                },
-            })
+            const result = await Api.updateCategoryGame( this.project.game.id, 1 );
 
-            this.$q.notify({
-                type: "positive",
-                message: "성공적으로 이동되었습니다.",
-                position: "top"
-            })
+            if( result ) {
+                this.$q.notify({
+                    type: "positive",
+                    message: "성공적으로 이동되었습니다.",
+                    position: "top"
+                })
 
-            await this.$router.push("/game/official");
+                await this.$router.push("/game/official");
+            }
         });
     }
 

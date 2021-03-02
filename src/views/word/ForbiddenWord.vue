@@ -33,7 +33,8 @@ import GraphqlTable, {TableBus} from "@/components/GraphqlTable.vue";
 import PopupForm, { PopupBus } from '@/components/PopupForm.vue';
 import ExcelUploader from "@/components/ExcelUploader.vue";
 import Query from '@/query/WordQuery';
-import {Dialog} from "quasar";
+import {Dialog, Notify} from "quasar";
+import Api from "@/util/Api";
 
 @Component({
     components: {
@@ -61,35 +62,27 @@ export default class extends Vue {
 
     async subEvent( row: any ) {
         if( row.activated ) {
-            await this.$apollo.mutate({
-                mutation: Query.forbiddenWordsHide,
-                variables: {
-                    id: row.id,
-                },
-            })
+            const result = await Api.updateForbiddenWord( row.id, false );
 
-            this.$q.notify({
-                type: "positive",
-                message: "성공적으로 비활성화되었습니다.",
-                position: "top"
-            })
+            if( result ) {
+                this.$q.notify({
+                    type: "positive",
+                    message: "성공적으로 비활성화되었습니다.",
+                    position: "top"
+                })
 
-            TableBus.$emit('reload');
+                TableBus.$emit('reload');
+            }
         }else{
-            await this.$apollo.mutate({
-                mutation: Query.forbiddenWordsShow,
-                variables: {
-                    id: row.id,
-                },
-            })
-
-            this.$q.notify({
-                type: "positive",
-                message: "성공적으로 활성화되었습니다.",
-                position: "top"
-            })
-
-            TableBus.$emit('reload');
+            const result = await Api.updateForbiddenWord( row.id, true );
+            if( result ) {
+                this.$q.notify({
+                    type: "positive",
+                    message: "성공적으로 활성화되었습니다.",
+                    position: "top"
+                })
+                TableBus.$emit('reload');
+            }
         }
     }
 
@@ -107,22 +100,17 @@ export default class extends Vue {
             return;
         }
 
-        await this.$apollo.mutate({
-            mutation: Query.forbiddenWordsCreate,
-            variables: {
-                word: this.word,
-            },
-        })
-
-        this.$q.notify({
-            type: "positive",
-            message: "성공적으로 추가되었습니다.",
-            position: "top"
-        })
-
-        this.word = '';
-        TableBus.$emit('reload');
-        PopupBus.$emit('close');
+        const result = await Api.addForbiddenWord( this.word );
+        if( result ) {
+            Notify.create({
+                type: "positive",
+                message: "금지어가 성공적으로 추가되었습니다.",
+                position: "top",
+            });
+            this.word = '';
+            TableBus.$emit('reload');
+            PopupBus.$emit('close');
+        }
     }
 
     schema = {
@@ -136,12 +124,7 @@ export default class extends Vue {
         const { rows } = data;
 
         for ( let i = 0; i < rows.length; i++ ) {
-            await this.$apollo.mutate({
-                mutation: Query.forbiddenWordsCreate,
-                variables: {
-                    word: rows[i].word,
-                },
-            })
+            await Api.addForbiddenWord( rows[i].word );
         }
 
         this.$q.notify({
@@ -149,7 +132,6 @@ export default class extends Vue {
             message: "성공적으로 추가되었습니다.",
             position: "top"
         })
-
 
         TableBus.$emit('reload');
         TableBus.$emit('selectClear');
@@ -171,12 +153,7 @@ export default class extends Vue {
                 persistent: true
             }).onOk(async () => {
                 for( let i = 0; i < this.selected.length; i++ ) {
-                    await this.$apollo.mutate({
-                        mutation: Query.forbiddenWordsDelete,
-                        variables: {
-                            id: this.selected[i].id,
-                        },
-                    })
+                    await Api.deleteForbiddenWord( this.selected[i].id );
                 }
                 this.$q.notify({
                     type: "positive",

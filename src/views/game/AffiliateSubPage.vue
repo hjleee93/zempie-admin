@@ -255,20 +255,17 @@ export default class extends Vue {
             cancel: true,
             persistent: true
         }).onOk(async () => {
-            await this.$apollo.mutate({
-                mutation: Query.gameHide,
-                variables: {
-                    id: Math.round(this.gameGet[0].id),
-                },
-            })
+            const result = Api.updateActivatedGame( this.gameGet[0].id, false );
 
-            this.$q.notify({
-                type: "positive",
-                message: "성공적으로 비활성화되었습니다.",
-                position: "top"
-            })
+            if( result ) {
+                this.$q.notify({
+                    type: "positive",
+                    message: "성공적으로 비활성화되었습니다.",
+                    position: "top"
+                })
 
-            await this.refresh();
+                await this.refresh();
+            }
         });
     }
 
@@ -279,20 +276,17 @@ export default class extends Vue {
             cancel: true,
             persistent: true
         }).onOk(async () => {
-            await this.$apollo.mutate({
-                mutation: Query.gameShow,
-                variables: {
-                    id: Math.round(this.gameGet[0].id),
-                },
-            })
+            const result = Api.updateActivatedGame( this.gameGet[0].id, true );
 
-            this.$q.notify({
-                type: "positive",
-                message: "성공적으로 활성화되었습니다.",
-                position: "top"
-            })
+            if( result ) {
+                this.$q.notify({
+                    type: "positive",
+                    message: "성공적으로 활성화되었습니다.",
+                    position: "top"
+                })
 
-            await this.refresh();
+                await this.refresh();
+            }
         });
     }
 
@@ -303,20 +297,11 @@ export default class extends Vue {
             cancel: true,
             persistent: true
         }).onOk(async () => {
-            await this.$apollo.mutate({
-                mutation: Query.gameDelete,
-                variables: {
-                    id: Math.round(this.gameGet[0].id),
-                },
-            })
+            const result = await Api.deleteAffiliateGame( this.gameGet[0].id );
 
-            this.$q.notify({
-                type: "positive",
-                message: "성공적으로 삭제되었습니다.",
-                position: "top"
-            })
-
-            await this.$router.push( "/game/affiliate" );
+            if( result ) {
+                await this.$router.push( "/game/affiliate" );
+            }
         });
     }
 

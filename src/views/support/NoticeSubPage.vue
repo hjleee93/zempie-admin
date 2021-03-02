@@ -55,6 +55,7 @@ import Config from "@/util/Config";
 
 import gql from "graphql-tag";
 import Query from "../../query/NoticeQuery";
+import Api from "@/util/Api";
 
 @Component({
     components: {},
@@ -93,20 +94,10 @@ export default class extends Vue {
                 cancel: true,
                 persistent: true
             }).onOk(async () => {
-                const data = await this.$apollo.mutate({
-                    mutation: Query.noticeDelete,
-                    variables: {
-                        id: Math.round(this.noticeGet[0].id),
-                    },
-                })
-
-                this.$q.notify({
-                    type: "positive",
-                    message: "성공적으로 삭제되었습니다.",
-                    position: "top"
-                })
-
-                this.$router.push("/support/notice");
+                const result = await Api.deleteNotice( this.noticeGet[0].id );
+                if( result ) {
+                    this.$router.push("/support/notice");
+                }
             });
         }else{
             this.$q.notify({
@@ -126,23 +117,10 @@ export default class extends Vue {
                 cancel: true,
                 persistent: true
             }).onOk(async () => {
-                const data = await this.$apollo.mutate({
-                    mutation: Query.noticeEdit,
-                    variables: {
-                        id: Math.round(this.noticeGet[0].id),
-                        title: this.title,
-                        content: this.content,
-                        category: Config.noticeCategory.indexOf(this.category)
-                    },
-                })
-
-                this.$q.notify({
-                    type: "positive",
-                    message: "성공적으로 수정되었습니다.",
-                    position: "top"
-                })
-
-                await this.refresh();
+                const result = await Api.modifyNotice( this.noticeGet[0].id, this.title, this.content, Config.noticeCategory.indexOf(this.category) );
+                if( result ) {
+                    await this.refresh();
+                }
             });
         }else{
             this.$q.notify({
