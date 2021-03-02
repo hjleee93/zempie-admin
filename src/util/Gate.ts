@@ -23,12 +23,6 @@ instance.interceptors.response.use(
     async function(error) {
         if(process.env.NODE_ENV == "local"){
             console.log([error]);
-            
-            // Notify.create({
-            //     type: "negative",
-            //     message: error,
-            //     position: "top",
-            // });
         }
         
         const errorConfig = error.config;
@@ -37,16 +31,9 @@ instance.interceptors.response.use(
             if(result){
                 return instance(errorConfig);
             }
-        }else{
-            // Notify.create({
-            //     type: "negative",
-            //     message: error.response.data.error,
-            //     position: "top",
-            // });
         }
         
         return Promise.reject(error);
-
     }
 );
 

@@ -49,7 +49,7 @@ const store: StoreOptions<State> = {
                 params.append('password', adminData.password);
                 const result = await Gate({
                     method: "POST",
-                    url: "/api/v1/admin/login",
+                    url: "/admin/login",
                     params,
                     headers: {
                         'Content-Type': "application/x-www-form-urlencoded"
@@ -74,7 +74,7 @@ const store: StoreOptions<State> = {
             try{
                 const result = await axios({
                     method: "POST",
-                    url: process.env.VUE_APP_API_LINK + "/api/v1/admin/token",
+                    url: process.env.VUE_APP_API_LINK + "/admin/token",
                     params,
                     headers: {
                         'Content-Type': "application/x-www-form-urlencoded"
@@ -101,7 +101,7 @@ const store: StoreOptions<State> = {
             try{
                 const result = await Gate({
                     method: "GET",
-                    url: "/api/v1/admin/verify",
+                    url: "/admin/verify",
                     headers: {
                         'Content-Type': "application/x-www-form-urlencoded"
                     }

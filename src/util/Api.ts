@@ -2,149 +2,84 @@ import Gate from "@/util/Gate";
 import { Notify } from "quasar";
 
 export default class Api{
-    /* 관리자 */
-    static async getAdminList(limit = 10, offset = 0, sort = "id", dir= "asc"){
-        try{
-            if(sort == null){
-                sort = "id";
-            }
-            limit *= 2;
+    static async request( method : string, url : string, data : any ): Promise<any> {
+        try {
+            // @ts-ignore
             const result = await Gate({
-                method: "GET",
-                url: `/api/v1/admin/admin/list?limit=${limit}&offset=${offset}&sort=${sort}&dir=${dir}`,
-                headers: {
-                    "Content-Type": "application/json",
+                method : method,
+                url,
+                data
+            }  );
+            return {
+                data : result.data,
+                isError : false,
+                error : null,
+            };
+        }
+        catch (error) {
+            return {
+                data : null,
+                isError : true,
+                error : error && error.response && error.response.data || {
+                    error : error.message || error,
                 }
-            });
-            return result.data.result;
-        }catch(error){
-            return [];
+            };
         }
     }
 
-    static adminProcess = true;
+    /* 관리자 */
     static async addAdmin(account: string, password: string, name: string, level: number){
-        // , subLevel: number
-        if(!this.adminProcess){
-            this.loading();
-            return false;
-        }
-        this.adminProcess = false;
-
-        const params = new URLSearchParams();
-        params.append('name', name);
-        params.append('password', password);
-        params.append('level', level.toString());
-        // params.append('sub_level', subLevel.toString());
-        params.append('account', account);
-        try{
-            
-            await Gate({
-                method: "POST",
-                url: `/api/v1/admin/admin/add`,
-                headers: {
-                    'Content-Type': "application/x-www-form-urlencoded"
-                },
-                params
-            });
-            Notify.create({
-                type: "positive",
-                message: `관리자 생성에 성공하였습니다.`,
-                position: "top",
-            });
-            this.adminProcess = true;
-            return true;
-        }catch(error){
+        const result = await this.request( 'POST', '/admin/admin/add', { name, password, level, account } );
+        if( result.isError ) {
             Notify.create({
                 type: "negative",
                 message: `관리자 생성 도중 문제가 발생하였습니다.`,
                 position: "top",
             });
-            this.adminProcess = true;
-            return false;
+        } else {
+            Notify.create({
+                type: "positive",
+                message: `관리자 생성에 성공하였습니다.`,
+                position: "top",
+            });
         }
+        return !result.isError;
     }
 
     static async setAdminLevel(id: number, level: number){
-        // , subLevel: number
-        const params = new URLSearchParams();
-        params.append('id', id.toString());
-        params.append('level', level.toString());
-        params.append('sub_level', level.toString());
-        
-        try{
-            await Gate({
-                method: "POST",
-                url: `/api/v1/admin/admin/mod`,
-                headers: {
-                    'Content-Type': "application/x-www-form-urlencoded"
-                },
-                params
+        const result = await this.request( 'POST', '/admin/admin/mod', { id, level, sub_level : level } );
+        if( result.isError ) {
+            Notify.create({
+                type: "negative",
+                message: "변경하는 도중에 문제가 발생하였습니다.",
+                position: "top",
             });
+        } else {
             Notify.create({
                 type: "positive",
                 message: "변경에 성공했습니다.",
                 position: "top",
             });
-            return true;
-        }catch(error){
+        }
+        return !result.isError;
+    }
+
+    static async setAdmin(id: number, name: string, password: string){
+        const result = await this.request( 'POST', '/admin/admin/mod', { id, name, password } );
+        if( result.isError ){
             Notify.create({
                 type: "negative",
                 message: "변경하는 도중에 문제가 발생하였습니다.",
                 position: "top",
             });
-            return false;
-        }
-    }
-
-    static async setAdmin(id: number, name: string, password: string){
-        const params = new URLSearchParams();
-        params.append('id', id.toString());
-        params.append('name', name);
-        params.append('password', password);
-        
-        try{
-            await Gate({
-                method: "POST",
-                url: `/api/v1/admin/admin/mod`,
-                headers: {
-                    'Content-Type': "application/x-www-form-urlencoded"
-                },
-                params
-            });
+        } else {
             Notify.create({
                 type: "positive",
                 message: "변경에 성공하였습니다.",
                 position: "top",
             });
-            return true;
-        }catch(error){
-            Notify.create({
-                type: "negative",
-                message: "변경하는 도중에 문제가 발생하였습니다.",
-                position: "top",
-            });
-            return false;
         }
-    }
-
-    static async getLogList(limit = 10, offset = 0, sort = "id", dir= "asc"){
-        try{
-            if(sort == null){
-                sort = "id";
-            }
-            limit *= 2;
-            const result = await Gate({
-                method: "GET",
-                url: `/api/v1/admin/admin/logs?limit=${limit}&offset=${offset}&sort=${sort}&dir=${dir}`,
-                headers: {
-                    "Content-Type": "application/json",
-                }
-            });
-            return result.data.result;
-        }catch(error){
-            return [];
-        }
+        return !result.isError;
     }
     /* 관리자 */
 
@@ -157,174 +92,78 @@ export default class Api{
             limit *= 2;
             const result = await Gate({
                 method: "GET",
-                url: `/api/v1/admin/user/list?limit=${limit}&offset=${offset}&sort=${sort}&dir=${dir}`,
+                url: `/admin/user/list?limit=${limit}&offset=${offset}&sort=${sort}&dir=${dir}`,
                 headers: {
                     "Content-Type": "application/json",
                 }
             });
             return result.data.result;
         }catch(error){
-            return false;
-        }
-    }
-
-    static async getUserInquiry(limit = 50, offset = 0, sort: string, dir: string, userId: number){
-        const params = new URLSearchParams();
-        params.append("limit", limit.toString());
-        params.append("offset", offset.toString());
-        params.append("sort", sort);
-        params.append("dir", dir);
-        params.append("user_id", userId.toString());
-        try{
-            const result = await Gate({
-                method: "GET",
-                url: `/api/v1/admin/support/inquiries?${params.toString()}`,
-                headers: {
-                    "Content-Type": "application/json",
-                }
-            });
-            return result.data.result;
-        }catch(error){
-            return [];
         }
     }
     /* 회원관리 */
 
     /* 고객센터 */
-    static async getNoticeList(limit = 50, offset = 0, sort = "id", dir = "asc"){
-        try{
-            const result = await Gate({
-                method: "GET",
-                url: `/api/v1/admin/support/notices?limit=${limit}&offset=${offset}&no_answer=0&sort=${sort}&dir=${dir}`,
-                headers: {
-                    "Content-Type": "application/json",
-                }
-            });
-            return result.data.result;
-        }catch(error){
-            return [];
-        }
-    }
 
-    static noticeProcess = true;
     static async addNotice(title: string, content: string, category: number){
-        if(!this.noticeProcess){
-            this.loading();
-            return false;
-        }
-        this.noticeProcess = false;
-
-        const params = new URLSearchParams();
-        params.append('title', title);
-        params.append('content', content);
-        params.append('category', category.toString());
-        params.append('img_link', "https://img.animalplanet.co.kr/news/2020/02/19/700/1365a2q9p47avck7n98j.jpg");
-        params.append('start_at', "2020-10-29T07:55:28.000Z");
-        params.append('end_at', "2020-10-29T07:55:28.000Z");
-        try{
-            await Gate({
-                method: "POST",
-                url: `/api/v1/admin/support/notice`,
-                headers: {
-                    'Content-Type': "application/x-www-form-urlencoded"
-                },
-                params
-            });
-            Notify.create({
-                type: "positive",
-                message: "공지사항이 성공적으로 작성되었습니다.",
-                position: "top",
-            });
-            this.noticeProcess = true;
-            return true;
-        }catch(error){
+        const result = await this.request( 'POST', '/admin/support/notice', {
+            title,
+            content,
+            category,
+            img_link : '',
+            start_at : new Date(),
+            end_At : new Date(),
+        } );
+        if( result.isError ) {
             Notify.create({
                 type: "negative",
                 message: "공지사항을 작성하는 도중에 문제가 발생하였습니다.",
                 position: "top",
             });
-            this.noticeProcess = true;
-            return false;
+        } else {
+            Notify.create({
+                type: "positive",
+                message: "공지사항이 성공적으로 작성되었습니다.",
+                position: "top",
+            });
         }
+        return !result.isError;
     }
 
     static async deleteNotice(id: number){
-        const params = new URLSearchParams();
-        params.append('id', id.toString());
-        try{
-            await Gate({
-                method: "POST",
-                url: `/api/v1/admin/support/notice/del`,
-                headers: {
-                    'Content-Type': "application/x-www-form-urlencoded"
-                },
-                params
-            });
-            Notify.create({
-                type: "positive",
-                message: "공지사항이 성공적으로 삭제되었습니다.",
-                position: "top",
-            });
-            return true;
-        }catch(error){
+        const result = await this.request( 'POST', '/admin/support/notice/del', { id } );
+        if( result.isError ) {
             Notify.create({
                 type: "negative",
                 message: "공지사항을 삭제하는 도중에 문제가 발생하였습니다.",
                 position: "top",
             });
-            return false;
+        }else {
+            Notify.create({
+                type: "positive",
+                message: "공지사항이 성공적으로 삭제되었습니다.",
+                position: "top",
+            });
         }
+        return !result.isError;
     }
 
     static async modifyNotice(id: number, title: string, content: string, category: number){
-        const params = new URLSearchParams();
-        params.append('id', id.toString());
-        params.append('title', title);
-        params.append('content', content);
-        params.append('category', category.toString());
-        try{
-            await Gate({
-                method: "POST",
-                url: `/api/v1/admin/support/notice/mod`,
-                params,
-                headers: {
-                    'Content-Type': "application/x-www-form-urlencoded"
-                },
-            });
-            Notify.create({
-                type: "positive",
-                message: "공지사항이 성공적으로 수정되었습니다.",
-                position: "top",
-            });
-            return true;
-        }catch(error){
+        const result = await this.request( 'POST', '/admin/support/notice/mod', { id, title, content, category } );
+        if( result.isError ) {
             Notify.create({
                 type: "negative",
                 message: "공지사항을 수정하는 도중에 문제가 발생하였습니다.",
                 position: "top",
             });
-            return false;
-        }
-    }
-
-    static async getInquiryList(limit = 50, offset = 0, sort: string, dir: string){
-        const params = new URLSearchParams();
-        params.append("limit", limit.toString());
-        params.append("offset", offset.toString());
-        params.append("sort", sort);
-        params.append("dir", dir);
-        try{
-            const result = await Gate({
-                method: "GET",
-                url: `/api/v1/admin/support/inquiries?${params.toString()}`,
-                headers: {
-                    "Content-Type": "application/json",
-                }
+        } else {
+            Notify.create({
+                type: "positive",
+                message: "공지사항이 성공적으로 수정되었습니다.",
+                position: "top",
             });
-            return result.data.result;
-        }catch(error){
-            return [];
         }
+        return !result.isError;
     }
 
     static async getInquiryItem(id: number){
@@ -333,113 +172,77 @@ export default class Api{
         try{
             const result = await Gate({
                 method: "GET",
-                url: `/api/v1/admin/support/inquiry?${params.toString()}`,
+                url: `/admin/support/inquiry?${params.toString()}`,
                 headers: {
                     "Content-Type": "application/json",
                 }
             });
             return result.data.result;
         }catch(error){
-            return false;
         }
     }
 
     static async responseInquiry(id: number, response: string){
-        const params = new URLSearchParams();
-        params.append("id", id.toString());
-        params.append("response", response);
-        try{
-            await Gate({
-                method: "POST",
-                url: `/api/v1/admin/support/response`,
-                headers: {
-                    'Content-Type': "application/x-www-form-urlencoded"
-                },
-                params
-            });
-            Notify.create({
-                type: "positive",
-                message: "성공적으로 답변이 작성되었습니다.",
-                position: "top",
-            });
-            return true;
-        }catch(error){
+        const result = await this.request( 'POST', '/admin/support/response', { id, response } );
+        if( result.isError ) {
             Notify.create({
                 type: "negative",
                 message: "답변을 작성하는 도중 오류가 발생하였습니다.",
                 position: "top",
             });
-            return false;
+        } else {
+            Notify.create({
+                type: "positive",
+                message: "성공적으로 답변이 작성되었습니다.",
+                position: "top",
+            });
         }
+        return !result.isError;
     }
     /* 고객센터 */
 
 
     /* 게임 심사 */
-    static async getProjectList(){
-        try{
-            const result = await Gate({
-                method: "GET",
-                url: `/api/v1/admin/studio/versions`,
-                headers: {
-                    "Content-Type": "application/json",
-                }
-            });
-            return result.data.result;
-        }catch(error){
-            return [];
-        }
-    }
-    
     static async getProjectItem(index: number){
         const params = new URLSearchParams();
         params.append("version_id", index.toString());
         try{
             const result = await Gate({
                 method: "GET",
-                url: `/api/v1/admin/studio/version?${params.toString()}`,
+                url: `/admin/studio/version?${params.toString()}`,
                 headers: {
                     "Content-Type": "application/json",
                 }
             });
             return result.data.result;
         }catch(error){
-            return false;
         }
     }
 
-    static async JudgeProject(state: string, index: number, reason: string, user_id : number){
-        const params = new URLSearchParams();
-        params.append("state", state);
-        params.append("id", index.toString());
-        if(state === "fail"){
-            params.append("reason", reason);
-            params.append("user_id", user_id.toString());
+    static async JudgeProject(state: string, id: number, reason: string, user_id : number){
+        const data : any = {
+            state,
+            id,
         }
-        try{
-            const result = await Gate({
-                method: "POST",
-                url: `/api/v1/admin/studio/version`,
-                headers: {
-                    'Content-Type': "application/x-www-form-urlencoded"
-                },
-                params
-            });
-
-            Notify.create({
-                type: "positive",
-                message: "성공적으로 심사가 적용되었습니다.",
-                position: "top",
-            });
-            return true;
-        }catch(error){
+        if(state === "fail"){
+            data.reason = reason;
+            data.user_id = user_id;
+        }
+        const result = await this.request( 'POST', '/admin/studio/version', data );
+        if( result.isError ) {
             Notify.create({
                 type: "positive",
                 message: "심사하는 도중 문제가 발생하였습니다.",
                 position: "top",
             });
-            return false;
+        } else {
+            Notify.create({
+                type: "positive",
+                message: "성공적으로 심사가 적용되었습니다.",
+                position: "top",
+            });
         }
+        return !result.isError;
     }
 
     /* 게임 심사 */
@@ -447,192 +250,103 @@ export default class Api{
 
     /* 비속어 */
     static async addBadWord( word : string ) {
-        const params = new URLSearchParams();
-        params.append('word', word);
-        try{
-            await Gate({
-                method: "POST",
-                url: `/api/v1/admin/filter/bad-word/c`,
-                headers: {
-                    'Content-Type': "application/x-www-form-urlencoded"
-                },
-                params
-            });
-            Notify.create({
-                type: "positive",
-                message: "비속어가 성공적으로 추가되었습니다.",
-                position: "top",
-            });
-            return true;
-        }catch(error){
+        const result = await this.request( 'POST', '/admin/filter/bad-word/c', { word } );
+        if( result.isError ) {
             Notify.create({
                 type: "negative",
                 message: "비속어를 추가하는 도중에 문제가 발생하였습니다.",
                 position: "top",
             });
-            return false;
+        } else {
+            Notify.create({
+                type: "positive",
+                message: "비속어가 성공적으로 추가되었습니다.",
+                position: "top",
+            });
         }
+        return !result.isError;
     }
 
     static async deleteBadWord( id : number ) {
-        const params = new URLSearchParams();
-        params.append('id', id.toString());
-        try{
-            await Gate({
-                method: "POST",
-                url: `/api/v1/admin/filter/bad-word/d`,
-                headers: {
-                    'Content-Type': "application/x-www-form-urlencoded"
-                },
-                params
-            });
-            return true;
-        }catch(error){
-            return false;
-        }
+        const result = await this.request( 'POST', "/admin/filter/bad-word/d", { id } );
+        return !result.isError;
     }
 
     static async updateBadWord( id : number, activated : boolean ) {
-        const params = new URLSearchParams();
-        params.append('id', id.toString());
-        params.append('activated', activated.toString());
-        try{
-            await Gate({
-                method: "POST",
-                url: `/api/v1/admin/filter/bad-word/u`,
-                headers: {
-                    'Content-Type': "application/x-www-form-urlencoded"
-                },
-                params
-            });
-            return true;
-        }catch(error){
+        const result = await this.request( 'POST', '/admin/filter/bad-word/u', { id, activated } );
+        if( result.isError ) {
             Notify.create({
                 type: "negative",
                 message: "비속어를 수정하는 도중에 문제가 발생하였습니다.",
                 position: "top",
             });
-            return false;
         }
+        return !result.isError;
     }
     /* 비속어 */
 
     /* 금지어 */
     static async addForbiddenWord( word : string ) {
-        const params = new URLSearchParams();
-        params.append('word', word);
-        try{
-            await Gate({
-                method: "POST",
-                url: `/api/v1/admin/filter/forbidden-word/c`,
-                headers: {
-                    'Content-Type': "application/x-www-form-urlencoded"
-                },
-                params
-            });
-            Notify.create({
-                type: "positive",
-                message: "금지어가 성공적으로 추가되었습니다.",
-                position: "top",
-            });
-            return true;
-        }catch(error){
+        const result = await this.request( 'POST', "/admin/filter/forbidden-word/c", { word } );
+        if( result.isError ) {
             Notify.create({
                 type: "negative",
                 message: "금지어를 추가하는 도중에 문제가 발생하였습니다.",
                 position: "top",
             });
-            return false;
+        } else {
+            Notify.create({
+                type: "positive",
+                message: "금지어가 성공적으로 추가되었습니다.",
+                position: "top",
+            });
         }
+        return !result.isError;
     }
 
     static async deleteForbiddenWord( id : number ) {
-        const params = new URLSearchParams();
-        params.append('id', id.toString());
-        try{
-            await Gate({
-                method: "POST",
-                url: `/api/v1/admin/filter/forbidden-word/d`,
-                headers: {
-                    'Content-Type': "application/x-www-form-urlencoded"
-                },
-                params
-            });
-            return true;
-        }catch(error){
-            return false;
-        }
+        const result = await this.request( 'POST', "/admin/filter/forbidden-word/d", { id } );
+        return !result.isError;
     }
 
     static async updateForbiddenWord( id : number, activated : boolean ) {
-        const params = new URLSearchParams();
-        params.append('id', id.toString());
-        params.append('activated', activated.toString());
-        try{
-            await Gate({
-                method: "POST",
-                url: `/api/v1/admin/filter/forbidden-word/u`,
-                headers: {
-                    'Content-Type': "application/x-www-form-urlencoded"
-                },
-                params
-            });
-            return true;
-        }catch(error){
+        const result = await this.request( 'POST', '/admin/filter/forbidden-word/u', { id, activated } );
+        if( result.isError ) {
             Notify.create({
                 type: "negative",
                 message: "금지어를 수정하는 도중에 문제가 발생하였습니다.",
                 position: "top",
             });
-            return false;
         }
+        return !result.isError;
     }
     /* 금지어 */
 
 
     /* 유저 제재 */
 
-    static async punishUser( id : number, category : string, reason : string, date : number ) {
-        try{
-            await Gate({
-                method: "POST",
-                url: `/api/v1/admin/punish/user`,
-                data : {
-                    user_id : id,
-                    category,
-                    reason,
-                    date
-                }
-            });
-            return true;
-        }catch(error){
+    static async punishUser( user_id : number, category : string, reason : string, date : number ) {
+        const result = await this.request( 'POST', '/admin/punish/user', { user_id, category, reason, date } );
+        if( result.isError ) {
             Notify.create({
                 type: "negative",
                 message: "제재하는 도중에 문제가 발생하였습니다.",
                 position: "top",
             });
-            return false;
         }
+        return !result.isError;
     }
 
     static async releasePunishUser( id : number ) {
-        try{
-            await Gate({
-                method: "POST",
-                url: `/api/v1/admin/punish/user/release`,
-                data : {
-                    id
-                }
-            });
-            return true;
-        }catch(error){
+        const result = await this.request( 'POST', "/admin/punish/user/release", { id } );
+        if( result.isError ) {
             Notify.create({
                 type: "negative",
                 message: "제재를 취소하는 도중에 문제가 발생하였습니다.",
                 position: "top",
             });
-            return false;
         }
+        return !result.isError;
     }
     /* 유저 제재 */
 
@@ -640,32 +354,21 @@ export default class Api{
 
     /* 게임 제재 */
     static async punishGame( game_id : number, permanent : boolean, title : string, content : string, project_version_id : number = 0 ) {
-        try{
-            await Gate({
-                method: "POST",
-                url: `/api/v1/admin/punish/game`,
-                data : {
-                    game_id,
-                    permanent,
-                    title,
-                    content,
-                    project_version_id
-                }
-            });
-            Notify.create({
-                type: "positive",
-                message: "성공적으로 제재되었습니다.",
-                position: "top",
-            });
-            return true;
-        }catch(error){
+        const result = await this.request( 'POST', '/admin/punish/game', { game_id, permanent, title, content, project_version_id } );
+        if( result.isError ) {
             Notify.create({
                 type: "negative",
                 message: "제재하는 도중에 문제가 발생하였습니다.",
                 position: "top",
             });
-            return false;
+        } else {
+            Notify.create({
+                type: "positive",
+                message: "성공적으로 제재되었습니다.",
+                position: "top",
+            });
         }
+        return !result.isError;
     }
 
     static async releasePunishGame( id : number, project : boolean ) {
@@ -679,26 +382,22 @@ export default class Api{
                 project_version_id : id
             };
         }
-        try{
-            await Gate({
-                method: "POST",
-                url: `/api/v1/admin/punish/game/release`,
-                data
-            });
-            Notify.create({
-                type: "positive",
-                message: "성공적으로 제재가 취소되었습니다.",
-                position: "top",
-            });
-            return true;
-        }catch(error){
+        const result = await this.request( 'POST', '/admin/punish/game/release', data );
+        if( result.isError ) {
             Notify.create({
                 type: "negative",
                 message: "제재를 취소하는 도중에 문제가 발생하였습니다.",
                 position: "top",
             });
-            return false;
+        } else {
+            Notify.create({
+                type: "positive",
+
+                message: "성공적으로 제재가 취소되었습니다.",
+                position: "top",
+            });
         }
+        return !result.isError;
     }
     /* 게임 제재 */
 
@@ -706,7 +405,26 @@ export default class Api{
 
 
     /* 게임 관리 */
-    static affiliateProcess = true;
+    static async updateGame( game_id : number, official : boolean, category : number, enabled : boolean, activated : boolean ) {
+        const data = {
+            game_id,
+            official,
+            category,
+            enabled,
+            activated
+        };
+        const result = await this.request( 'POST', "/admin/game/u", data );
+        if( result.isError ) {
+            Notify.create({
+                type: "negative",
+                message: '게임을 수정하는 도중에 문제가 발생하였습니다.',
+                position: "top",
+            });
+        }
+        return !result.isError;
+    }
+
+
     static async addAffiliateGame(
         pathname : string,
         title : string,
@@ -717,52 +435,27 @@ export default class Api{
         url_thumb_webp : string,
         url_thumb_gif : string
     ) {
-
-        if( !this.affiliateProcess ) {
-            this.loading();
-            return;
+        const data = {
+            pathname, title, description, hashtags, url_game, url_thumb, url_thumb_gif, url_thumb_webp
         }
-        this.affiliateProcess = false;
-
-        const params = new URLSearchParams();
-        params.append("pathname", pathname);
-        params.append("title", title);
-        params.append("description", description);
-        params.append("hashtags", hashtags);
-        params.append("url_game", url_game);
-        params.append("url_thumb", url_thumb);
-        params.append("url_thumb_webp", url_thumb_webp);
-        params.append("url_thumb_gif", url_thumb_gif);
-
-        try{
-            const result = await Gate({
-                method: "POST",
-                url: `/api/v1/admin/game/c/p`,
-                headers: {
-                    'Content-Type': "application/x-www-form-urlencoded"
-                },
-                params
+        const result = await this.request( 'POST', '/admin/game/c/p', data );
+        if( result.isError ) {
+            Notify.create({
+                type: "negative",
+                message: "제휴게임을 생성하는 도중에 문제가 발생하였습니다.",
+                position: "top",
             });
+        } else {
 
             Notify.create({
                 type: "positive",
                 message: "성공적으로 제휴 게임이 추가되었습니다.",
                 position: "top",
             });
-            this.affiliateProcess = true;
-            return true;
-        }catch(error){
-            Notify.create({
-                type: "negative",
-                message: "제휴게임을 생성하는 도중에 문제가 발생하였습니다.",
-                position: "top",
-            });
-            this.affiliateProcess = true;
-            return false;
         }
+        return !result.isError;
     }
 
-    static affiliateUpdateProcess = true;
     static async updateAffiliateGame(
         game_id : number,
         pathname : string,
@@ -774,12 +467,6 @@ export default class Api{
         url_thumb_webp : string,
         url_thumb_gif : string
     ) {
-        if( !this.affiliateUpdateProcess ) {
-            this.loading();
-            return;
-        }
-        this.affiliateUpdateProcess = false;
-
         const data = {
             game_id,
             pathname,
@@ -791,122 +478,73 @@ export default class Api{
             url_thumb_webp : url_thumb_webp || '',
             url_thumb_gif : url_thumb_gif || '',
         };
-
-        try{
-            const result = await Gate({
-                method: "POST",
-                url: `/api/v1/admin/game/u/p`,
-                data
+        const result = await this.request( 'POST', '/admin/game/u/p', data );
+        if( result.isError ) {
+            Notify.create({
+                type: "negative",
+                message: '제휴게임을 수정하는 도중에 문제가 발생하였습니다.',
+                position: "top",
             });
-            console.log(result);
+        } else {
 
             Notify.create({
                 type: "positive",
                 message: "성공적으로 제휴 게임이 수정되었습니다.",
                 position: "top",
             });
-            this.affiliateUpdateProcess = true;
-            return true;
-        }catch(error){
-            Notify.create({
-                type: "negative",
-                message: '제휴게임을 수정하는 도중에 문제가 발생하였습니다.',
-                position: "top",
-            });
-            this.affiliateUpdateProcess = true;
-            return false;
         }
+        return !result.isError;
     }
     /* 게임 관리 */
 
     /* 설문조사 관리 */
 
     static async addSurvey( form_id : string, form_url : string, start_at : number, end_at : number ) {
-        const data = {
-            form_id,
-            form_url,
-            start_at,
-            end_at
-        };
-
-        try{
-            await Gate({
-                method: "POST",
-                url: `/api/v1/admin/studio/survey/c`,
-                data
-            });
-
-            Notify.create({
-                type: "positive",
-                message: "성공적으로 설문조사가 추가되었습니다.",
-                position: "top",
-            });
-            return true;
-        }catch(error){
+        const result = await this.request( 'POST', "/admin/studio/survey", { form_id, form_url, start_at, end_at } );
+        if( result.isError ) {
             Notify.create({
                 type: "negative",
                 message: '설문조사를 추가하는 도중에 문제가 발생하였습니다.',
                 position: "top",
             });
-            return false;
+        } else {
+            Notify.create({
+                type: "positive",
+                message: "성공적으로 설문조사가 추가되었습니다.",
+                position: "top",
+            });
         }
+        return !result.isError;
     }
 
     static async deleteSurvey( id : number ) {
-        const data = {
-            id
-        };
-
-        try{
-            await Gate({
-                method: "POST",
-                url: `/api/v1/admin/studio/survey/d`,
-                data
-            });
-
-            Notify.create({
-                type: "positive",
-                message: "성공적으로 설문조사가 삭제되었습니다.",
-                position: "top",
-            });
-            return true;
-        }catch(error){
+        const result = await this.request( 'POST', '/admin/studio/survey/d', { id } );
+        if( result.isError ) {
             Notify.create({
                 type: "negative",
                 message: '설문조사를 삭제하는 도중에 문제가 발생하였습니다.',
                 position: "top",
             });
-            return false;
+        } else {
+            Notify.create({
+                type: "positive",
+                message: "성공적으로 설문조사가 삭제되었습니다.",
+                position: "top",
+            });
         }
+        return !result.isError;
     }
 
     static async updateSurveyActivated( id : number, activated : boolean ) {
-        const data = {
-            id,
-            activated : activated.toString(),
-        };
-
-        try{
-            await Gate({
-                method: "POST",
-                url: `/api/v1/admin/studio/survey/u`,
-                data
-            });
-
-            // Notify.create({
-            //     type: "positive",
-            //     message: "성공적으로 설문조사가 수정되었습니다.",
-            //     position: "top",
-            // });
-            return true;
-        }catch(error){
+        const result = await this.request('POST', "/admin/studio/survey/u", {id, activated});
+        if (result.isError) {
             Notify.create({
                 type: "negative",
                 message: '설문조사를 수정하는 도중에 문제가 발생하였습니다.',
                 position: "top",
             });
-            return false;
         }
+        return !result.isError;
     }
 
     /* 설문조사 관리 */
@@ -924,7 +562,7 @@ export default class Api{
         try{
             const result = await Gate({
                 method: "GET",
-                url: `/api/v1/admin/${link}?${param}`,
+                url: `/admin/${link}?${param}`,
                 headers: {
                     "Content-Type": "application/json",
                 }
