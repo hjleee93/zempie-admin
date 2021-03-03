@@ -212,7 +212,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import { Dialog } from "quasar";
 
-import Query from "@/util/!uery";
+import Query from "@/util/Query";
 import Config from "@/util/Config";
 import Api from "@/util/Api";
 
