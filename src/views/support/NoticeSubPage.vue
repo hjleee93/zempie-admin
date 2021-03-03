@@ -54,14 +54,14 @@ import { Dialog } from "quasar";
 import Config from "@/util/Config";
 
 import gql from "graphql-tag";
-import Query from "../../query/NoticeQuery";
+import Query from "@/util/Query";
 import Api from "@/util/Api";
 
 @Component({
     components: {},
     apollo: {
         noticeGet: {
-            query: Query.noticeGetById,
+            query: Query.getNoticeById,
             variables: {}
         }
     }

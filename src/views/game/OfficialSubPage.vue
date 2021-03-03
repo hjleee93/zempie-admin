@@ -213,7 +213,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import { Dialog } from "quasar";
 
-import Query from "../../query/OfficialGameQuery";
+import Query from "@/util/Query";
 import Config from "@/util/Config";
 import Api from "@/util/Api";
 
@@ -221,7 +221,7 @@ import Api from "@/util/Api";
     components: {},
     apollo: {
         projectGet: {
-            query: Query.projectGet,
+            query: Query.getOfficialGameById,
             variables: {}
         },
     }

@@ -29,7 +29,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import Config from "@/util/Config";
-import Query from "@/query/FaqQuery";
+import Query from "@/util/Query";
 
 @Component({
     components: {},
@@ -47,7 +47,7 @@ export default class extends Vue {
     async submit(){
         try{
             const result = await this.$apollo.mutate({
-                mutation: Query.faqAdd, 
+                mutation: Query.addFaq,
                 variables: {
                     category: this.options.indexOf(this.category),
                     q: this.Qcontent,

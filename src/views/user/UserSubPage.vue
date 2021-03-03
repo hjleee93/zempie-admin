@@ -166,7 +166,7 @@ import LineChart from "@/components/LineChart.vue";
 import MainTable from "@/components/MainTable.vue";
 import UserPunish from "@/components/pageSub/userPunish.vue";
 import Config from "@/util/Config";
-import Query from "@/query/UserQuery";
+import Query from "@/util/Query";
 
 
 @Component({
@@ -177,11 +177,11 @@ import Query from "@/query/UserQuery";
     },
     apollo: {
         userGet: {
-            query: Query.userGetById,
+            query: Query.getUserById,
             variables: {}
         },
         userInquiryGet: {
-            query: Query.userInquiryGetByUserId,
+            query: Query.getInquiryByUserId,
             variables: {}
         }
     }

@@ -4,7 +4,7 @@
             row-key="id"
             :columns="columns"
             column-name="userReport"
-            :query="Query.gameReportGetOptionAxios"
+            :query="Query.getReportTable"
             @subEvent="subEvent"
         >
 
@@ -15,7 +15,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import GraphqlTable from "@/components/GraphqlTable.vue";
-import Query from "@/query/ReportQuery";
+import Query from "@/util/Query";
 
 @Component({
     components : {
@@ -30,7 +30,6 @@ export default class  extends Vue {
         { field: "reason", name: "reason", label: "신고 사유", align: "left" },
         { field: "is_done", name: "is_done", label: "해결 상태", align: "left" },
         { field: "url_img", name: "url_img", label: "첨부 이미지", align: "left" },
-
         { field: "created_at", name: "created_at", label: "생성일", align: "left", sortable: true, sort: () => null },
     ];
 

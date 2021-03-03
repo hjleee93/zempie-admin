@@ -208,7 +208,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { Dialog } from "quasar";
 import PopupForm, {PopupBus} from "@/components/PopupForm.vue";
 
-import Query from "../../query/AffiliateQuery";
+import Query from "@/util/Query";
 import Api from "@/util/Api";
 
 @Component({
@@ -217,7 +217,7 @@ import Api from "@/util/Api";
     },
     apollo: {
         gameGet: {
-            query: Query.gameGetById,
+            query: Query.getAffiliateGameById,
             variables: {}
         }
     }

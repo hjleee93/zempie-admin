@@ -1,7 +1,7 @@
 <template>
     <div>
         <GraphqlTable
-            :query="Query.forbiddenWordsListGetOptionAxios"
+            :query="Query.getForbiddenWordTable"
             :columns="columns"
             rowKey="id"
             columnName="forbiddenWords"
@@ -32,7 +32,7 @@ import { Component, Vue } from "vue-property-decorator";
 import GraphqlTable, {TableBus} from "@/components/GraphqlTable.vue";
 import PopupForm, { PopupBus } from '@/components/PopupForm.vue';
 import ExcelUploader from "@/components/ExcelUploader.vue";
-import Query from '@/query/WordQuery';
+import Query from '@/util/Query';
 import {Dialog, Notify} from "quasar";
 import Api from "@/util/Api";
 

@@ -1,6 +1,6 @@
 <template>
     <GraphqlTable
-        :query="Query.gameListGetOptionAxios"
+        :query="Query.getAffiliateGameTable"
         :columns="columns"
         rowKey="id"
         columnName="game"
@@ -19,7 +19,7 @@
 import {Vue, Component, Prop} from "vue-property-decorator"
 import GraphqlTable, { TableBus } from '@/components/GraphqlTable.vue';
 import PopupForm, { PopupBus } from "@/components/PopupForm.vue";
-import Query from "../../query/AffiliateQuery";
+import Query from "@/util/Query";
 import Api from "@/util/Api";
 import ExcelUploader from "@/components/ExcelUploader.vue";
 

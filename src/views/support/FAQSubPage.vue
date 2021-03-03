@@ -34,12 +34,12 @@ import { Component, Vue } from 'vue-property-decorator';
 
 import { Dialog } from "quasar";
 import Config from "@/util/Config";
-import Query from "@/query/FaqQuery";
+import Query from "@/util/Query";
 
 @Component({
     apollo: {
         faqGet: {
-            query: Query.faqGetById,
+            query: Query.getFaqById,
             variables: {
             }
         }
@@ -74,7 +74,7 @@ export default class extends Vue {
             persistent: true
         }).onOk(async () => {
             const data = await this.$apollo.mutate({
-                mutation: Query.faqDelete,
+                mutation: Query.deleteFaq,
                 variables: {
                     id: Math.round(this.faqGet[0].id),
                 },
@@ -98,7 +98,7 @@ export default class extends Vue {
             persistent: true
         }).onOk(async () => {
             const data = await this.$apollo.mutate({
-                mutation: Query.faqEdit,
+                mutation: Query.updateFaq,
                 variables: {
                     id: Math.round(this.faqGet[0].id),
                     category: this.options.indexOf(this.category),

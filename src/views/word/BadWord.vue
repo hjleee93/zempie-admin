@@ -1,7 +1,7 @@
 <template>
     <div>
         <GraphqlTable
-            :query="Query.badWordsListGetOptionAxios"
+            :query="Query.getBadWordTable"
             :columns="columns"
             rowKey="id"
             columnName="badWords"
@@ -33,7 +33,7 @@ import { Component, Vue } from "vue-property-decorator";
 import GraphqlTable, { TableBus } from "@/components/GraphqlTable.vue";
 import PopupForm, { PopupBus } from '@/components/PopupForm.vue';
 import ExcelUploader from '@/components/ExcelUploader.vue';
-import Query from '@/query/WordQuery';
+import Query from '@/util/Query';
 import {Dialog} from "quasar";
 import Api from "@/util/Api";
 

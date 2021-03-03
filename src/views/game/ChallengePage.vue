@@ -3,7 +3,7 @@
         <div >
             <GraphqlTable 
             rowKey="id" 
-            :query="Query.gameListGetOptionAxios" 
+            :query="Query.getChallengeGameTable"
             :columns="columns" 
             columnName="game"
             @subEvent="subEvent"
@@ -19,7 +19,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import GraphqlTable from "@/components/GraphqlTable.vue";
 
-import Query from "../../query/ChallengeGameQuery";
+import Query from "@/util/Query";
 
 
 @Component({

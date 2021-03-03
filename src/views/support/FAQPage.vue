@@ -2,7 +2,7 @@ w<template>
     <div>
         <GraphqlTable
         rowKey="id" 
-        :query="Query.faqGetTable"
+        :query="Query.getFaqTable"
         :columns="columns" 
         columnName="faq" 
         @subEvent="subEvent"
@@ -16,7 +16,7 @@ w<template>
 import { Component, Vue } from "vue-property-decorator";
 import GraphqlTable from "@/components/GraphqlTable.vue";
 
-import Query from "@/query/FaqQuery";
+import Query from "@/util/Query";
 
 @Component({
     components: {

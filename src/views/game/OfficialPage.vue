@@ -1,6 +1,6 @@
 <template>
     <GraphqlTable
-    :query="Query.gameListGetOptionAxios"
+    :query="Query.getOfficialGameTable"
     :columns="columns"
     rowKey="id"
     columnName="game"
@@ -15,7 +15,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import GraphqlTable from "@/components/GraphqlTable.vue";
 
-import Query from "../../query/OfficialGameQuery";
+import Query from "@/util/Query";
 
 @Component({
     components: {
