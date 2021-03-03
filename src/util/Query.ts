@@ -328,5 +328,20 @@ export default class Query {
             }
         }
     `;
+
+    static getSurveyTable = (order: string, limit: number, offset: number) => `
+        query faqGet {
+            surveyGet(order: "${order}", limit: ${limit}, offset: ${offset}) {
+                id
+                form_url
+                form_id
+                start_at
+                end_at
+                activated
+            }
+    
+            surveyCount
+        }
+    `;
 }
 

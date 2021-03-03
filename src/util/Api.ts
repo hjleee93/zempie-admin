@@ -111,8 +111,8 @@ export default class Api{
             content,
             category,
             img_link : '',
-            start_at : new Date(),
-            end_At : new Date(),
+            start_at : '2021-02-03T02:10:16.000Z',
+            end_at : '2021-02-03T02:10:16.000Z',
         } );
         if( result.isError ) {
             Notify.create({
@@ -533,7 +533,7 @@ export default class Api{
     /* 설문조사 관리 */
 
     static async addSurvey( form_id : string, form_url : string, start_at : number, end_at : number ) {
-        const result = await this.request( 'POST', "/admin/studio/survey", { form_id, form_url, start_at, end_at } );
+        const result = await this.request( 'POST', "/admin/studio/survey/c", { form_id, form_url, start_at, end_at } );
         if( result.isError ) {
             Notify.create({
                 type: "negative",
@@ -569,7 +569,7 @@ export default class Api{
     }
 
     static async updateSurveyActivated( id : number, activated : boolean ) {
-        const result = await this.request('POST', "/admin/studio/survey/u", {id, activated});
+        const result = await this.request('POST', "/admin/studio/survey/u", {id, activated : activated.toString()});
         if (result.isError) {
             Notify.create({
                 type: "negative",

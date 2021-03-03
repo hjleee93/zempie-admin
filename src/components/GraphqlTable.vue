@@ -9,11 +9,6 @@
     :selected.sync="selected"
     >
         <template v-slot:top-right>
-            <div v-if="searchOptions != null" class="flex">
-                <q-select v-model="searchCategory" :options="searchOptions" placeholder="Category" class="q-mr-md" />
-                <q-input v-model="search" type="text" placeholder="Search" class="q-mr-md" />
-            </div>
-
             <div v-if="exportMode != null && rows.length > 0" class="q-mr-md">
                 <q-btn color="primary" icon="get_app" label="엑셀 파일로 추출" @click="exportData" />
             </div>
@@ -25,24 +20,45 @@
             <q-td :props="props">
                 <div v-if="props.col.field === 'url_thumb'">
                     <q-img
-                        :src="rows[props.rowIndex][props.col.field]"
+                        :src="props.row[props.col.field]"
                         spinner-color="white"
-                        style="height: 100px; width: 100px"
+                        style="height: 66px; width: 100px"
                         :ratio="1"
                     />
                 </div>
                 <div v-else-if="props.col.field === 'url_img'">
-                    <q-btn color="primary" label="이미지보기" @click="openImagePopup" v-if="rows[props.rowIndex][props.col.field] != null && rows[props.rowIndex][props.col.field] != ''" />
+                    <q-btn color="primary" label="이미지보기" @click="openImagePopup" v-if="props.row[props.col.field] != null && props.row[props.col.field] != ''" />
 
                     <q-dialog v-model="imagePopup">
-                        <img :src="rows[props.rowIndex][props.col.field]" style="max-width: 90%; max-height: 90%;" alt="문의 이미지" />
+                        <img :src="props.row[props.col.field]" style="max-width: 90%; max-height: 90%;" alt="문의 이미지" />
                     </q-dialog>
                 </div>
                 <div v-else-if="props.col.event">
-                    <a href="#" @click="(event)=>{event.preventDefault();subEvent(props.row)}">{{rows[props.rowIndex][props.col.field]}}</a>
+                    <div v-if="props.col.eventButton">
+                        <q-btn
+                            :color="props.col.eventButtonColor(props.row[props.col.field]) || 'primary'"
+                            @click.prevent="subEvent(props.row)"
+                        >
+                            {{ props.col.format && props.col.format(props.row[props.col.field]) || props.row[props.col.field] }}
+                        </q-btn>
+                    </div>
+                    <a
+                        v-else
+                        href="#"
+                       @click.prevent="subEvent(props.row)"
+                    >
+                        {{ props.col.format && props.col.format(props.row[props.col.field]) || props.row[props.col.field] }}
+                    </a>
                 </div>
                 <div v-else>
-                    {{rows[props.rowIndex][props.col.field]}}
+                    <div v-if="props.col.badge">
+                        <q-badge :color="props.col.badgeColor(props.row[props.col.field]) || 'primary'">
+                            {{ props.col.format && props.col.format(props.row[props.col.field]) || props.row[props.col.field] }}
+                        </q-badge>
+                    </div>
+                    <div v-else>
+                        {{ props.col.format && props.col.format(props.row[props.col.field]) || props.row[props.col.field] }}
+                    </div>
                 </div>
             </q-td>
         </template>
