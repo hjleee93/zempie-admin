@@ -1,68 +1,69 @@
 <template>
-    <q-table 
-    :data="rows" 
-    row-key="id" 
-    :columns="columns" 
-    :pagination.sync="pagination" 
-    :rows-per-page-options="pageOption"
-    :selection="selection || 'none'"
-    :selected.sync="selected"
-    >
-        <template v-slot:top-right>
-            <div v-if="exportMode != null && rows.length > 0" class="q-mr-md">
-                <q-btn color="primary" icon="get_app" label="엑셀 파일로 추출" @click="exportData" />
-            </div>
-            
-            <slot></slot>
-        </template>
-
-        <template v-slot:body-cell="props">
-            <q-td :props="props">
-                <div v-if="props.col.field === 'url_thumb'">
-                    <q-img
-                        :src="props.row[props.col.field]"
-                        spinner-color="white"
-                        style="height: 66px; width: 100px"
-                        :ratio="1"
-                    />
+    <div>
+        <q-table
+        :data="rows"
+        row-key="id"
+        :columns="columns"
+        :pagination.sync="pagination"
+        :rows-per-page-options="pageOption"
+        :selection="selection || 'none'"
+        :selected.sync="selected"
+        >
+            <template v-slot:top-right>
+                <div v-if="exportMode != null && rows.length > 0" class="q-mr-md">
+                    <q-btn color="primary" icon="get_app" label="엑셀 파일로 추출" @click="exportData" />
                 </div>
-                <div v-else-if="props.col.field === 'url_img'">
-                    <q-btn color="primary" label="이미지보기" @click="openImagePopup" v-if="props.row[props.col.field] != null && props.row[props.col.field] != ''" />
 
-                    <q-dialog v-model="imagePopup">
-                        <img :src="props.row[props.col.field]" style="max-width: 90%; max-height: 90%;" alt="문의 이미지" />
-                    </q-dialog>
-                </div>
-                <div v-else-if="props.col.event">
-                    <div v-if="props.col.eventButton">
-                        <q-btn
-                            :color="props.col.eventButtonColor(props.row[props.col.field]) || 'primary'"
-                            @click.prevent="subEvent(props.row)"
+                <slot></slot>
+            </template>
+
+            <template v-slot:body-cell="props">
+                <q-td :props="props">
+                    <div v-if="props.col.field === 'url_thumb'">
+                        <q-img
+                            :src="props.row[props.col.field]"
+                            spinner-color="white"
+                            style="height: 66px; width: 100px"
+                            :ratio="1"
+                        />
+                    </div>
+                    <div v-else-if="props.col.field === 'url_img'">
+                        <q-btn color="primary" label="이미지보기" @click="openImagePopup(props.row[props.col.field])" v-if="props.row[props.col.field] != null && props.row[props.col.field] != ''" />
+                    </div>
+                    <div v-else-if="props.col.event">
+                        <div v-if="props.col.eventButton">
+                            <q-btn
+                                :color="props.col.eventButtonColor(props.row[props.col.field]) || 'primary'"
+                                @click.prevent="subEvent(props.row)"
+                            >
+                                {{ props.col.format && props.col.format(props.row[props.col.field]) || props.row[props.col.field] }}
+                            </q-btn>
+                        </div>
+                        <a
+                            v-else
+                            href="#"
+                           @click.prevent="subEvent(props.row)"
                         >
                             {{ props.col.format && props.col.format(props.row[props.col.field]) || props.row[props.col.field] }}
-                        </q-btn>
-                    </div>
-                    <a
-                        v-else
-                        href="#"
-                       @click.prevent="subEvent(props.row)"
-                    >
-                        {{ props.col.format && props.col.format(props.row[props.col.field]) || props.row[props.col.field] }}
-                    </a>
-                </div>
-                <div v-else>
-                    <div v-if="props.col.badge">
-                        <q-badge :color="props.col.badgeColor(props.row[props.col.field]) || 'primary'">
-                            {{ props.col.format && props.col.format(props.row[props.col.field]) || props.row[props.col.field] }}
-                        </q-badge>
+                        </a>
                     </div>
                     <div v-else>
-                        {{ props.col.format && props.col.format(props.row[props.col.field]) || props.row[props.col.field] }}
+                        <div v-if="props.col.badge">
+                            <q-badge :color="props.col.badgeColor(props.row[props.col.field]) || 'primary'">
+                                {{ props.col.format && props.col.format(props.row[props.col.field]) || props.row[props.col.field] }}
+                            </q-badge>
+                        </div>
+                        <div v-else>
+                            {{ props.col.format && props.col.format(props.row[props.col.field]) || props.row[props.col.field] }}
+                        </div>
                     </div>
-                </div>
-            </q-td>
-        </template>
-    </q-table>
+                </q-td>
+            </template>
+        </q-table>
+        <q-dialog v-model="imagePopup">
+            <img :src="imageUrl" style="max-width: 90%; max-height: 90%;" alt="문의 이미지" />
+        </q-dialog>
+    </div>
 </template>
 
 <script lang="ts">
@@ -96,7 +97,6 @@ export default class extends Vue {
     @Prop() columnName!: string;
     @Prop() exportMode!: boolean;
     @Prop() filename!: string;
-    @Prop() searchOptions!: string[]; // prop
     @Prop() selection!: string;
 
     subEvent( row: any ){
@@ -234,8 +234,10 @@ export default class extends Vue {
 
 
     imagePopup = false;
-    openImagePopup() {
+    imageUrl = '';
+    openImagePopup( url : string ) {
         this.imagePopup = true;
+        this.imageUrl = url;
     }
     
     // searchCategory = '';

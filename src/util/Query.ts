@@ -90,7 +90,7 @@ export default class Query {
     `;
     static getChallengeGameTable = ( order: string, limit: number, offset: number) => `
         query gameGet {
-            gameGet(where: {category: 0, userId : { not : null }}, order: "${order}", limit: ${limit}, offset: ${offset}) {
+            gameGet(where: {category: 0, userId : { not : null } }, order: "${order}", limit: ${limit}, offset: ${offset}) {
                 id
                 title
                 user{
@@ -105,7 +105,7 @@ export default class Query {
                 created_at
             }
     
-            gameCount(where: {category: 0, userId : { not : null }})
+            gameCount(where: {category: 0, userId : { not : null } })
         }
     `;
 
@@ -156,7 +156,7 @@ export default class Query {
     `;
     static getOfficialGameTable = ( order: string, limit: number, offset: number) => `
     query gameGet {
-        gameGet(where: {category: 1}, order: "${order}", limit: ${limit}, offset: ${offset}) {
+        gameGet(where: {category: 1 }, order: "${order}", limit: ${limit}, offset: ${offset}) {
             id
             title
             user{
