@@ -49,7 +49,7 @@
                     </div>
                     <div v-else>
                         <div v-if="props.col.badge">
-                            <q-badge :color="props.col.badgeColor(props.row[props.col.field]) || 'primary'">
+                            <q-badge :color="props.col.badgeColor && props.col.badgeColor(props.row[props.col.field]) || 'primary'">
                                 {{ props.col.format && props.col.format(props.row[props.col.field]) || props.row[props.col.field] }}
                             </q-badge>
                         </div>
@@ -184,19 +184,10 @@ export default class extends Vue {
                 } else {
                     this.rows[index].developer = '없음';
                 }
-                this.rows[index].state = this.rows[index].enabled ? "공개 중" : "비공개";
             }
 
             if(this.columnName == "faq"){
                 this.rows[index].category = Config.faqCategory[this.rows[index].category];
-            }
-
-            if( this.columnName == 'badWords' || this.columnName == 'forbiddenWords' ) {
-                if( this.rows[index].activated ){
-                    this.rows[index].state = "활성화";
-                } else {
-                    this.rows[index].state = "비활성화";
-                }
             }
 
             if(this.columnName == "userReport" ){

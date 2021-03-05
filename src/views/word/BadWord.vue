@@ -51,7 +51,12 @@ export default class extends Vue {
     columns = [
         { field: "id", name: "id", label: "#", align: "left", sortable: true, sort: () => null },
         { field: "word", name: "word", label: "단어", align: "left", sortable: true, sort: () => null },
-        { field: "state", name: "state", label: "활성화 상태", align: "left", event: true },
+        {
+            field: "activated", name: "activated", label: "활성화 상태", align: "left", event: true,
+            format: (data : any) => data ? '활성화' : '비활성화',
+            eventButton: true,
+            eventButtonColor: (data : any) => data ? 'positive': 'red'
+        },
         { field: "created_at", name: "created_at", label: "생성일", align: "left", sortable: true, sort: () => null },
     ];
     word = '';

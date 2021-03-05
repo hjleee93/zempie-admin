@@ -17,29 +17,29 @@
                 <div v-if="props.col.event">
                     <div v-if="props.col.eventButton" >
                         <q-btn
-                            v-if="!!rows[props.rowIndex][props.col.field]"
+                            v-if="!!props.row[props.col.field]"
                             :color="props.col.eventButtonColor || 'primary'"
-                            @click="(event)=>{event.preventDefault();subEvent(props.row)}"
+                            @click.prevent="subEvent(props.row)"
                         >
-                            {{rows[props.rowIndex][props.col.field]}}
+                            {{ props.col.format && props.col.format(props.row[props.col.field]) || props.row[props.col.field] }}
                         </q-btn>
                     </div>
                     <a
                         v-else
                         href="#"
-                        @click="(event)=>{event.preventDefault();subEvent(props.row)}"
+                        @click.prevent="subEvent(props.row)"
                     >
-                        {{rows[props.rowIndex][props.col.field]}}
+                        {{ props.col.format && props.col.format(props.row[props.col.field]) || props.row[props.col.field] }}
                     </a>
                 </div>
                 <div v-else>
                     <div v-if="props.col.badge">
-                        <q-badge :color="props.col.badgeColor(rows[props.rowIndex][props.col.field]) || 'primary'">
-                            {{rows[props.rowIndex][props.col.field]}}
+                        <q-badge :color="props.col.badgeColor && props.col.badgeColor(props.row[props.col.field]) || 'primary'">
+                            {{ props.col.format && props.col.format(props.row[props.col.field]) || props.row[props.col.field] }}
                         </q-badge>
                     </div>
                     <div v-else>
-                        {{rows[props.rowIndex][props.col.field]}}
+                        {{ props.col.format && props.col.format(props.row[props.col.field]) || props.row[props.col.field] }}
                     </div>
                 </div>
             </q-td>
