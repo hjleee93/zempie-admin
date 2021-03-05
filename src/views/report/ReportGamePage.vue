@@ -27,7 +27,10 @@ export default class  extends Vue {
     Query = Query;
     columns = [
         { field: "id", name: "id", label: "#", align: "left", sortable: true, sort: () => null },
-        { field: "game_title", name: "game_title", label: "신고된 게임", align: "left", event : true },
+        {
+            field: "game", name: "game", label: "신고된 게임", align: "left", event : true,
+            format: (data : any) => data.title || '없음'
+        },
         { field: "reason", name: "reason", label: "신고 사유", align: "left" },
         {
           field: "is_done", name: "is_done", label: "해결 상태", align: "left",

@@ -1,7 +1,6 @@
 w<template>
     <div>
         <GraphqlTable
-        rowKey="id" 
         :query="Query.getFaqTable"
         :columns="columns" 
         columnName="faq" 
@@ -17,6 +16,7 @@ import { Component, Vue } from "vue-property-decorator";
 import GraphqlTable from "@/components/GraphqlTable.vue";
 
 import Query from "@/util/Query";
+import Config from "@/util/Config";
 
 @Component({
     components: {
@@ -29,7 +29,10 @@ export default class extends Vue {
     columns = [
         { field: "id", name: "id", label: "#", align: "left" },
         { field: "q", name: "q", label: "질문", align: "left", event: true },
-        { field: "category", name: "category", label: "#", align: "left" },
+        {
+            field: "category", name: "category", label: "#", align: "left",
+            format: (data : any) => Config.faqCategory[data]
+        },
         // { field: "a", name: "a", label: "응답", align: "left" },
         { field: "created_at", name: "created_at", label: "생성일", align: "left" }
     ];

@@ -8,7 +8,6 @@
                     </div>
                     <div>
 <!--                        <MainTable-->
-<!--                            rowKey="id"-->
 <!--                            :columns="columns"-->
 <!--                            apiLink="punish/user/list"-->
 <!--                            :apiParam="{user_id:63}"-->
@@ -77,8 +76,19 @@ export default class  extends Vue {
         { field: 'reason', name: 'reason', label: "제재 사유", align: 'left' },
         { field: 'created_at', name: 'created_at', label: "제재 시작일", align: 'left' },
         { field: 'end_at', name: 'end_at', label: "제재 종료일", align: 'left' },
-        { field: 'is_denied', name: 'is_denied', label: "제재 상태", align: 'left', badge: true, badgeColor: (text:string) => {return text == "제재 중" ? 'red' : 'positive'} },
-        { field: 'release_punish', name: 'release_punish', label: "제재 취소", align: 'left', event: true, eventButton: true, eventButtonColor: "positive" },
+        // {
+        //     field: 'is_denied', name: 'is_denied', label: "제재 상태", align: 'left',
+        //     badge: true,
+        //     badgeColor: (text : any) => text == "제재 중" ? 'red' : 'positive',
+        //     format: (data : any) => data ? '제재 중' : '제재 풀림'
+        // },
+        // {
+        //     field: 'is_denied', name: 'is_denied', label: "제재 취소", align: 'left',
+        //     event: true,
+        //     eventButton: true,
+        //     eventButtonColor: "positive",
+        //     format: (data : any) => data ? '제재 취소' : null
+        // },
     ]
 }
 </script>

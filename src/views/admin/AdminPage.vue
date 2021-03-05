@@ -1,6 +1,6 @@
 <template>
     <div>
-        <MainTable rowKey="id" :columns="columns" apiLink="admin/list" columnName="admins" @subEvent="openPopup">
+        <MainTable :columns="columns" apiLink="admin/list" columnName="admins" @subEvent="openPopup">
             <q-btn color="primary" @click="moveSubPage">관리자 생성</q-btn>
         </MainTable>
 

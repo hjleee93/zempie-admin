@@ -2,10 +2,9 @@
     <div>
 <!--        <div class="q-mb-md">-->
         <MainTable
-            rowKey="id"
             :columns="punishColumns"
             apiLink="punish/user/list"
-            :apiParam="{user_id : userData.id}"
+            :data="{user_id : userData.id}"
             @subEvent="releasePunish"
         >
             <PopupForm btnLabel="제재 추가" btn-color="red">
@@ -55,7 +54,10 @@ export default class  extends Vue {
         { field: 'category', name: 'category', label: "제재 종류", align: 'left' },
         { field: 'reason', name: 'reason', label: "제재 사유", align: 'left' },
         { field: 'created_at', name: 'created_at', label: "제재 시작일", align: 'left' },
-        { field: 'end_at', name: 'end_at', label: "제재 종료일", align: 'left' },
+        {
+            field: 'end_at', name: 'end_at', label: "제재 종료일", align: 'left',
+            format: (data : any) => new Date(data).toLocaleString()
+        },
         { field: 'is_denied', name: 'is_denied', label: "제재 상태", align: 'left', badge: true, badgeColor: (text:string) => {return text == "제재 중" ? 'red' : 'positive'} },
         { field: 'release_punish', name: 'release_punish', label: "제재 취소", align: 'left', event: true, eventButton: true, eventButtonColor: "positive" },
     ];

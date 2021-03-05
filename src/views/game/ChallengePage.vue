@@ -1,8 +1,7 @@
 <template>
     <div>
         <div >
-            <GraphqlTable 
-            rowKey="id" 
+            <GraphqlTable
             :query="Query.getChallengeGameTable"
             :columns="columns" 
             columnName="game"
@@ -37,7 +36,10 @@ export default class extends Vue {
         { field: "id", name: "id", label: "#", align: "left" },
         { field: "url_thumb", name: "url_thumb", label: "썸네일", align: "left" },
         { field: "title", name: "title", label: "제목", align: "left", event: true },
-        { field: "developer", name: "developer", label: "개발자", align: "left" },
+        {
+            field: "user", name: "user", label: "개발자", align: "left",
+            format: (data : any) => data.name || '없음',
+        },
         { field: "count_over", name: "count_over", label: "플레이 수", align: "left", sortable: true, sort: () => null },
         { field: "count_heart", name: "count_heart", label: "하트 수", align: "left", sortable: true, sort: () => null },
         { field: "version", name: "version", label: "버전", align: "left" },

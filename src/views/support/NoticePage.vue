@@ -1,7 +1,6 @@
 <template>
     <div>
-        <MainTable 
-        rowKey="id" 
+        <MainTable
         :columns="columns" 
         apiLink="support/notices" 
         columnName="notices" 
@@ -32,13 +31,12 @@ export default class extends Vue {
 
     columns = [
         { label: "#", name: "id", field: "id", align: "left", sortable: true},
-        { label: "카테고리", name: "category", field: "category", align: "left", sortable: true},
+        {
+            label: "카테고리", name: "category", field: "category", align: "left", sortable: true,
+            format: (data : any) => Config.noticeCategory[data]
+        },
         { label: "제목", name: "title", field: "title", align: "left", sortable: true, event: true},
     ];
-
-    get options(){
-        return Config.noticeCategory;
-    }
 
     moveCreatePage() {
         this.$router.push(this.$route.path + "/create");

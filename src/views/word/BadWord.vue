@@ -3,7 +3,6 @@
         <GraphqlTable
             :query="Query.getBadWordTable"
             :columns="columns"
-            rowKey="id"
             columnName="badWords"
             @subEvent="subEvent"
             selection="multiple"

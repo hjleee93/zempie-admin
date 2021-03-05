@@ -3,7 +3,6 @@
         <GraphqlTable
             :query="Query.getForbiddenWordTable"
             :columns="columns"
-            rowKey="id"
             columnName="forbiddenWords"
             @subEvent="subEvent"
             selection="multiple"

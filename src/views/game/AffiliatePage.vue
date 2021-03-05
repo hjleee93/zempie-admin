@@ -2,7 +2,6 @@
     <GraphqlTable
         :query="Query.getAffiliateGameTable"
         :columns="columns"
-        rowKey="id"
         columnName="game"
         @subEvent="subEvent">
         <PopupForm

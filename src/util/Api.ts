@@ -591,14 +591,12 @@ export default class Api{
         });
     }
 
-    static async getList( link : string, param : string ){
+    static async getList( link : string, data : any ){
         try{
             const result = await Gate({
                 method: "GET",
-                url: `/admin/${link}?${param}`,
-                headers: {
-                    "Content-Type": "application/json",
-                }
+                url: `/admin/${link}`,
+                data
             });
             return result.data.result;
         }catch(error){

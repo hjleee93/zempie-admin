@@ -1,7 +1,6 @@
 <template>
     <div>
         <GraphqlTable
-            rowKey="id"
             :columns="columns"
             @subEvent="subEvent"
             selection="single"

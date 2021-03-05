@@ -68,13 +68,8 @@
 
 <script lang="ts">
 import { Component, Vue, Prop, Watch } from "vue-property-decorator";
-import Api from "@/util/Api";
-import Config from "@/util/Config";
-import Gate from "@/util/Gate";
 import axios from "axios";
-
 import exportExcel from '@/util/ExportExcel';
-
 export const TableBus = new Vue();
 
 @Component({})
@@ -91,7 +86,6 @@ export default class extends Vue {
 
     selected: any = [];
 
-    @Prop() rowKey!: string;
     @Prop() columns!: any;
     @Prop() query!: Function;
     @Prop() columnName!: string;
@@ -126,7 +120,7 @@ export default class extends Vue {
     async movePage() {
         const limit = this.pagination.rowsPerPage;
         const offset = (this.pagination.page - 1) * this.pagination.rowsPerPage;
-        let order = this.pagination.sortBy || this.rowKey;
+        let order = this.pagination.sortBy || 'id';
         
         if(this.pagination.descending){
             order = "reverse:" + order;
@@ -177,27 +171,11 @@ export default class extends Vue {
             if(this.rows[index].created_at != null){
                 this.rows[index].created_at = new Date(this.rows[index].created_at).toLocaleString();
             }
-
-            if(this.columnName == "game" ){
-                if( this.rows[index].user != null ) {
-                    this.rows[index].developer = this.rows[index].user.name;
-                } else {
-                    this.rows[index].developer = '없음';
-                }
-            }
-
-            if(this.columnName == "faq"){
-                this.rows[index].category = Config.faqCategory[this.rows[index].category];
-            }
-
-            if(this.columnName == "userReport" ){
-                this.rows[index].game_title = this.rows[index].game.title;
-            }
         }
     }
 
     async exportData() {
-        let order = this.pagination.sortBy || this.rowKey;
+        let order = this.pagination.sortBy || 'id';
         if(this.pagination.descending){
             order = "reverse:" + order;
         }
@@ -230,8 +208,5 @@ export default class extends Vue {
         this.imagePopup = true;
         this.imageUrl = url;
     }
-    
-    // searchCategory = '';
-    // search = '';
 }
 </script>
