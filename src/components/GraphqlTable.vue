@@ -107,7 +107,7 @@ export default class extends Vue {
         this.$emit('selectEvent', this.selected);
     }
 
-    async created(){
+    mounted(){
         TableBus.$on("reload", async () => {
             await this.movePage();
         });
@@ -115,6 +115,11 @@ export default class extends Vue {
         TableBus.$on("selectClear", async () => {
             this.selected = [];
         });
+    }
+
+    destroyed() {
+        TableBus.$off("reload");
+        TableBus.$off("selectClear");
     }
 
     async movePage() {
