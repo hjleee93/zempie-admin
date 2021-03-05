@@ -1,29 +1,40 @@
 <template>
     <div>
-        <div >
-            <GraphqlTable
-            :query="Query.getChallengeGameTable"
-            :columns="columns" 
-            columnName="game"
+        <MainTable
+            columnName="games"
+            :columns="columns"
+            apiLink="games"
+            search-column="title"
+            :data="{category:0}"
             @subEvent="subEvent"
-            :exportMode="true"
-            filename="도전 게임">
+        >
 
-            </GraphqlTable>
-        </div>
+        </MainTable>
+<!--        <div >-->
+<!--            <GraphqlTable-->
+<!--            :query="Query.getChallengeGameTable"-->
+<!--            :columns="columns"-->
+<!--            columnName="game"-->
+<!--            @subEvent="subEvent"-->
+<!--            :exportMode="true"-->
+<!--            filename="도전 게임">-->
+
+<!--            </GraphqlTable>-->
+<!--        </div>-->
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import GraphqlTable from "@/components/GraphqlTable.vue";
-
+import MainTable from "@/components/MainTable.vue";
 import Query from "@/util/Query";
 
 
 @Component({
     components: {
-        GraphqlTable
+        GraphqlTable,
+        MainTable
     },
     apollo: {
     }

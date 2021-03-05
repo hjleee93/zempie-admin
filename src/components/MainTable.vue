@@ -10,11 +10,24 @@
     >
         <template v-slot:top-right>
             <slot></slot>
+
+            <div class="flex" v-if="!!searchColumn">
+                <q-input type="text" placeholder="Search" class="q-ml-md q-mr-md" v-model="searchText" @keyup="onKeyUpSearch" />
+                <q-btn flat icon="search" @click="search" />
+            </div>
         </template>
 
         <template v-slot:body-cell="props">
             <q-td :props="props">
-                <div v-if="props.col.event">
+                <div v-if="props.col.field === 'url_thumb'">
+                    <q-img
+                        :src="props.row[props.col.field]"
+                        spinner-color="white"
+                        style="height: 66px; width: 100px"
+                        :ratio="1"
+                    />
+                </div>
+                <div v-else-if="props.col.event">
                     <div v-if="props.col.eventButton" >
                         <q-btn
                             v-if="!!props.row[props.col.field]"
@@ -71,11 +84,14 @@ export default class extends Vue {
 
     selected: any = [];
 
+    searchText: string = '';
+
     @Prop() columns!: any[];
     @Prop() apiLink!: string;
     @Prop() columnName!: string;
     @Prop() data!: any;
     @Prop() selection!: string;
+    @Prop() searchColumn!: string;
 
     subEvent( row: any ){
         this.$emit('subEvent', row);
@@ -107,26 +123,29 @@ export default class extends Vue {
         const sort = this.pagination.sortBy || 'id';
         const dir = this.pagination.descending ? "desc" : "asc";
 
-        const data : any = {
-            limit,
-            offset,
-            sort,
-            dir
-        }
+        const params = new URLSearchParams();
+        params.append('limit', limit.toString());
+        params.append('offset', offset.toString());
+        params.append('sort', sort.toString());
+        params.append('dir', dir.toString());
 
         for(const key in this.data){
-            data[key] = this.data[key];
+            params.append(key, this.data[key]);
         }
 
-        const result = await Api.getList(this.apiLink, data);
+        if( !!this.searchColumn ) {
+            params.append(this.searchColumn, this.searchText);
+        }
+
+        const result = await Api.getList(this.apiLink, params.toString());
         const rows = new Array(result.count || 0).fill({id:null});
 
         if(this.rows.length == 0){
             this.rows = new Array(result.count || 0).fill({id:null});
         }
 
-        for(let i = 0; i < this.rows.length; i++){
-            rows[i] = this.rows[i];
+        for(let i = 0; i < rows.length; i++){
+            rows[i] = this.rows[i] || {id:null};
         }
 
         this.rows = rows;
@@ -157,6 +176,16 @@ export default class extends Vue {
                 }
             }
         }
+    }
+
+    onKeyUpSearch( event : KeyboardEvent ) {
+        if( event.code == "Enter" ){
+            this.movePage();
+        }
+    }
+
+    search() {
+        this.movePage();
     }
 }
 </script>

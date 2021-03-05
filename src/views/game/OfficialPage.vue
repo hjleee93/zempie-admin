@@ -1,24 +1,37 @@
 <template>
-    <GraphqlTable
-    :query="Query.getOfficialGameTable"
-    :columns="columns"
-    columnName="game"
-    @subEvent="subEvent"
-    :exportMode="true"
-    filename="정식 게임">
-            
-    </GraphqlTable>
+    <div>
+        <MainTable
+            columnName="games"
+            :columns="columns"
+            apiLink="games"
+            search-column="title"
+            :data="{category:1}"
+            @subEvent="subEvent"
+        >
+
+        </MainTable>
+
+<!--        <GraphqlTable-->
+<!--            :query="Query.getOfficialGameTable"-->
+<!--            :columns="columns"-->
+<!--            columnName="game"-->
+<!--            :exportMode="true"-->
+<!--            filename="정식 게임">-->
+
+<!--        </GraphqlTable>-->
+    </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import GraphqlTable from "@/components/GraphqlTable.vue";
-
+import MainTable from "@/components/MainTable.vue";
 import Query from "@/util/Query";
 
 @Component({
     components: {
-        GraphqlTable
+        GraphqlTable,
+        MainTable
     },
     apollo: {
     }
@@ -32,7 +45,7 @@ export default class extends Vue {
         { field: "title", name: "title", label: "제목", align: "left", sortable: true, sort: () => null, event: true },
         {
             field: "user", name: "user", label: "개발자", align: "left",
-            format: (data : any) => data.name || '없음',
+            format: (data : any) => data && data.name || '없음',
         },
         { field: "count_over", name: "count_over", label: "플레이 수", align: "left", sortable: true, sort: () => null },
         { field: "count_heart", name: "count_heart", label: "하트 수", align: "left", sortable: true, sort: () => null },
