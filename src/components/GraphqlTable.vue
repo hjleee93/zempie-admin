@@ -40,9 +40,15 @@
                             </q-btn>
                         </div>
                         <a
+                            v-else-if="props.col.html"
+                            href="#"
+                            @click.prevent="subEvent(props.row)"
+                            v-html="props.col.format && props.col.format(props.row[props.col.field]) || props.row[props.col.field]"
+                        ></a>
+                        <a
                             v-else
                             href="#"
-                           @click.prevent="subEvent(props.row)"
+                            @click.prevent="subEvent(props.row)"
                         >
                             {{ props.col.format && props.col.format(props.row[props.col.field]) || props.row[props.col.field] }}
                         </a>

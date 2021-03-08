@@ -12,8 +12,28 @@
                     </div>
                 </div>
 
-                <q-input v-model="Qcontent" type="textarea" placeholder="Q." class="q-mb-md" />
-                <q-input v-model="Acontent" type="textarea" placeholder="A." />
+                <div class="row q-mb-md items-center">
+                    <div class="col-12 col-md-2 text-weight-bold">
+                        Q.
+                    </div>
+
+                    <div class="col-12 col-md-10">
+                        <Editor @text="onChangeTextQ" :text="Qcontent" />
+                    </div>
+                </div>
+
+                <div class="row q-mb-md items-center">
+                    <div class="col-12 col-md-2 text-weight-bold">
+                        A.
+                    </div>
+
+                    <div class="col-12 col-md-10">
+                        <Editor @text="onChangeTextA" :text="Acontent" />
+                    </div>
+                </div>
+
+<!--                <q-input v-model="Qcontent" type="textarea" placeholder="Q." class="q-mb-md" />-->
+<!--                <q-input v-model="Acontent" type="textarea" placeholder="A." />-->
             </q-card-section>
 
             <q-separator />
@@ -35,8 +55,12 @@ import { Component, Vue } from 'vue-property-decorator';
 import { Dialog } from "quasar";
 import Config from "@/util/Config";
 import Query from "@/util/Query";
+import Editor from '@/components/Editor.vue';
 
 @Component({
+    components : {
+        Editor
+    },
     apollo: {
         faqGet: {
             query: Query.getFaqById,
@@ -51,7 +75,16 @@ export default class extends Vue {
     category = "";
     Qcontent = "";
     Acontent ="";
+
     faqGet: any;
+
+    onChangeTextQ( text : string ) {
+        this.Qcontent = text;
+    }
+
+    onChangeTextA( text : string ) {
+        this.Acontent = text;
+    }
     
     async created(){
         await this.$apollo.queries.faqGet.setVariables({id: Math.round((Number(this.$route.params.index)))});
@@ -112,8 +145,6 @@ export default class extends Vue {
                 message: "성공적으로 수정되었습니다.",
                 position: "top"
             })
-
-            await this.$apollo.queries.faqGet.refetch();
         });
     }
 }

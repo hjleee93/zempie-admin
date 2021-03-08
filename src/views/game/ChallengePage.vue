@@ -49,7 +49,7 @@ export default class extends Vue {
         { field: "title", name: "title", label: "제목", align: "left", event: true },
         {
             field: "user", name: "user", label: "개발자", align: "left",
-            format: (data : any) => data.name || '없음',
+            format: (data : any) => data && data.name || '없음',
         },
         { field: "count_over", name: "count_over", label: "플레이 수", align: "left", sortable: true, sort: () => null },
         { field: "count_heart", name: "count_heart", label: "하트 수", align: "left", sortable: true, sort: () => null },

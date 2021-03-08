@@ -22,7 +22,7 @@
             </div>
 
             <div>
-                <q-editor v-model="content" min-height="10rem" />
+                <Editor @text="onChangeText" />
             </div>
         </q-card-section>
 
@@ -41,16 +41,17 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import Api from "@/util/Api";
 import Config from "@/util/Config";
+import Editor from "@/components/Editor.vue";
 
 @Component({
-    components: {},
+    components: {
+        Editor
+    },
 })
 export default class extends Vue {
     title = "";
     content = "";
     category = "공지";
-
-    submitDisable = true;
 
     get options(){
         return Config.noticeCategory;
@@ -59,26 +60,19 @@ export default class extends Vue {
     cancel() {
         this.$router.go(-1);
     }
-
-    @Watch("title")
-    onChangeTitle(){
-        this.onChange();
+    get submitDisable() {
+        return this.title.trim() == "" || this.content.trim() == "";
     }
-
-    @Watch("content")
-    onChangeContent(){
-        this.onChange();
-    }
-
-    onChange(){
-        this.submitDisable = this.title.trim() == "" || this.content.trim() == "";
-    } 
 
     async submit() {
         const result = await Api.addNotice(this.title, this.content, Config.noticeCategory.indexOf(this.category));
         if (result) {
             await this.$router.push("/support/notice");
         }
+    }
+
+    onChangeText(text : string ) {
+        this.content = text;
     }
 }
 </script>

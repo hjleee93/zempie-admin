@@ -10,9 +10,28 @@
                     <q-select v-model="category" :options="options" />
                 </div>
             </div>
-            
-            <q-input v-model="Qcontent" type="textarea" placeholder="Q." class="q-mb-md" />
-            <q-input v-model="Acontent" type="textarea" placeholder="A." />
+
+            <div class="row q-mb-md items-center">
+                <div class="col-12 col-md-2 text-weight-bold">
+                    Q.
+                </div>
+
+                <div class="col-12 col-md-10">
+                    <Editor @text="onChangeTextQ" />
+                </div>
+            </div>
+
+            <div class="row q-mb-md items-center">
+                <div class="col-12 col-md-2 text-weight-bold">
+                    A.
+                </div>
+
+                <div class="col-12 col-md-10">
+                    <Editor @text="onChangeTextA" />
+                </div>
+            </div>
+<!--            <q-input v-model="Qcontent" type="textarea" placeholder="Q." class="q-mb-md" />-->
+<!--            <q-input v-model="Acontent" type="textarea" placeholder="A." />-->
         </q-card-section>
 
         <q-separator />
@@ -30,15 +49,25 @@
 import { Component, Vue } from "vue-property-decorator";
 import Config from "@/util/Config";
 import Query from "@/util/Query";
+import Editor from "@/components/Editor.vue";
 
 @Component({
-    components: {},
+    components: {
+        Editor
+    },
 })
 export default class extends Vue {
     category = Config.faqCategory[0]
     options = Config.faqCategory;
     Qcontent = "";
     Acontent = "";
+
+    onChangeTextQ( text : string ) {
+        this.Qcontent = text;
+    }
+    onChangeTextA( text : string ) {
+        this.Acontent = text;
+    }
 
     cancel(){
         this.$router.go(-1);

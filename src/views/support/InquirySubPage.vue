@@ -58,7 +58,8 @@
 
             <div class="row q-mb-md">
                 <div class="col">
-                    <q-editor v-model="text" min-height="10rem" />
+                    <Editor @text="onChangeText" :text="text" />
+<!--                    <q-editor v-model="text" min-height="10rem" />-->
                 </div>
             </div>
         </q-card-section>
@@ -79,16 +80,22 @@ import { Component, Vue } from "vue-property-decorator";
 import { Notify } from "quasar";
 import Api from '@/util/Api';
 import Config from '@/util/Config';
+import Editor from '@/components/Editor.vue';
 
 
 @Component({
     components: {
+        Editor
     }
 })
 export default class extends Vue {
     data: any = {}
     text = ""
     imagePopup = false;
+
+    onChangeText( text : string ) {
+        this.text = text;
+    }
 
     get submitCheck(){
         return this.text.trim() != "";
@@ -109,6 +116,7 @@ export default class extends Vue {
             this.$router.go(-1);
         }else{
             this.data = result.inquiry;
+            console.log( this.data );
             this.data.category = Config.inquiryCategory[this.data.category];
             this.data.date = new Date(this.data.created_at).toLocaleString();
             this.data.responseDate = new Date(this.data.updated_at).toLocaleString();

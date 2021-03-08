@@ -1,4 +1,4 @@
-w<template>
+<template>
     <div>
         <GraphqlTable
         :query="Query.getFaqTable"
@@ -28,9 +28,9 @@ export default class extends Vue {
 
     columns = [
         { field: "id", name: "id", label: "#", align: "left" },
-        { field: "q", name: "q", label: "질문", align: "left", event: true },
+        { field: "q", name: "q", label: "질문", align: "left", event: true, html: true },
         {
-            field: "category", name: "category", label: "#", align: "left",
+            field: "category", name: "category", label: "카테고리", align: "left",
             format: (data : any) => Config.faqCategory[data]
         },
         // { field: "a", name: "a", label: "응답", align: "left" },

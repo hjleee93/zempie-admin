@@ -23,7 +23,8 @@
                 </div>
 
                 <div>
-                    <q-editor v-model="content" min-height="10rem" />
+                    <Editor @text="onChangeText" :text="content" />
+<!--                    <q-editor v-model="content" min-height="10rem" />-->
                 </div>
             </q-card-section>
 
@@ -32,7 +33,7 @@
             <q-card-section>
                 <div class="row justify-end">
                     <q-btn class="q-pl-md q-pr-md q-mr-md" color="grey" outline label="취소" @click="cancel" />
-                    <q-btn class="q-pl-md q-pr-md q-mr-md" color="positive" label="수정" :disable="submitDisble" @click="editNotice" />
+                    <q-btn class="q-pl-md q-pr-md q-mr-md" color="positive" label="수정" :disable="submitDisable" @click="editNotice" />
                     <q-btn class="q-pl-md q-pr-md" color="red" label="삭제" @click="deleteNotice" />
                 </div>
             </q-card-section>
@@ -52,13 +53,14 @@
 import { Component, Vue } from "vue-property-decorator";
 import { Dialog } from "quasar";
 import Config from "@/util/Config";
-
-import gql from "graphql-tag";
 import Query from "@/util/Query";
 import Api from "@/util/Api";
+import Editor from "@/components/Editor.vue";
 
 @Component({
-    components: {},
+    components: {
+        Editor,
+    },
     apollo: {
         noticeGet: {
             query: Query.getNoticeById,
@@ -68,6 +70,11 @@ import Api from "@/util/Api";
 })
 export default class extends Vue {
     noticeGet: any;
+
+    title = "";
+    category = "";
+    content = "";
+
     async created(){
         await this.$apollo.queries.noticeGet.setVariables({id: Math.round(Number(this.$route.params.index))});
         await this.refresh();
@@ -81,7 +88,7 @@ export default class extends Vue {
         return Config.noticeCategory;
     }
 
-    get submitDisble(){
+    get submitDisable(){
         return this.title.trim() == "" || this.content.trim() == "";
     }
 
@@ -118,9 +125,6 @@ export default class extends Vue {
                 persistent: true
             }).onOk(async () => {
                 const result = await Api.modifyNotice( this.noticeGet[0].id, this.title, this.content, Config.noticeCategory.indexOf(this.category) );
-                if( result ) {
-                    await this.refresh();
-                }
             });
         }else{
             this.$q.notify({
@@ -135,9 +139,9 @@ export default class extends Vue {
         this.$router.go(-1);
     }
 
-    title = "";
-    category = "";
-    content = "";
+    onChangeText(text : string ) {
+        this.content = text;
+    }
 
     async refresh(){
         await this.$apollo.queries.noticeGet.refetch();

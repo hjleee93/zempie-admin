@@ -38,7 +38,9 @@ export default class extends Vue {
         },
         {
             label: "상태", name: "response", field: "response", align: "left",
-            format: (data: any) => data == null ? "대기" : "답변 완료"
+            format: (data: any) => data == null ? "대기" : "답변 완료",
+            badge: true,
+            badgeColor: (data: any) => data == null ? "grey" : "positive"
         },
     ];
 
