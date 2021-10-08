@@ -7,6 +7,9 @@ import './quasar'
 import VueApollo from "vue-apollo";
 import ApolloClient from 'apollo-boost';
 
+import Vuelidate from 'vuelidate'
+Vue.use(Vuelidate)
+
 const apolloClient = new ApolloClient({
   uri: process.env.VUE_APP_GRAPHQL_LINK
 })

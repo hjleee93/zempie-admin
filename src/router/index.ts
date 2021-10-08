@@ -53,6 +53,13 @@ import Survey from "@/views/survey/SurveyPage.vue";
 import SurveyCreate from "@/views/survey/SurveyCreatePage.vue";
 import SurveyUpdate from "@/views/survey/SurveyUpdatePage.vue";
 
+//커뮤니티
+import CommunityCreate from "@/views/community/CommunityCreate.vue";
+import CommunityList from "@/views/community/CommunityList.vue";
+import CommunityDetail from "@/views/community/CommunityDetail.vue";
+import ChannelList from "@/views/community/channel/ChannelList.vue";
+import ReportList from "@/views/community/report/ReportList.vue";
+
 
 function loginCheck(next: NavigationGuardNext){
     if (!store.getters.isLogin) {
@@ -331,6 +338,40 @@ const routes: Array<RouteConfig> = [
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
     /* 설문조사 */
+
+    /* 커뮤니티 */
+    {
+        path: "/community/list",
+        name: "CommunityList",
+        component: CommunityList,
+        beforeEnter: (_to, _from, next) => {loginCheck(next)}
+    },
+    {
+        path: "/community/create",
+        name: "CommunityCreate",
+        component: CommunityCreate,
+        beforeEnter: (_to, _from, next) => {loginCheck(next)}
+    },
+    {
+        path: "/community/sub/:community_id",
+        name: "CommunityDetail",
+        component: CommunityDetail,
+        beforeEnter: (_to, _from, next) => {loginCheck(next)}
+    },
+    {
+        path: "/community/channel/list",
+        name: "ChannelList",
+        component: ChannelList,
+        beforeEnter: (_to, _from, next) => {loginCheck(next)}
+    },
+    {
+        path: "/community/reportList",
+        name: "ReportList",
+        component: ReportList,
+        beforeEnter: (_to, _from, next) => {loginCheck(next)}
+    },
+    /* 커뮤니티 */
+
 ];
 
 const router = new VueRouter({

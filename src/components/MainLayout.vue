@@ -2,109 +2,151 @@
     <q-layout view="hHh lpR fFf">
         <q-header class="glossy">
             <q-toolbar>
-                <q-btn dense flat round icon="menu" @click="left = !left"/>
+                <q-btn dense flat round icon="menu" @click="left = !left" />
 
-                <q-toolbar-title>
-                    Zempie admin page
-                </q-toolbar-title>
+                <q-toolbar-title> Zempie admin page </q-toolbar-title>
 
-                <q-btn round flat icon="nights_stay" @click="changeDark" v-if="$q.screen.name !== 'xs'">
-                    <q-tooltip>
-                        다크모드
-                    </q-tooltip>
+                <q-btn
+                    round
+                    flat
+                    icon="nights_stay"
+                    @click="changeDark"
+                    v-if="$q.screen.name !== 'xs'"
+                >
+                    <q-tooltip> 다크모드 </q-tooltip>
                 </q-btn>
 
-                <q-btn flat @click="openPasswordPopup" v-if="$q.screen.name !== 'xs'">
-                    <q-icon name="person"/>
+                <q-btn
+                    flat
+                    @click="openPasswordPopup"
+                    v-if="$q.screen.name !== 'xs'"
+                >
+                    <q-icon name="person" />
                     {{ $store.state.name }}
 
-                    <q-tooltip>
-                        정보 수정
-                    </q-tooltip>
+                    <q-tooltip> 정보 수정 </q-tooltip>
                 </q-btn>
 
-                <q-btn stretch flat @click="logout" v-if="$q.screen.name !== 'xs'">
-                    <q-icon name="logout"/>
+                <q-btn
+                    stretch
+                    flat
+                    @click="logout"
+                    v-if="$q.screen.name !== 'xs'"
+                >
+                    <q-icon name="logout" />
                     Logout
                 </q-btn>
             </q-toolbar>
         </q-header>
 
         <q-dialog v-model="passwordPopup" persistent>
-            <q-card class="my-card" style="width: 600px;">
+            <q-card class="my-card" style="width: 600px">
                 <q-card-section class="q-pa-md">
                     <div class="row items-center q-mb-md">
-                        <div class="col-12">
-                            이름
-                        </div>
+                        <div class="col-12">이름</div>
 
                         <div class="col-12">
-                            <q-input v-model="name" placeholder="Name"/>
+                            <q-input v-model="name" placeholder="Name" />
                         </div>
                     </div>
 
                     <div class="row items-center">
-                        <div class="col-12">
-                            변경할 비밀번호
-                        </div>
+                        <div class="col-12">변경할 비밀번호</div>
 
                         <div class="col-12">
-                            <q-input v-model="password" placeholder="Password"/>
+                            <q-input
+                                v-model="password"
+                                placeholder="Password"
+                            />
                         </div>
                     </div>
                 </q-card-section>
 
-                <q-separator/>
+                <q-separator />
 
                 <q-card-actions align="right">
-                    <q-btn v-close-popup color="grey" outline label="닫기"/>
-                    <q-btn color="positive" label="변경" @click="changePassword"/>
+                    <q-btn v-close-popup color="grey" outline label="닫기" />
+                    <q-btn
+                        color="positive"
+                        label="변경"
+                        @click="changePassword"
+                    />
                 </q-card-actions>
             </q-card>
         </q-dialog>
 
-        <q-drawer v-model="left" show-if-above side="left" bordered content-class="bg-grey-2">
+        <q-drawer
+            v-model="left"
+            show-if-above
+            side="left"
+            bordered
+            content-class="bg-grey-2"
+        >
             <q-scroll-area class="fit">
                 <q-list>
                     <div class="full-width">
-                        <q-btn flat @click="changeDark" v-if="$q.screen.name === 'xs'" class="full-width">
-                            <q-icon name="nights_stay"/>
+                        <q-btn
+                            flat
+                            @click="changeDark"
+                            v-if="$q.screen.name === 'xs'"
+                            class="full-width"
+                        >
+                            <q-icon name="nights_stay" />
                             다크모드
                         </q-btn>
                     </div>
 
-                    <q-btn flat @click="openPasswordPopup" v-if="$q.screen.name === 'xs'" style="width: 50%;">
-                        <q-icon name="person"/>
+                    <q-btn
+                        flat
+                        @click="openPasswordPopup"
+                        v-if="$q.screen.name === 'xs'"
+                        style="width: 50%"
+                    >
+                        <q-icon name="person" />
                         {{ $store.state.name }}
 
-                        <q-tooltip>
-                            정보 수정
-                        </q-tooltip>
+                        <q-tooltip> 정보 수정 </q-tooltip>
                     </q-btn>
 
-                    <q-btn stretch flat @click="logout" v-if="$q.screen.name === 'xs'" style="width: 50%;">
-                        <q-icon name="logout"/>
+                    <q-btn
+                        stretch
+                        flat
+                        @click="logout"
+                        v-if="$q.screen.name === 'xs'"
+                        style="width: 50%"
+                    >
+                        <q-icon name="logout" />
                         Logout
                     </q-btn>
 
-                    <q-separator/>
+                    <q-separator />
 
-                    <template v-for="(categoryItem, index) in filteredCategoryList">
+                    <template
+                        v-for="(categoryItem, index) in filteredCategoryList"
+                    >
                         <q-expansion-item
                             :key="index"
                             :icon="categoryItem.icon"
                             :label="categoryItem.label"
                             v-if="categoryItem.sub.length !== 0"
                             expand-separator
-                            :default-opened="getActiveExpansion( categoryItem.path )"
+                            :default-opened="
+                                getActiveExpansion(categoryItem.path)
+                            "
                         >
                             <q-list>
                                 <q-item
                                     :key="categoryItem.label + subIndex"
                                     clickable
                                     v-ripple
-                                    v-for="(subItem, subIndex) in categoryItem.sub"
-                                    @click="movePath(categoryItem.path + subItem.path)"
+                                    v-for="(
+                                        subItem, subIndex
+                                    ) in categoryItem.sub"
+                                    @click="
+                                        movePath(
+                                            categoryItem.path + subItem.path
+                                        )
+                                    "
                                     :class="'q-pl-xl ' + getIsActive(subItem)"
                                 >
                                     <q-item-section>
@@ -123,7 +165,7 @@
                             @click="movePath(categoryItem.path)"
                         >
                             <q-item-section avatar>
-                                <q-icon :name="categoryItem.icon"/>
+                                <q-icon :name="categoryItem.icon" />
                             </q-item-section>
                             <q-item-section>
                                 {{ categoryItem.label }}
@@ -137,10 +179,20 @@
         <q-page-container>
             <div>
                 <div class="container q-pl-md q-pr-md">
-                    <div class="text-h5 text-weight-bold q-mb-md q-mt-md" v-if="isSubPage">
-                        <span class="previousBtn" @click="movePreviousPage">&lt;</span>&nbsp;{{ activeTitle }}
+                    <div
+                        class="text-h5 text-weight-bold q-mb-md q-mt-md"
+                        v-if="isSubPage"
+                    >
+                        <span class="previousBtn" @click="movePreviousPage"
+                            >&lt;</span
+                        >&nbsp;{{ activeTitle }}
                     </div>
-                    <div class="text-h5 text-weight-bold q-mb-md q-mt-md" v-else>{{ activeCategory.label }}</div>
+                    <div
+                        class="text-h5 text-weight-bold q-mb-md q-mt-md"
+                        v-else
+                    >
+                        {{ activeCategory.label }}
+                    </div>
                 </div>
 
                 <q-separator spaced="true" />
@@ -156,7 +208,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { Notify, Dialog } from "quasar";
-import Api from '@/util/Api';
+import Api from "@/util/Api";
 
 interface Category {
     icon: string;
@@ -267,15 +319,15 @@ export default class MainLayout extends Vue {
             label: "신고",
             sub: [
                 {
-                    label: '게임 신고 현황',
-                    path: '/game'
+                    label: "게임 신고 현황",
+                    path: "/game",
                 },
                 // {
                 //     label: '유저 신고 현황',
                 //     path: '/user'
                 // }
             ],
-            path: "/report"
+            path: "/report",
         },
         // {
         //     icon: "block",
@@ -301,31 +353,50 @@ export default class MainLayout extends Vue {
             label: "단어 관리",
             sub: [
                 {
-                    label: '금지어',
-                    path: '/forbidden'
+                    label: "금지어",
+                    path: "/forbidden",
                 },
                 {
-                    label: '비속어',
-                    path: '/bad'
+                    label: "비속어",
+                    path: "/bad",
                 },
             ],
-            path: "/word"
+            path: "/word",
         },
         {
             icon: "poll",
             label: "설문조사 관리",
             sub: [
                 {
-                    label: '개발자 설문조사',
-                    path: '/developer'
+                    label: "개발자 설문조사",
+                    path: "/developer",
                 },
-            //     {
-            //         label: '비속어',
-            //         path: '/bad'
-            //     },
+                //     {
+                //         label: '비속어',
+                //         path: '/bad'
+                //     },
             ],
-            path: "/survey"
-        }
+            path: "/survey",
+        },
+        {
+            icon: "group",
+            label: "커뮤니티",
+            sub: [
+                {
+                    label: "그룹 리스트",
+                    path: "/list",
+                },
+                {
+                    label: "그룹 만들기",
+                    path: "/create",
+                },
+                {
+                    label: "신고 관리",
+                    path: "/reportList",
+                },
+            ],
+            path: "/community",
+        },
     ];
 
     titleList = [
@@ -385,6 +456,12 @@ export default class MainLayout extends Vue {
             path: "/survey/developer/update/",
             title: "설문조사 수정",
         },
+        /* 커뮤니티 */
+        {
+            path: "/community/sub/",
+            title: "그룹 상세보기",
+        },
+        /* /커뮤니티 */
     ];
 
     get isSubPage() {
@@ -407,7 +484,12 @@ export default class MainLayout extends Vue {
         for (let i = 0; i < this.categoryList.length; i++) {
             if (this.categoryList[i].sub.length != 0) {
                 for (let j = 0; j < this.categoryList[i].sub.length; j++) {
-                    if (path.includes((this.categoryList[i].path + this.categoryList[i].sub[j].path))) {
+                    if (
+                        path.includes(
+                            this.categoryList[i].path +
+                                this.categoryList[i].sub[j].path
+                        )
+                    ) {
                         return this.categoryList[i].sub[j];
                     }
                 }
@@ -421,12 +503,15 @@ export default class MainLayout extends Vue {
         return this.categoryList[0];
     }
 
-    getActiveExpansion( path : string ) {
-        return this.$route.path.split( '/' )[1] === path.substring(1);
+    getActiveExpansion(path: string) {
+        return this.$route.path.split("/")[1] === path.substring(1);
     }
 
     get filteredCategoryList() {
-        const filterList = [["/", "/user", "/admin"], ["/", "/support", "/judge", "/game"]];
+        const filterList = [
+            ["/", "/user", "/admin"],
+            ["/", "/support", "/judge", "/game", "/community"],
+        ];
 
         const filteredList = [];
         const level = 1;
@@ -451,14 +536,14 @@ export default class MainLayout extends Vue {
 
     async logout() {
         Dialog.create({
-            title: '로그아웃',
-            message: '로그아웃하시겠습니까?',
+            title: "로그아웃",
+            message: "로그아웃하시겠습니까?",
             cancel: true,
             persistent: true,
         }).onOk(async () => {
             this.$store.commit("logout");
             await this.$router.push("/login");
-        })
+        });
     }
 
     async created() {
@@ -466,13 +551,13 @@ export default class MainLayout extends Vue {
             if (this.$route.path != "/") {
                 Notify.create({
                     type: "negative",
-                    message: '해당 서비스는 로그인 후 이용하실 수 있습니다.',
+                    message: "해당 서비스는 로그인 후 이용하실 수 있습니다.",
                     position: "top",
                 });
             }
             await this.$router.push("/login");
         } else {
-          await this.$store.dispatch("getAdminData");
+            await this.$store.dispatch("getAdminData");
         }
 
         let darkMode = await localStorage.getItem("ZA_darkmode");
@@ -513,7 +598,6 @@ export default class MainLayout extends Vue {
                 message: "내용을 전부 채워주시기 바랍니다.",
                 position: "top",
             });
-
         }
 
         const result = await Api.setAdmin(id, name.trim(), password.trim());
