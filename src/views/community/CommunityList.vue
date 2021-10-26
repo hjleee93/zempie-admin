@@ -71,7 +71,7 @@ export default class CommunityList extends Vue {
     ];
     private groupData: any = [];
 
-    private limit = 31;
+    private limit = 50;
     private offset = 0;
     private loading: boolean = false;
 
@@ -81,9 +81,15 @@ export default class CommunityList extends Vue {
 
     private pageOption = [5, 10, 15, 20, 30];
 
-    async created() {
+     created() {
+
+        this.fetch();
+
+    }
+
+    fetch(){
         this.$api.group
-            .list("SUBSCRIBE", this.limit, this.offset)
+            .list("", this.limit, this.offset)
             .then((res: any) => {
                 this.groupData = res;
             })
@@ -92,10 +98,11 @@ export default class CommunityList extends Vue {
             });
     }
 
-
     subEvent(rows: any) {
         this.$router.push("/community/sub/" + rows.id);
     }
+
+
 }
 </script>
 

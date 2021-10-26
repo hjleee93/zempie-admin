@@ -1,19 +1,21 @@
 import Vue from "vue";
-import Vuex, { StoreOptions } from "vuex";
+import Vuex, {StoreOptions} from "vuex";
 import Gate from "@/util/Gate";
-import { getCookie, setCookie, deleteCookie } from "@/util/Cookie";
+import {getCookie, setCookie, deleteCookie} from "@/util/Cookie";
 import axios from "axios";
-import { Notify } from "quasar";
+import {Notify} from "quasar";
 import router from "@/router/index";
 
 Vue.use(Vuex);
-interface State{
-    accessToken: string|null;
-    name: string|null;
-    level: number|null;
-    subLevel: number|null;
-    id: number|null;
+
+interface State {
+    accessToken: string | null;
+    name: string | null;
+    level: number | null;
+    subLevel: number | null;
+    id: number | null;
 }
+
 const store: StoreOptions<State> = {
     state: {
         accessToken: null,
@@ -23,8 +25,8 @@ const store: StoreOptions<State> = {
         id: null
     },
     getters: {
-        isLogin(state){
-            if(state.accessToken == null){
+        isLogin(state) {
+            if (state.accessToken == null) {
                 state.accessToken = getCookie("access_token") as any;
             }
 
@@ -35,7 +37,7 @@ const store: StoreOptions<State> = {
         login(state, token) {
             state.accessToken = token;
         },
-        logout(state){
+        logout(state) {
             deleteCookie("access_token");
             deleteCookie("refresh_token");
             state.accessToken = null;
@@ -43,7 +45,7 @@ const store: StoreOptions<State> = {
     },
     actions: {
         login: async (context, adminData) => {
-            try{
+            try {
                 const params = new URLSearchParams();
                 params.append('account', adminData.account);
                 params.append('password', adminData.password);
@@ -60,18 +62,19 @@ const store: StoreOptions<State> = {
                 context.commit("login", result.data.result.access_token);
 
                 return true;
-            }catch(error){
+            }
+            catch (error) {
                 return false;
             }
         },
         refreshToken: async (context) => {
             const refreshToken = getCookie("refresh_token") || "";
-            if(refreshToken == null || refreshToken == ""){
+            if (refreshToken == null || refreshToken == "") {
                 return;
             }
             const params = new URLSearchParams();
             params.append('token', refreshToken);
-            try{
+            try {
                 const result = await axios({
                     method: "POST",
                     url: process.env.VUE_APP_API_LINK + "/admin/token",
@@ -83,7 +86,8 @@ const store: StoreOptions<State> = {
                 context.state.accessToken = result.data.result.access_token;
                 setCookie("access_token", result.data.result.access_token);
                 return true;
-            }catch(error){
+            }
+            catch (error) {
                 Notify.create({
                     type: "negative",
                     message: '해당 계정의 토큰이 만료되었습니다. 다시 로그인해주시기 바랍니다.',
@@ -95,10 +99,10 @@ const store: StoreOptions<State> = {
             }
         },
         getAdminData: async (context) => {
-            if(!context.getters.isLogin){
+            if (!context.getters.isLogin) {
                 return false;
             }
-            try{
+            try {
                 const result = await Gate({
                     method: "GET",
                     url: "/admin/verify",
@@ -109,8 +113,9 @@ const store: StoreOptions<State> = {
                 context.state.name = result.data.result.name;
                 context.state.level = result.data.result.level;
                 context.state.subLevel = result.data.result.sub_level;
-                // context.state.id = result.data.data.id;
-            }catch(error){
+                context.state.id = result.data.result.id;
+            }
+            catch (error) {
             }
         }
     },

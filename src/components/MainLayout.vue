@@ -460,8 +460,8 @@ export default class MainLayout extends Vue {
         {
             path: "/community/sub/",
             title: "그룹 상세보기",
-        },
-        /* /커뮤니티 */
+        }
+        /* 커뮤니티 */
     ];
 
     get isSubPage() {

@@ -1,11 +1,11 @@
 <template>
     <div class="q-pa-md" style="background-color: #fff">
-        <q-form class="q-gutter-md" @submit="createCommunity" @reset="onReset">
+        <q-form class="q-gutter-md" @submit="editChannel" @reset="onReset">
             <div class="q-gutter-md">
                 <q-input
                     label="Title"
                     :rules="[
-                        (title) => !!title || '커뮤니티 이름을 입력해주세요',
+                        (title) => !!title || '채널 이름을 입력해주세요',
                     ]"
                     maxlength="50"
                     v-model="title"
@@ -14,15 +14,16 @@
                     type="textarea"
                     label="Description"
                     :rules="[
-                        (desc) => !!desc || '커뮤니티 설명을 입력해주세요',
+                        (desc) => !!desc || '채널 설명을 입력해주세요',
                     ]"
                     maxlength="2000"
                     v-model="description"
                 />
 
                 <div class="image-uploader-container">
-                    <ImgSelector :accept="'image/*'" :label="'Profile Image'" @imgFile="(file) => {profileImg = file}"/>
-                    <ImgSelector :accept="'image/*'" :label="'Banner Image' " @imgFile="(file) => {bannerImg = file}"/>
+                    <ImgSelector :accept="'image/*'" :label="'Profile Image'" :imgSrc='profileImgSrc'
+                                 @imgFile="(file) => {profileImg = file}"/>
+
                 </div>
                 <q-toggle
                     false-value="PRIVATE"
@@ -33,14 +34,14 @@
                 />
             </div>
             <div>
-                <q-btn label="만들기" type="submit" color="primary"/>
+                <q-btn label="수정" type="submit" color="primary"/>
                 <!-- <q-btn
                     label="초기화"
                     type="reset"
                     color="primary"
                     flat
                     class="q-ml-sm"
-                    
+
                 /> -->
             </div>
         </q-form>
@@ -56,51 +57,56 @@ import {Notify} from "quasar";
 @Component({
     components: {ImgSelector},
 })
-export default class CommunityCreate extends Vue {
-    @Prop() community!: any;
+export default class ChannelEdit extends Vue {
+    @Prop() channel!: any;
     private title = "";
     private description = "";
+    private profileImgSrc: string = '';
     private profileImg: File = null;
-    private bannerImg: File = null;
+
     private state = "PUBLIC";
 
     created() {
-        if (this.community) {
-            this.title = this.community.name;
-            this.description = this.community.description;
+        console.log(this.channel)
+        if (this.channel) {
+            this.title = this.channel.title;
+            this.description = this.channel.description;
+            this.profileImgSrc = this.channel.profile_img;
         }
     }
 
-    async createCommunity() {
-
-        const profileImg = await this.$api.fileUploader(this.profileImg)
-        const bannerImg = await this.$api.fileUploader(this.bannerImg)
+    async editChannel() {
+        let profileImg: { url: string } = '';
+        if (this.profileImg) {
+            profileImg = await this.$api.fileUploader(this.profileImg)
+            this.profileImgSrc = profileImg.url;
+        }
 
         const obj = {
-            owner_id: this.$store.state.id,
-            community_name: this.title,
-            community_desc: this.description,
-            community_profile_img: profileImg.url,
-            community_banner_img: bannerImg.url,
-            community_state: this.state,
+            community_id: this.channel.community_id,
+            channel_id: this.channel.id,
+            title: this.title,
+            description: this.description,
+            profile_img: this.profileImgSrc,
+            is_private: this.state === "PUBLIC" ? false : true,
         };
 
-        this.$api.group.create(obj)
+        this.$api.group.channel.edit(obj)
             .then((res: AxiosResponse) => {
-                this.$router.push(`/community/sub/${res.id}`)
+                this.$emit('closeModal')
                 Notify.create({
                     type: "positive",
-                    message: "커뮤니티가 생성되었습니다.",
+                    message: "해당 채널이 수정되었습니다.",
                     position: "top",
                 });
             })
-        .catch((err:AxiosError)=>{
-            Notify.create({
-                type: "negative",
-                message: "커뮤니티 생성에 실패했습니다. 다시 시도해주세요.",
-                position: "top",
-            });
-        })
+            .catch((err: AxiosError) => {
+                Notify.create({
+                    type: "negative",
+                    message: "채널 수정에 실패했습니다. 다시 시도해주세요.",
+                    position: "top",
+                });
+            })
     }
 
     onReset() {

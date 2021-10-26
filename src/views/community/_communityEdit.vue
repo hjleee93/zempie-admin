@@ -21,8 +21,10 @@
                 />
 
                 <div class="image-uploader-container">
-                    <ImgSelector :accept="'image/*'" :label="'Profile Image'" @imgFile="(file) => {profileImg = file}"/>
-                    <ImgSelector :accept="'image/*'" :label="'Banner Image' " @imgFile="(file) => {bannerImg = file}"/>
+                    <ImgSelector :accept="'image/*'" :label="'Profile Image'" :imgSrc='profileImgSrc'
+                                 @imgFile="(file) => {profileImg = file}"/>
+                    <ImgSelector :accept="'image/*'" :label="'Banner Image' " :imgSrc='bannerImgSrc'
+                                 @imgFile="(file) => {bannerImg = file}"/>
                 </div>
                 <q-toggle
                     false-value="PRIVATE"
@@ -33,7 +35,7 @@
                 />
             </div>
             <div>
-                <q-btn label="만들기" type="submit" color="primary"/>
+                <q-btn label="수정" type="submit" color="primary"/>
                 <!-- <q-btn
                     label="초기화"
                     type="reset"
@@ -56,7 +58,7 @@ import {Notify} from "quasar";
 @Component({
     components: {ImgSelector},
 })
-export default class CommunityCreate extends Vue {
+export default class CommunityEdit extends Vue {
     @Prop() community!: any;
     private title = "";
     private description = "";
@@ -64,43 +66,61 @@ export default class CommunityCreate extends Vue {
     private bannerImg: File = null;
     private state = "PUBLIC";
 
+    private profileImgSrc: string = '';
+    private bannerImgSrc: string = '';
+
     created() {
+        console.log(this.community);
         if (this.community) {
             this.title = this.community.name;
             this.description = this.community.description;
+            this.profileImgSrc = this.community.profile_img;
+            this.bannerImgSrc = this.community.banner_img;
         }
     }
 
     async createCommunity() {
+        let profileImg: { url: string } = '';
+        let bannerImg: { url: string } = '';
 
-        const profileImg = await this.$api.fileUploader(this.profileImg)
-        const bannerImg = await this.$api.fileUploader(this.bannerImg)
+
+        if (this.profileImg) {
+            profileImg = await this.$api.fileUploader(this.profileImg)
+            this.profileImgSrc = profileImg.url
+        }
+        //todo:bannerImg update 반영 안됨
+        if (this.bannerImg) {
+            bannerImg = await this.$api.fileUploader(this.bannerImg)
+            this.bannerImgSrc = bannerImg.url
+            console.log('bannerImg', this.bannerImgSrc)
+        }
+
 
         const obj = {
-            owner_id: this.$store.state.id,
+            id: this.community.id,
             community_name: this.title,
             community_desc: this.description,
-            community_profile_img: profileImg.url,
-            community_banner_img: bannerImg.url,
+            community_profile_img: this.profileImgSrc,
+            community_banner_img: this.bannerImgSrc,
             community_state: this.state,
         };
 
-        this.$api.group.create(obj)
+        this.$api.group.edit(obj)
             .then((res: AxiosResponse) => {
-                this.$router.push(`/community/sub/${res.id}`)
+                this.$emit('closeModal')
                 Notify.create({
                     type: "positive",
-                    message: "커뮤니티가 생성되었습니다.",
+                    message: "해당 커뮤니티가 수정되었습니다.",
                     position: "top",
                 });
             })
-        .catch((err:AxiosError)=>{
-            Notify.create({
-                type: "negative",
-                message: "커뮤니티 생성에 실패했습니다. 다시 시도해주세요.",
-                position: "top",
-            });
-        })
+            .catch((err: AxiosError) => {
+                Notify.create({
+                    type: "negative",
+                    message: "커뮤니티 수정에 실패했습니다. 다시 시도해주세요.",
+                    position: "top",
+                });
+            })
     }
 
     onReset() {
