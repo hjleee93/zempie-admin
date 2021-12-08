@@ -1,6 +1,6 @@
 <template>
     <div class="q-pa-md" style="background-color: #fff">
-        <q-form class="q-gutter-md" @submit="createCommunity" @reset="onReset">
+        <q-form class="q-gutter-md" @submit="createCommunity" >
             <div class="q-gutter-md">
                 <q-input
                     label="Title"
@@ -60,8 +60,8 @@ export default class CommunityCreate extends Vue {
     @Prop() community!: any;
     private title = "";
     private description = "";
-    private profileImg: File = null;
-    private bannerImg: File = null;
+    private profileImg!: File;
+    private bannerImg!: File;
     private state = "PUBLIC";
 
     created() {
@@ -72,9 +72,21 @@ export default class CommunityCreate extends Vue {
     }
 
     async createCommunity() {
+        let profileImg:any = '';
+        let bannerImg:any ='';
 
-        const profileImg = await this.$api.fileUploader(this.profileImg)
-        const bannerImg = await this.$api.fileUploader(this.bannerImg)
+        console.log(this.profileImg)
+
+        if (this.profileImg) {
+            const result = await this.$api.fileUploader(this.profileImg)
+            profileImg = result[0]
+        }
+        if (this.bannerImg) {
+            const result = await this.$api.fileUploader(this.bannerImg)
+            
+            bannerImg = result[0]
+        }
+
 
         const obj = {
             owner_id: this.$store.state.id,
@@ -85,8 +97,10 @@ export default class CommunityCreate extends Vue {
             community_state: this.state,
         };
 
+        console.log('obj', obj)
+
         this.$api.group.create(obj)
-            .then((res: AxiosResponse) => {
+            .then((res: any) => {
                 this.$router.push(`/community/sub/${res.id}`)
                 Notify.create({
                     type: "positive",
@@ -94,21 +108,13 @@ export default class CommunityCreate extends Vue {
                     position: "top",
                 });
             })
-        .catch((err:AxiosError)=>{
-            Notify.create({
-                type: "negative",
-                message: "커뮤니티 생성에 실패했습니다. 다시 시도해주세요.",
-                position: "top",
-            });
-        })
-    }
-
-    onReset() {
-        this.title = "";
-        this.description = "";
-        this.profileImg = null;
-        this.bannerImg = null;
-        this.state = "PUBLIC";
+            .catch((err: any) => {
+                Notify.create({
+                    type: "negative",
+                    message: "커뮤니티 생성에 실패했습니다. 다시 시도해주세요.",
+                    position: "top",
+                });
+            })
     }
 
 
@@ -118,7 +124,6 @@ export default class CommunityCreate extends Vue {
 <style scoped lang="scss">
 .image-uploader-container {
     display: flex;
-    justify-content: space-between;
 
     .uploader {
         width: 48%;

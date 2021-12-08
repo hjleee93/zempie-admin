@@ -1,5 +1,5 @@
 <template>
-    <div class="q-pa-md" style="background-color: #fff">
+    <div class="q-pa-md edit-modal" style="background-color: #fff">
         <q-form class="q-gutter-md" @submit="createCommunity" @reset="onReset">
             <div class="q-gutter-md">
                 <q-input
@@ -21,10 +21,26 @@
                 />
 
                 <div class="image-uploader-container">
-                    <ImgSelector :accept="'image/*'" :label="'Profile Image'" :imgSrc='profileImgSrc'
-                                 @imgFile="(file) => {profileImg = file}"/>
-                    <ImgSelector :accept="'image/*'" :label="'Banner Image' " :imgSrc='bannerImgSrc'
-                                 @imgFile="(file) => {bannerImg = file}"/>
+                    <ImgSelector
+                        :accept="'image/*'"
+                        :label="'Profile Image'"
+                        :imgSrc="profileImgSrc"
+                        @imgFile="
+                            (file) => {
+                                profileImg = file;
+                            }
+                        "
+                    />
+                    <ImgSelector
+                        :accept="'image/*'"
+                        :label="'Banner Image'"
+                        :imgSrc="bannerImgSrc"
+                        @imgFile="
+                            (file) => {
+                                bannerImg = file;
+                            }
+                        "
+                    />
                 </div>
                 <q-toggle
                     false-value="PRIVATE"
@@ -34,8 +50,15 @@
                     v-model="state"
                 />
             </div>
-            <div>
-                <q-btn label="수정" type="submit" color="primary"/>
+            <div class="btn-container">
+                <q-btn
+                    label="취소"
+                    class="q-mr-sm"
+                    type="submit"
+                    color="negative"
+                    @click="hideModal"
+                />
+                <q-btn label="수정" type="submit" color="primary" />
                 <!-- <q-btn
                     label="초기화"
                     type="reset"
@@ -50,24 +73,24 @@
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue, Watch} from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import ImgSelector from "@/views/community/file/_imgSelector.vue";
-import {AxiosError, AxiosResponse} from "axios";
-import {Notify} from "quasar";
+import { AxiosError, AxiosResponse } from "axios";
+import { Notify } from "quasar";
 
 @Component({
-    components: {ImgSelector},
+    components: { ImgSelector },
 })
 export default class CommunityEdit extends Vue {
     @Prop() community!: any;
-    private title = "";
-    private description = "";
-    private profileImg: File = null;
-    private bannerImg: File = null;
-    private state = "PUBLIC";
+    title = "";
+    description = "";
+    profileImg: File | null = null;
+    bannerImg: File | null = null;
+    state = "PUBLIC";
 
-    private profileImgSrc: string = '';
-    private bannerImgSrc: string = '';
+    profileImgSrc: string = "";
+    bannerImgSrc: string = "";
 
     created() {
         console.log(this.community);
@@ -80,21 +103,21 @@ export default class CommunityEdit extends Vue {
     }
 
     async createCommunity() {
-        let profileImg: { url: string } = '';
-        let bannerImg: { url: string } = '';
-
+        let profileImg: any = "";
+        let bannerImg: any = "";
 
         if (this.profileImg) {
-            profileImg = await this.$api.fileUploader(this.profileImg)
-            this.profileImgSrc = profileImg.url
+            profileImg = await this.$api.fileUploader(this.profileImg);
+            this.profileImgSrc = profileImg.url;
         }
-        //todo:bannerImg update 반영 안됨
         if (this.bannerImg) {
-            bannerImg = await this.$api.fileUploader(this.bannerImg)
-            this.bannerImgSrc = bannerImg.url
-            console.log('bannerImg', this.bannerImgSrc)
-        }
+            const result = await this.$api.fileUploader(this.bannerImg);
 
+            bannerImg = result[0];
+
+            this.bannerImgSrc = bannerImg.url;
+            console.log("bannerImg", this.bannerImgSrc);
+        }
 
         const obj = {
             id: this.community.id,
@@ -105,9 +128,10 @@ export default class CommunityEdit extends Vue {
             community_state: this.state,
         };
 
-        this.$api.group.edit(obj)
+        this.$api.group
+            .edit(obj)
             .then((res: AxiosResponse) => {
-                this.$emit('closeModal')
+                this.$emit("closeModal");
                 Notify.create({
                     type: "positive",
                     message: "해당 커뮤니티가 수정되었습니다.",
@@ -120,7 +144,7 @@ export default class CommunityEdit extends Vue {
                     message: "커뮤니티 수정에 실패했습니다. 다시 시도해주세요.",
                     position: "top",
                 });
-            })
+            });
     }
 
     onReset() {
@@ -130,8 +154,9 @@ export default class CommunityEdit extends Vue {
         this.bannerImg = null;
         this.state = "PUBLIC";
     }
-
-
+    hideModal() {
+        this.$emit("closeModal");
+    }
 }
 </script>
 
@@ -143,6 +168,9 @@ export default class CommunityEdit extends Vue {
     .uploader {
         width: 48%;
     }
+}
+.btn-container {
+    float: right;
 }
 </style>
 

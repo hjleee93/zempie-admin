@@ -60,11 +60,11 @@
         </q-table>
 <!--        채널 생성 모달-->
         <q-dialog ref="createChannel" no-backdrop-dismiss>
-            <q-card>
+            <q-card class="edit-modal">
                 <q-card-section class="row items-center q-pb-none">
                     <div class="text-h6">채널 생성하기</div>
                     <q-space/>
-                    <q-btn icon="close" flat round dense v-close-popup></q-btn>
+                    <q-btn icon="close" flat round dense v-close-popup='true'></q-btn>
                 </q-card-section>
                 <q-card-section>
                     <ChannelCreate :communityId="communityId" @closeModal='closeModal()'></ChannelCreate>
@@ -73,11 +73,11 @@
         </q-dialog>
 <!--        채널 수정 모달-->
         <q-dialog ref="editChannel" no-backdrop-dismiss>
-            <q-card>
+            <q-card class="edit-modal">
                 <q-card-section class="row items-center q-pb-none">
                     <div class="text-h6">채널 수정하기</div>
                     <q-space/>
-                    <q-btn icon="close" flat round dense v-close-popup></q-btn>
+                    <q-btn icon="close" flat round dense v-close-popup='true'></q-btn>
                 </q-card-section>
                 <q-card-section>
                     <ChannelEdit :channel="channel" @closeModal='closeModal()'></ChannelEdit>
@@ -91,7 +91,7 @@
 import {Component, Prop, Vue} from "vue-property-decorator";
 import ChannelInfo from "./ChannelInfo.vue";
 import ChannelCreate from "@/views/community/channel/_channelCreate.vue";
-import ChannelEdit from "@/views/community/channel/_channelEdit"
+import ChannelEdit from "@/views/community/channel/_channelEdit.vue"
 import {AxiosError, AxiosResponse} from "axios";
 import {Notify} from "quasar";
 
@@ -157,8 +157,8 @@ export default class ChannelList extends Vue {
         },
     ];
 
-    private channelData: any = [];
-    private channel: any = null;
+    channelData: any = [];
+    channel: any = null;
 
     created() {
         this.fetch();
@@ -223,6 +223,9 @@ export default class ChannelList extends Vue {
 </script>
 
 <style scoped lang="scss">
+.edit-modal{
+    width: 100%;
+}
 .table-title {
     font-size: 20px;
     letter-spacing: .005em;

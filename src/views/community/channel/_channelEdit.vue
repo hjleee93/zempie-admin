@@ -1,29 +1,32 @@
 <template>
     <div class="q-pa-md" style="background-color: #fff">
-        <q-form class="q-gutter-md" @submit="editChannel" @reset="onReset">
+        <q-form class="q-gutter-md" @submit="editChannel">
             <div class="q-gutter-md">
                 <q-input
                     label="Title"
-                    :rules="[
-                        (title) => !!title || '채널 이름을 입력해주세요',
-                    ]"
+                    :rules="[(title) => !!title || '채널 이름을 입력해주세요']"
                     maxlength="50"
                     v-model="title"
                 />
                 <q-input
                     type="textarea"
                     label="Description"
-                    :rules="[
-                        (desc) => !!desc || '채널 설명을 입력해주세요',
-                    ]"
+                    :rules="[(desc) => !!desc || '채널 설명을 입력해주세요']"
                     maxlength="2000"
                     v-model="description"
                 />
 
                 <div class="image-uploader-container">
-                    <ImgSelector :accept="'image/*'" :label="'Profile Image'" :imgSrc='profileImgSrc'
-                                 @imgFile="(file) => {profileImg = file}"/>
-
+                    <ImgSelector
+                        :accept="'image/*'"
+                        :label="'Profile Image'"
+                        :imgSrc="profileImgSrc"
+                        @imgFile="
+                            (file) => {
+                                profileImg = file;
+                            }
+                        "
+                    />
                 </div>
                 <q-toggle
                     false-value="PRIVATE"
@@ -33,41 +36,39 @@
                     v-model="state"
                 />
             </div>
-            <div>
-                <q-btn label="수정" type="submit" color="primary"/>
-                <!-- <q-btn
-                    label="초기화"
-                    type="reset"
-                    color="primary"
-                    flat
-                    class="q-ml-sm"
-
-                /> -->
+            <div class="btn-container">
+                <q-btn
+                    label="취소"
+                    class="q-mr-sm"
+                    type="submit"
+                    color="negative"
+                    @click="hideModal"
+                />
+                <q-btn label="수정" type="submit" color="primary" />
             </div>
         </q-form>
     </div>
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue, Watch} from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import ImgSelector from "@/views/community/file/_imgSelector.vue";
-import {AxiosError, AxiosResponse} from "axios";
-import {Notify} from "quasar";
+import { AxiosError, AxiosResponse } from "axios";
+import { Notify } from "quasar";
 
 @Component({
-    components: {ImgSelector},
+    components: { ImgSelector },
 })
 export default class ChannelEdit extends Vue {
     @Prop() channel!: any;
-    private title = "";
-    private description = "";
-    private profileImgSrc: string = '';
-    private profileImg: File = null;
+    title = "";
+    description = "";
+    profileImgSrc: string = "";
+    profileImg: any = null;
 
     private state = "PUBLIC";
 
     created() {
-        console.log(this.channel)
         if (this.channel) {
             this.title = this.channel.title;
             this.description = this.channel.description;
@@ -76,11 +77,11 @@ export default class ChannelEdit extends Vue {
     }
 
     async editChannel() {
-        let profileImg: { url: string } = '';
-        if (this.profileImg) {
-            profileImg = await this.$api.fileUploader(this.profileImg)
-            this.profileImgSrc = profileImg.url;
-        }
+        let profileImg: any = "";
+
+        profileImg = await this.$api.fileUploader(this.profileImg);
+        console.log("profileImg", profileImg[0].url);
+        this.profileImgSrc = profileImg[0].url;
 
         const obj = {
             community_id: this.channel.community_id,
@@ -90,10 +91,12 @@ export default class ChannelEdit extends Vue {
             profile_img: this.profileImgSrc,
             is_private: this.state === "PUBLIC" ? false : true,
         };
+        console.log(obj);
 
-        this.$api.group.channel.edit(obj)
+        this.$api.group.channel
+            .edit(obj)
             .then((res: AxiosResponse) => {
-                this.$emit('closeModal')
+                this.$emit("closeModal");
                 Notify.create({
                     type: "positive",
                     message: "해당 채널이 수정되었습니다.",
@@ -106,18 +109,12 @@ export default class ChannelEdit extends Vue {
                     message: "채널 수정에 실패했습니다. 다시 시도해주세요.",
                     position: "top",
                 });
-            })
+            });
     }
 
-    onReset() {
-        this.title = "";
-        this.description = "";
-        this.profileImg = null;
-        this.bannerImg = null;
-        this.state = "PUBLIC";
+    hideModal() {
+        this.$emit("closeModal");
     }
-
-
 }
 </script>
 
@@ -129,6 +126,11 @@ export default class ChannelEdit extends Vue {
     .uploader {
         width: 48%;
     }
+}
+
+.btn-container {
+    float: right;
+    margin-bottom: 16px;
 }
 </style>
 

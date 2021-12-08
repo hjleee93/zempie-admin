@@ -665,7 +665,7 @@ export default class Api {
     /* 커뮤니티 */
     group = {
 
-        create: async (obj: { community_name: string, community_url: string, community_desc: string, community_state: string, community_profile_img?: string, community_banner_img?: string, community_manager_id?: string, community_sub_manager_id?: string }) => {
+        create: async (obj:any) => {
             return await this.callApi('post', `${communityApi}admin/community`, obj, false)
         },
         edit: async(obj: any) =>{
@@ -686,11 +686,20 @@ export default class Api {
         blockMembers: async (id: string) => {
             return await this.callApi('get', `${communityApi}community/${id}/members/block`, undefined)
         },
+        block: async (community_id:string,user_id: string) => {
+            return await this.callApi('post', `${communityApi}admin/community/${community_id}/member/${user_id}/block`, undefined)
+        },
         kickMembers: async (id: string) => {
             return await this.callApi('get', `${communityApi}community/${id}/members/kick`, undefined)
         },
         unblock: async (community_id: string, user_id: string) => {
-            return await this.callApi('post', `${communityApi}community/${community_id}/member/${user_id}`, undefined)
+            return await this.callApi('post', `${communityApi}admin/community/${community_id}/member/${user_id}/unblock`, undefined)
+        },
+        kick: async (community_id: string, user_id: string) => {
+            return await this.callApi('post', `${communityApi}admin/community/${community_id}/member/${user_id}/kick`, undefined)
+        },
+        unkick: async (community_id: string, user_id: string) => {
+            return await this.callApi('post', `${communityApi}admin/community/${community_id}/member/${user_id}/unkick`, undefined)
         },
         channel: {
             info: async (community_id: string, channel_id: string) => {

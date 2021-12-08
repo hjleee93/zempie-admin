@@ -38,45 +38,45 @@
         <div class="row">
             <div class="col-3">멤버 수</div>
             <div class="col-9">
-                {{ community.member_cnt }}
+                {{ community.member_cnt }}명
             </div>
         </div>
 
         <div class="row">
             <div class="col-3">포스팅 수</div>
             <div class="col-9">
-                {{ community.posts_cnt }}
+                {{ community.posts_cnt }}개
             </div>
         </div>
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-3">매니저</div>
             <div class="col-9">
                 {{ user.name }}
             </div>
-        </div>
+        </div> -->
         <div class="row">
             <div class="col-3">젬파이 인증 여부</div>
             <div class="col-9">
-                {{ community.is_certificated }}
+                {{ community.is_certificated ?'인증' : '미인증'}}
             </div>
         </div>
         <div class="row">
             <div class="col-3">공개여부</div>
             <div class="col-9">
-                {{ community.is_private }}
+                {{ community.is_private ?'비공개' : '공개'}}
             </div>
         </div>
         <div class="row">
             <div class="col-3">생성일</div>
             <div class="col-9">
-                {{ community.createdAt }}
+                {{ createdDate }}
             </div>
         </div>
         <div class="q-mt-sm" style="text-align: right">
             <q-btn color="secondary" class="q-mr-md" @click="edit">수정</q-btn>
             <q-btn style="background: red; color: white" @click="deleteConfirm" >삭제</q-btn>
         </div>
-        <q-dialog ref="editCommunity">
+        <q-dialog ref="editCommunity" no-backdrop-dismiss >
             <CommunityEdit :community="community" @closeModal='closeModal()'></CommunityEdit>
         </q-dialog>
     </div>
@@ -88,6 +88,7 @@ import Query from "@/util/Query";
 import CommunityEdit from "@/views/community/_communityEdit.vue";
 import {AxiosError, AxiosResponse} from "axios";
 import {Notify} from "quasar";
+import moment from "moment";
 
 @Component({
     components: {CommunityEdit},
@@ -100,11 +101,12 @@ import {Notify} from "quasar";
 })
 export default class CommunityInfo extends Vue {
     @Prop() communityId!: any;
-    private community: any = {};
-    private userGet: any;
-    private user: any = {};
+    community: any = {};
+    userGet: any;
+    user: any = {};
+    createdDate: string = ''
 
-    created() {
+    mounted() {
         this.fetch();
     }
 
@@ -116,6 +118,7 @@ export default class CommunityInfo extends Vue {
                 //todo: id값 (주석제거)
                 const response: any = await this.$apollo.queries.userGet.setVariables({id: 30});
                 this.user = response.data.userGet[0];
+                  this.createdDate = moment(this.community.createdAt).locale('ko').format('LL')
                 // await this.$apollo.queries.userGet.setVariables({ id: this.community.manager_id });
             })
             .catch((err) => {
@@ -165,5 +168,8 @@ export default class CommunityInfo extends Vue {
 <style scoped lang="scss">
 .row {
     margin-top: 8px;
+}
+.edit-modal{
+    width: 100%;
 }
 </style>

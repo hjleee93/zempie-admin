@@ -6,7 +6,7 @@
         row-key="id"
     >
         <template v-slot:body="props">
-            <q-tr :props="props" @click.prevent="subEvent(props.row)">
+            <q-tr :props="props">
                 <q-td key="profile_img" :props="props">
                     <q-img
                         :src="props.row.profile_img"
@@ -32,6 +32,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import {Notify} from "quasar";
 
 @Component({
     components: {},
@@ -83,11 +84,16 @@ export default class BlockMembers extends Vue {
     unblock(userId: string){        
         this.$api.group.unblock(this.communityId, userId)
         .then((res:any)=>{
-            console.log(res)
+            Notify.create({
+                type: "positive",
+                message: "해당 유저 블락이 해제되었습니다.",
+                position: "top",
+            });
         })
         .catch((e)=>{
 
         })
+        this.fetch()
     }
 
     fetch(){
