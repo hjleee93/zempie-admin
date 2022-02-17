@@ -54,7 +54,6 @@
                 <q-btn
                     label="취소"
                     class="q-mr-sm"
-                    type="submit"
                     color="negative"
                     @click="hideModal"
                 />
@@ -106,17 +105,16 @@ export default class CommunityEdit extends Vue {
         let profileImg: any = "";
         let bannerImg: any = "";
 
+        console.log(this.profileImg);
+
         if (this.profileImg) {
             profileImg = await this.$api.fileUploader(this.profileImg);
-            this.profileImgSrc = profileImg.url;
+            this.profileImgSrc = profileImg[0].url;
         }
         if (this.bannerImg) {
             const result = await this.$api.fileUploader(this.bannerImg);
-
             bannerImg = result[0];
-
             this.bannerImgSrc = bannerImg.url;
-            console.log("bannerImg", this.bannerImgSrc);
         }
 
         const obj = {
@@ -127,7 +125,7 @@ export default class CommunityEdit extends Vue {
             community_banner_img: this.bannerImgSrc,
             community_state: this.state,
         };
-
+        console.log("obj", obj);
         this.$api.group
             .edit(obj)
             .then((res: AxiosResponse) => {
@@ -155,7 +153,7 @@ export default class CommunityEdit extends Vue {
         this.state = "PUBLIC";
     }
     hideModal() {
-        this.$emit("closeModal");
+        this.$emit("closeModal", false);
     }
 }
 </script>

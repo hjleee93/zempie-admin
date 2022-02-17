@@ -40,7 +40,6 @@
                 <q-btn
                     label="취소"
                     class="q-mr-sm"
-                    type="submit"
                     color="negative"
                     @click="hideModal"
                 />
@@ -79,9 +78,10 @@ export default class ChannelEdit extends Vue {
     async editChannel() {
         let profileImg: any = "";
 
-        profileImg = await this.$api.fileUploader(this.profileImg);
-        console.log("profileImg", profileImg[0].url);
-        this.profileImgSrc = profileImg[0].url;
+        if (this.profileImg) {
+            profileImg = await this.$api.fileUploader(this.profileImg);
+            this.profileImgSrc = profileImg[0].url;
+        }
 
         const obj = {
             community_id: this.channel.community_id,
@@ -113,7 +113,7 @@ export default class ChannelEdit extends Vue {
     }
 
     hideModal() {
-        this.$emit("closeModal");
+        this.$emit("closeModal", false);
     }
 }
 </script>

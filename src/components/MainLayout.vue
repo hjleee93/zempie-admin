@@ -202,7 +202,9 @@
                 </div>
             </div>
         </q-page-container>
+      <pre v-if="$store.state.debug">{{ $store.state }}</pre>
     </q-layout>
+    
 </template>
 
 <script lang="ts">
@@ -322,10 +324,10 @@ export default class MainLayout extends Vue {
                     label: "게임 신고 현황",
                     path: "/game",
                 },
-                // {
-                //     label: '유저 신고 현황',
-                //     path: '/user'
-                // }
+                {
+                    label: '유저 신고 현황',
+                    path: '/user'
+                }
             ],
             path: "/report",
         },
@@ -564,6 +566,16 @@ export default class MainLayout extends Vue {
         if (darkMode == "true") {
             this.changeDark();
         }
+    }
+
+    setDebug(){
+        this.$store.state.debug =!this.$store.state.debug;
+    }
+
+    mounted() {
+      window.addEventListener('keypress', (e) => {	    
+	    if (e.key == '_') this.setDebug()
+	  })   
     }
 
     movePath(path: string) {

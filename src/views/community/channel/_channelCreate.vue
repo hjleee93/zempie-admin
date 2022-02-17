@@ -39,7 +39,6 @@
                 <q-btn
                     label="취소"
                     class="q-mr-sm"
-                    type="submit"
                     color="negative"
                     @click="hideModal"
                 />
@@ -68,13 +67,14 @@ export default class ChannelCreate extends Vue {
 
     async createChannel() {
         const profileImg = await this.$api.fileUploader(this.profileImg);
+        console.log(profileImg.length)
 
         const obj = {
             user_id: this.$store.state.id,
             community_id: this.communityId,
             title: this.title,
             description: this.description,
-            profile_img: profileImg[0].url,
+            profile_img: profileImg.length === 0 ? null: profileImg[0].url,
             state: this.state,
         };
 

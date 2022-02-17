@@ -15,7 +15,7 @@
                     <q-tab name="channels" label="채널"/>
                     <q-tab name="subscribers" label="가입 유저"/>
                     <q-tab name="blocks" label="블락 유저"/>
-                    <q-tab name="kicks" label="강퇴 유저"/>
+                    <!-- <q-tab name="kicks" label="강퇴 유저"/> -->
                 </q-tabs>
 
                 <q-separator/>

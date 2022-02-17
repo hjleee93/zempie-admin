@@ -1,7 +1,7 @@
 import Gate from "@/util/Gate";
 import axios from "axios";
-import {Notify} from "quasar";
-import Vue, {PluginObject} from "vue";
+import { Notify } from "quasar";
+import Vue, { PluginObject } from "vue";
 
 const zempieApi = process.env.VUE_APP_ZEMPIE_API;
 const communityApi = process.env.VUE_APP_COMMUNITY_API;
@@ -35,8 +35,17 @@ export default class Api {
     }
 
 
-    async callApi(method: string, url: string, data?: any, withCredentials: boolean = false,): Promise<any> {
-        try {
+    async callApi(method: string, url: string, data?: any, withCredentials: boolean = false): Promise<any> {
+
+        try {            
+            if (method === 'get') {
+                url = url + '?_=' + Date.now()
+                if(data) {
+                    for (let d in data) {
+                        if (data[d]) url += `&${d}=${data[d]}`
+                    }
+                }
+            }
             // @ts-ignore
             const result = await Gate({
                 method: method,
@@ -44,7 +53,7 @@ export default class Api {
                 data,
                 withCredentials
             });
-            return result.data
+            return result.data;
         }
         catch (error) {
             throw error
@@ -53,7 +62,7 @@ export default class Api {
 
     /* 관리자 */
     static async addAdmin(account: string, password: string, name: string, level: number) {
-        const result = await this.request('POST', '/admin/admin/add', {name, password, level, account});
+        const result = await this.request('POST', '/admin/admin/add', { name, password, level, account });
         if (result.isError) {
             Notify.create({
                 type: "negative",
@@ -72,7 +81,7 @@ export default class Api {
     }
 
     static async setAdminLevel(id: number, level: number) {
-        const result = await this.request('POST', '/admin/admin/mod', {id, level, sub_level: level});
+        const result = await this.request('POST', '/admin/admin/mod', { id, level, sub_level: level });
         if (result.isError) {
             Notify.create({
                 type: "negative",
@@ -91,7 +100,7 @@ export default class Api {
     }
 
     static async setAdmin(id: number, name: string, password: string) {
-        const result = await this.request('POST', '/admin/admin/mod', {id, name, password});
+        const result = await this.request('POST', '/admin/admin/mod', { id, name, password });
         if (result.isError) {
             Notify.create({
                 type: "negative",
@@ -162,7 +171,7 @@ export default class Api {
     }
 
     static async deleteNotice(id: number) {
-        const result = await this.request('POST', '/admin/support/notice/del', {id});
+        const result = await this.request('POST', '/admin/support/notice/del', { id });
         if (result.isError) {
             Notify.create({
                 type: "negative",
@@ -181,7 +190,7 @@ export default class Api {
     }
 
     static async modifyNotice(id: number, title: string, content: string, category: number) {
-        const result = await this.request('POST', '/admin/support/notice/mod', {id, title, content, category});
+        const result = await this.request('POST', '/admin/support/notice/mod', { id, title, content, category });
         if (result.isError) {
             Notify.create({
                 type: "negative",
@@ -217,7 +226,7 @@ export default class Api {
     }
 
     static async responseInquiry(id: number, response: string) {
-        const result = await this.request('POST', '/admin/support/response', {id, response});
+        const result = await this.request('POST', '/admin/support/response', { id, response });
         if (result.isError) {
             Notify.create({
                 type: "negative",
@@ -288,7 +297,7 @@ export default class Api {
 
     /* 비속어 */
     static async addBadWord(word: string) {
-        const result = await this.request('POST', '/admin/filter/bad-word/c', {word});
+        const result = await this.request('POST', '/admin/filter/bad-word/c', { word });
         if (result.isError) {
             Notify.create({
                 type: "negative",
@@ -307,12 +316,12 @@ export default class Api {
     }
 
     static async deleteBadWord(id: number) {
-        const result = await this.request('POST', "/admin/filter/bad-word/d", {id});
+        const result = await this.request('POST', "/admin/filter/bad-word/d", { id });
         return !result.isError;
     }
 
     static async updateBadWord(id: number, activated: boolean) {
-        const result = await this.request('POST', '/admin/filter/bad-word/u', {id, activated});
+        const result = await this.request('POST', '/admin/filter/bad-word/u', { id, activated });
         if (result.isError) {
             Notify.create({
                 type: "negative",
@@ -327,7 +336,7 @@ export default class Api {
 
     /* 금지어 */
     static async addForbiddenWord(word: string) {
-        const result = await this.request('POST', "/admin/filter/forbidden-word/c", {word});
+        const result = await this.request('POST', "/admin/filter/forbidden-word/c", { word });
         if (result.isError) {
             Notify.create({
                 type: "negative",
@@ -339,12 +348,12 @@ export default class Api {
     }
 
     static async deleteForbiddenWord(id: number) {
-        const result = await this.request('POST', "/admin/filter/forbidden-word/d", {id});
+        const result = await this.request('POST', "/admin/filter/forbidden-word/d", { id });
         return !result.isError;
     }
 
     static async updateForbiddenWord(id: number, activated: boolean) {
-        const result = await this.request('POST', '/admin/filter/forbidden-word/u', {id, activated});
+        const result = await this.request('POST', '/admin/filter/forbidden-word/u', { id, activated });
         if (result.isError) {
             Notify.create({
                 type: "negative",
@@ -361,7 +370,7 @@ export default class Api {
     /* 유저 제재 */
 
     static async punishUser(user_id: number, category: string, reason: string, date: number) {
-        const result = await this.request('POST', '/admin/punish/user', {user_id, category, reason, date});
+        const result = await this.request('POST', '/admin/punish/user', { user_id, category, reason, date });
         if (result.isError) {
             Notify.create({
                 type: "negative",
@@ -373,7 +382,7 @@ export default class Api {
     }
 
     static async releasePunishUser(id: number) {
-        const result = await this.request('POST', "/admin/punish/user/release", {id});
+        const result = await this.request('POST', "/admin/punish/user/release", { id });
         if (result.isError) {
             Notify.create({
                 type: "negative",
@@ -563,7 +572,7 @@ export default class Api {
     }
 
     static async deleteAffiliateGame(game_id: number) {
-        const result = await this.request('POST', '/admin/game/d/p', {game_id});
+        const result = await this.request('POST', '/admin/game/d/p', { game_id });
         if (result.isError) {
             Notify.create({
                 type: "negative",
@@ -586,7 +595,7 @@ export default class Api {
     /* 설문조사 관리 */
 
     static async addSurvey(form_id: string, form_url: string, start_at: number, end_at: number) {
-        const result = await this.request('POST', "/admin/studio/survey/c", {form_id, form_url, start_at, end_at});
+        const result = await this.request('POST', "/admin/studio/survey/c", { form_id, form_url, start_at, end_at });
         if (result.isError) {
             Notify.create({
                 type: "negative",
@@ -605,7 +614,7 @@ export default class Api {
     }
 
     static async deleteSurvey(id: number) {
-        const result = await this.request('POST', '/admin/studio/survey/d', {id});
+        const result = await this.request('POST', '/admin/studio/survey/d', { id });
         if (result.isError) {
             Notify.create({
                 type: "negative",
@@ -624,7 +633,7 @@ export default class Api {
     }
 
     static async updateSurveyActivated(id: number, activated: boolean) {
-        const result = await this.request('POST', "/admin/studio/survey/u", {id, activated: activated.toString()});
+        const result = await this.request('POST', "/admin/studio/survey/u", { id, activated: activated.toString() });
         if (result.isError) {
             Notify.create({
                 type: "negative",
@@ -665,13 +674,13 @@ export default class Api {
     /* 커뮤니티 */
     group = {
 
-        create: async (obj:any) => {
+        create: async (obj: any) => {
             return await this.callApi('post', `${communityApi}admin/community`, obj, false)
         },
-        edit: async(obj: any) =>{
+        edit: async (obj: any) => {
             return await this.callApi('put', `${communityApi}admin/community/${obj.id}`, obj)
         },
-        delete:async(community_id: string )=>{
+        delete: async (community_id: string) => {
             return await this.callApi('post', `${communityApi}admin/community/${community_id}/remove`)
         },
         list: async (sort?: string, limit?: number, offset?: number) => {
@@ -686,7 +695,7 @@ export default class Api {
         blockMembers: async (id: string) => {
             return await this.callApi('get', `${communityApi}community/${id}/members/block`, undefined)
         },
-        block: async (community_id:string,user_id: string) => {
+        block: async (community_id: string, user_id: string) => {
             return await this.callApi('post', `${communityApi}admin/community/${community_id}/member/${user_id}/block`, undefined)
         },
         kickMembers: async (id: string) => {
@@ -708,14 +717,14 @@ export default class Api {
             list: async (group_id: string) => {
                 return await this.callApi('get', `${communityApi}community/${group_id}/channels`, undefined);
             },
-            create: async (obj:any) => {
+            create: async (obj: any) => {
                 return await this.callApi('post', `${communityApi}admin/community/${obj.community_id}/channel`, obj)
             },
-            delete:async(community_id:string, channel_id: string)=>{
-                return await this.callApi('post',`${communityApi}admin/community/${community_id}/channel/${channel_id}/remove`, undefined)
+            delete: async (community_id: string, channel_id: string) => {
+                return await this.callApi('post', `${communityApi}admin/community/${community_id}/channel/${channel_id}/remove`, undefined)
             },
-            edit:async(obj:any)=>{
-                return await this.callApi('post',`${communityApi}admin/community/${obj.community_id}/channel/${obj.channel_id}`,obj)
+            edit: async (obj: any) => {
+                return await this.callApi('post', `${communityApi}admin/community/${obj.community_id}/channel/${obj.channel_id}`, obj)
 
             }
         },
@@ -725,14 +734,34 @@ export default class Api {
             }
         },
         userInfo: async (channel_id: any) => {
-            console.log('channel api start ', channel_id)
             return await this.callApi('get', `${zempieApi}channel/${channel_id}`, undefined, false);
 
+        },
+        deletePost: async (post_id: string) => {
+            return await this.callApi('delete', `${communityApi}admin/post/${post_id}`, undefined, false)
+        },
+        readPost: async (post_id: string) => {
+            return await this.callApi('get', `${communityApi}post/${post_id}`, undefined, false)
         }
         // userInfo: async () => {
         //     const response = await this.callApi('get', '/user/info', undefined, true);
         //     return response.result || response;
         // },
+
+
+    }
+
+    async userReportList(obj:any) {
+        return await this.callApi('get', `/admin/report/user/list`, obj, false)
+
+    }
+
+    async userBan(obj:any) {
+        return await this.callApi('post', `/admin/user/ban`, obj, false)
+    }
+
+    async cancelUserBan(obj:any) {
+        return await this.callApi('post', `/admin/user/ban/cancel`, obj, false)
     }
 
     /* 커뮤니티 */

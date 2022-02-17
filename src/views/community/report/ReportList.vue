@@ -1,7 +1,7 @@
 <template>
     <div>
         <q-table
-            title="All group"
+            title="신고 목록"
             :data="data"
             :columns="columns"
             row-key="id"
@@ -14,17 +14,34 @@
                         {{ props.row.user_id }}
                     </q-td>
 
+                    <q-td key="targetType" :props="props">
+                        {{ props.row.targetType }}
+                    </q-td>
                     <q-td key="createdAt" :props="props">
                         {{
                             $q.config.date.formatDate(
                                 props.row.createdAt,
-                                "YYYY-MM-DD"
+                                "YYYY-MM-DD HH:MM:SS"
                             )
                         }}
                     </q-td>
 
                     <q-td key="name" :props="props">
-                        {{ props.row.report_reason }}
+                        {{ reportEnum[props.row.report_reason] }}
+                    </q-td>
+                    <q-td>
+                        <q-btn
+                            class="q-mr-sm"
+                            @click="readPost(props.row.post_id)"
+                            >보기</q-btn
+                        >
+                    </q-td>
+                    <q-td>
+                        <q-btn
+                            class="q-mr-sm"
+                            @click="deletePost(props.row.post_id)"
+                            >삭제</q-btn
+                        >
                     </q-td>
                 </q-tr>
             </template>
@@ -34,15 +51,30 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import { Notify } from "quasar";
+
+enum eReportReason {
+    spam = 1,
+    sexual,
+    curse,
+    other,
+}
 @Component({
     components: {},
 })
 export default class ReportList extends Vue {
+    reportEnum: any = eReportReason;
     columns = [
         {
             field: "userId",
             name: "userId",
             label: "신고자",
+            align: "left",
+        },
+        {
+            field: "targetType",
+            name: "targetType",
+            label: "타입",
             align: "left",
         },
         {
@@ -62,6 +94,18 @@ export default class ReportList extends Vue {
             sort: () => null,
             event: true,
         },
+        {
+            field: "check",
+            name: "check",
+            label: "확인",
+            align: "left",
+        },
+        {
+            field: "manage",
+            name: "manage",
+            label: "관리",
+            align: "left",
+        },
     ];
     private data: any = [];
 
@@ -75,6 +119,9 @@ export default class ReportList extends Vue {
 
     private pageOption = [5, 10, 15, 20, 30];
 
+    isPostRead = false;
+    postInfo: any = {};
+
     async created() {
         this.$api.group.report
             .list()
@@ -87,7 +134,39 @@ export default class ReportList extends Vue {
     }
 
     subEvent(rows: any) {
-        this.$router.push("/community/sub/" + rows.id);
+        // this.$router.push("/community/sub/" + rows.id);
+    }
+    readPost(id: string) {
+        window.open(`${process.env.VUE_APP_ZEMPIE_LINK}feed/${id}`);
+        this.$api.group
+            .readPost(id)
+            .then((res: any) => {
+                this.postInfo = res;
+                console.log(res);
+                this.isPostRead = true;
+                // this.data = res;
+            })
+            .catch((e) => {
+                console.log(e);
+            });
+    }
+    deletePost(id: string) {
+        this.$q
+            .dialog({
+                message: "해당 포스팅을 삭제하시겠습니까?",
+                cancel: true,
+            })
+            .onOk(() => {
+                this.$api.group.deletePost(id).then((res) => {
+                    Notify.create({
+                        type: "positive",
+                        message: "해당 포스팅을 삭제했습니다.",
+                        position: "top",
+                    });
+                });
+            })
+            .onCancel(() => {})
+            .onDismiss(() => {});
     }
 }
 </script>

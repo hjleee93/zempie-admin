@@ -22,7 +22,7 @@ instance.interceptors.response.use(
     },
     async function (error) {
         if (process.env.NODE_ENV == "local") {
-            console.log([error]);
+            return Promise.reject(error);
         }
 
         const errorConfig = error.config;

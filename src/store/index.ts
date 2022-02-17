@@ -14,7 +14,15 @@ interface State {
     level: number | null;
     subLevel: number | null;
     id: number | null;
+    debug: boolean | null;
 }
+const moduleFiles = require.context('./modules', true, /\.ts$/);
+const modules = moduleFiles.keys().reduce((modules: any, modulePath: string) => {
+    const moduleName = modulePath.replace(/^\.\/(.*)\.\w+$/, '$1');
+    const value = moduleFiles(modulePath);
+    modules[moduleName] = value.default;
+    return modules;
+}, {});
 
 const store: StoreOptions<State> = {
     state: {
@@ -22,7 +30,8 @@ const store: StoreOptions<State> = {
         name: null,
         level: null,
         subLevel: null,
-        id: null
+        id: null,
+        debug :false
     },
     getters: {
         isLogin(state) {
@@ -119,7 +128,7 @@ const store: StoreOptions<State> = {
             }
         }
     },
-    modules: {},
+    modules: modules,
 }
 
 export default new Vuex.Store(store);

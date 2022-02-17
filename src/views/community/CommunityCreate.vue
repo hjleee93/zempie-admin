@@ -89,15 +89,13 @@ export default class CommunityCreate extends Vue {
 
 
         const obj = {
-            owner_id: this.$store.state.id,
+            owner_id: 0,
             community_name: this.title,
             community_desc: this.description,
             community_profile_img: profileImg.url,
             community_banner_img: bannerImg.url,
             community_state: this.state,
         };
-
-        console.log('obj', obj)
 
         this.$api.group.create(obj)
             .then((res: any) => {

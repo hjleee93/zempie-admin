@@ -41,6 +41,7 @@ import JudgeLog from "@/views/judge/JudgeLogPage.vue";
 // 신고
 import ReportGame from "@/views/report/ReportGamePage.vue";
 import ReportUser from "@/views/report/ReportUserPage.vue";
+import userReportList from "@/views/report/ReportUserPage.vue"
 // 제재
 import PunishGame from "@/views/punish/PunishGamePage.vue";
 import PunishUser from "@/views/punish/PunishUserPage.vue";
@@ -274,10 +275,11 @@ const routes: Array<RouteConfig> = [
     },
     {
         path: "/report/user",
-        name: "ReportUser",
-        component: ReportUser,
+        name: "userReportList",
+        component: userReportList,
         beforeEnter: (_to, _from, next) => {loginCheck(next)}
     },
+    
     /* 신고 */
 
 

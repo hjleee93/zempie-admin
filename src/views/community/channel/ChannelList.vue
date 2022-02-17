@@ -7,8 +7,13 @@
             row-key="id"
         >
             <template v-slot:top>
-                <div class="table-title">Channels
-                    <q-btn color="positive" label="생성하기" @click="openModal"/>
+                <div class="table-title">
+                    Channels
+                    <q-btn
+                        color="positive"
+                        label="생성하기"
+                        @click="openModal"
+                    />
                 </div>
             </template>
             <template v-slot:body="props">
@@ -52,35 +57,62 @@
                         }}
                     </q-td>
                     <q-td key="change">
-                        <q-btn label="수정" color="primary" class="q-mr-sm" @click="editChannel(props.row)"/>
-                        <q-btn label="삭제" color="red" @click="confirmDialog(props.row.id)"/>
+                        <q-btn
+                            label="수정"
+                            color="primary"
+                            class="q-mr-sm"
+                            @click="editChannel(props.row)"
+                        />
+                        <q-btn
+                            label="삭제"
+                            color="red"
+                            @click="confirmDialog(props.row.id)"
+                        />
                     </q-td>
                 </q-tr>
             </template>
         </q-table>
-<!--        채널 생성 모달-->
+        <!-- 채널 생성 모달-->
         <q-dialog ref="createChannel" no-backdrop-dismiss>
             <q-card class="edit-modal">
                 <q-card-section class="row items-center q-pb-none">
                     <div class="text-h6">채널 생성하기</div>
-                    <q-space/>
-                    <q-btn icon="close" flat round dense v-close-popup='true'></q-btn>
+                    <q-space />
+                    <q-btn
+                        icon="close"
+                        flat
+                        round
+                        dense
+                        v-close-popup="true"
+                    ></q-btn>
                 </q-card-section>
                 <q-card-section>
-                    <ChannelCreate :communityId="communityId" @closeModal='closeModal()'></ChannelCreate>
+                    <ChannelCreate
+                        :communityId="communityId"
+                        @closeModal="closeModal()"
+                    ></ChannelCreate>
                 </q-card-section>
             </q-card>
         </q-dialog>
-<!--        채널 수정 모달-->
+        <!-- 채널 수정 모달-->
         <q-dialog ref="editChannel" no-backdrop-dismiss>
             <q-card class="edit-modal">
                 <q-card-section class="row items-center q-pb-none">
                     <div class="text-h6">채널 수정하기</div>
-                    <q-space/>
-                    <q-btn icon="close" flat round dense v-close-popup='true'></q-btn>
+                    <q-space />
+                    <q-btn
+                        icon="close"
+                        flat
+                        round
+                        dense
+                        v-close-popup="true"
+                    ></q-btn>
                 </q-card-section>
                 <q-card-section>
-                    <ChannelEdit :channel="channel" @closeModal='closeModal()'></ChannelEdit>
+                    <ChannelEdit
+                        :channel="channel"
+                        @closeModal="closeModal()"
+                    ></ChannelEdit>
                 </q-card-section>
             </q-card>
         </q-dialog>
@@ -88,15 +120,14 @@
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue} from "vue-property-decorator";
-import ChannelInfo from "./ChannelInfo.vue";
+import { Component, Prop, Vue } from "vue-property-decorator";
 import ChannelCreate from "@/views/community/channel/_channelCreate.vue";
-import ChannelEdit from "@/views/community/channel/_channelEdit.vue"
-import {AxiosError, AxiosResponse} from "axios";
-import {Notify} from "quasar";
+import ChannelEdit from "@/views/community/channel/_channelEdit.vue";
+import { AxiosError, AxiosResponse } from "axios";
+import { Notify } from "quasar";
 
 @Component({
-    components: {ChannelInfo, ChannelCreate, ChannelEdit}
+    components: { ChannelCreate, ChannelEdit },
 })
 export default class ChannelList extends Vue {
     @Prop() communityId!: string;
@@ -130,7 +161,7 @@ export default class ChannelList extends Vue {
             align: "left",
             sortable: true,
             sort: () => null,
-            event: true
+            event: true,
         },
         {
             field: "state",
@@ -180,30 +211,34 @@ export default class ChannelList extends Vue {
         (this.$refs.createChannel as any).show();
     }
 
-    closeModal() {
+    closeModal(isFetch?: boolean) {
         (this.$refs.createChannel as any).hide();
         (this.$refs.editChannel as any).hide();
-        this.fetch();
+        if (isFetch) {
+            this.fetch();
+        }
     }
-    editChannel(channel:any){
+    editChannel(channel: any) {
         this.channel = channel;
         (this.$refs.editChannel as any).show();
     }
 
-
     confirmDialog(channelId: string) {
-        this.$q.dialog({
-            message: '해당 채널을 삭제하시겠습니까?',
-            cancel: true
-        }).onOk(() => {
-            this.deleteChannel(channelId)
-        }).onCancel(() => {
-        }).onDismiss(() => {
-        })
+        this.$q
+            .dialog({
+                message: "해당 채널을 삭제하시겠습니까?",
+                cancel: true,
+            })
+            .onOk(() => {
+                this.deleteChannel(channelId);
+            })
+            .onCancel(() => {})
+            .onDismiss(() => {});
     }
 
     deleteChannel(channelId: string) {
-        this.$api.group.channel.delete(this.communityId, channelId)
+        this.$api.group.channel
+            .delete(this.communityId, channelId)
             .then((res: AxiosResponse) => {
                 Notify.create({
                     type: "positive",
@@ -211,31 +246,30 @@ export default class ChannelList extends Vue {
                     position: "top",
                 });
                 this.fetch();
-            }).catch((err: AxiosError) => {
-            Notify.create({
-                type: "negative",
-                message: "채널 삭제에 실패했습니다. 다시 시도해주세요.",
-                position: "top",
+            })
+            .catch((err: AxiosError) => {
+                Notify.create({
+                    type: "negative",
+                    message: "채널 삭제에 실패했습니다. 다시 시도해주세요.",
+                    position: "top",
+                });
             });
-        })
     }
 }
 </script>
 
 <style scoped lang="scss">
-.edit-modal{
+.edit-modal {
     width: 100%;
 }
 .table-title {
     font-size: 20px;
-    letter-spacing: .005em;
+    letter-spacing: 0.005em;
     font-weight: 400;
     width: 100%;
     display: flex;
     align-content: center;
     align-items: center;
     justify-content: space-between;
-
 }
-
 </style>

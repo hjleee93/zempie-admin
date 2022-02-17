@@ -37,10 +37,10 @@
                 <q-td key="manage" :props="props">
                     {{props.row.state}}
                     <q-btn class="q-mr-sm" @click="block(props.row.id)" v-if="props.row.state !== 'BLOCK'&& props.row.state !== 'KICK' " >블락</q-btn>
-                    <q-btn @click="kick(props.row.id)" v-if="props.row.state !== 'KICK' && props.row.state !== 'BLOCK'">강퇴</q-btn>
+                    <!-- <q-btn @click="kick(props.row.id)" v-if="props.row.state !== 'KICK' && props.row.state !== 'BLOCK'">강퇴</q-btn> -->
 
                     <q-btn class="q-mr-sm" @click="unblock(props.row.id)" v-if="props.row.state === 'BLOCK'">블락 해제</q-btn>                    
-                    <q-btn @click="unkick(props.row.id)" v-if="props.row.state === 'KICK'" >강퇴 해제</q-btn>
+                    <!-- <q-btn @click="unkick(props.row.id)" v-if="props.row.state === 'KICK'" >강퇴 해제</q-btn> -->
 
                 </q-td>
             </q-tr>

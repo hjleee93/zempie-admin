@@ -36,7 +36,7 @@ export default class ImgSelector extends Vue {
     @Prop() label!: string;
     @Prop() imgSrc!: string;
 
-    private imageData: any = this.imgSrc || "";
+    imageData: any = this.imgSrc || "";
 
     onSelectFile() {
         const input: any = this.$refs.fileInput;
