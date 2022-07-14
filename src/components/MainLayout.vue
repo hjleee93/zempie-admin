@@ -302,6 +302,14 @@ export default class MainLayout extends Vue {
             label: "게임 관리",
             sub: [
                 {
+                    label: "모든 게임",
+                    path: "/list",
+                },
+                {
+                    label: "게임젬",
+                    path: "/jams",
+                },
+                {
                     label: "정식 게임",
                     path: "/official",
                 },
@@ -431,6 +439,10 @@ export default class MainLayout extends Vue {
             title: "공지사항 상세보기",
         },
         {
+            path: "/game/list/sub/",
+            title: "게임 상세보기",
+        },
+        {
             path: "/game/official/sub/",
             title: "정식 게임 상세보기",
         },
@@ -441,6 +453,10 @@ export default class MainLayout extends Vue {
         {
             path: "/game/affiliate/sub/",
             title: "제휴 게임 상세보기",
+        },
+        {
+            path: "/game/jam/sub/",
+            title: "게임 상세보기",
         },
         {
             path: "/game/affiliate/create",

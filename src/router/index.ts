@@ -34,6 +34,11 @@ import OfficialSub from "@/views/game/OfficialSubPage.vue";
 import Affiliate from "@/views/game/AffiliatePage.vue";
 import AffiliateSub from "@/views/game/AffiliateSubPage.vue";
 import AffiliateCreate from "@/views/game/AffiliateCreatePage.vue";
+import GameList from "@/views/game/GameList.vue";
+import GameJams from "@/views/game/GameJams.vue";
+import GameSub from "@/views/game/GameSub.vue";
+import GameJamSub from "@/views/game/GameJamSub.vue";
+
 // 심사
 import Judge from "@/views/judge/JudgePage.vue";
 import JudgeSub from "@/views/judge/JudgeSubPage.vue";
@@ -201,6 +206,30 @@ const routes: Array<RouteConfig> = [
     /* 고객센터 */
 
     /* 게임 관리 */
+    {
+        path: "/game/list",
+        name: "GameList",
+        component: GameList,
+        beforeEnter: (_to, _from, next) => {loginCheck(next)}
+    },
+    {
+        path: "/game/list/sub/:index",
+        name: "GameSub",
+        component: GameSub,
+        beforeEnter: (_to, _from, next) => {loginCheck(next)}
+    },
+    {
+        path: "/game/jams",
+        name: "GameJams",
+        component: GameJams,
+        beforeEnter: (_to, _from, next) => {loginCheck(next)}
+    },
+    {
+        path: "/game/jam/sub/:index",
+        name: "GameJamSub",
+        component: GameJamSub,
+        beforeEnter: (_to, _from, next) => {loginCheck(next)}
+    },
     {
         path: "/game/challenge",
         name: "GameChallenge",

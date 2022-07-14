@@ -457,6 +457,13 @@ export default class Api {
 
 
     /* 게임 관리 */
+    async updateGame(obj:any) {
+        return await this.callApi('post', `/admin/game/u`, obj, false)
+    }
+    async updateAwards(obj:any){
+        return await this.callApi('post', `/admin/game/u/jam`, obj, false)
+    }
+
     static async updateCategoryGame(
         game_id: number,
         category: number,
@@ -673,7 +680,6 @@ export default class Api {
 
     /* 커뮤니티 */
     group = {
-
         create: async (obj: any) => {
             return await this.callApi('post', `${communityApi}admin/community`, obj, false)
         },
@@ -753,7 +759,6 @@ export default class Api {
 
     async userReportList(obj:any) {
         return await this.callApi('get', `/admin/report/user/list`, obj, false)
-
     }
 
     async userBan(obj:any) {

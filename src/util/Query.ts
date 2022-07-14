@@ -55,7 +55,7 @@ export default class Query {
             description
             hashtags
             created_at
-            
+                
             projectVersions {
                 id
                 version
@@ -193,6 +193,57 @@ export default class Query {
             }
             userReportCount(where: { target_type : 1 })
         }
+    `;
+
+
+    static getGameById = gql`
+    query projectGet($game_id: Int) {
+        projectGet(where: {game_id: $game_id}) {
+            id
+            name
+            state
+            picture
+            picture2
+            picture_webp
+            description
+            hashtags
+            created_at
+            projectVersions {
+                id
+                version
+                state
+                url
+                size
+                reason
+            }
+            
+            game {
+                id
+                category
+                pathname
+                count_over
+                count_heart
+                url_game
+                enabled
+                gameJam {
+                    jam_id
+                    title
+                    is_awarded
+                }
+                emotions {
+                    e1
+                    e2
+                    e3
+                    e4
+                    e5
+                }
+                user{
+                    id
+                    name
+                }
+            }
+        }
+    }
     `;
 
     static getUsers = gql`

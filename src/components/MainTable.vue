@@ -144,6 +144,7 @@ export default class extends Vue {
         }
 
         const result = await Api.getList(this.apiLink, params.toString());
+
         const rows = new Array(result.count || 0).fill({id:null});
 
         if(this.rows.length == 0){
@@ -171,6 +172,11 @@ export default class extends Vue {
                 const index = offset + i;
                 this.rows[index] = result[this.columnName][i];
 
+                if(this.rows[index].gameJam?.length){
+                    console.log(this.rows[index].gameJam)
+                    this.rows[index].is_awarded = this.rows[index].gameJam.is_awarded
+
+                }
                 if(!!this.rows[index].created_at){
                     this.rows[index].created_at = new Date(this.rows[index].created_at).toLocaleString();
                 }
